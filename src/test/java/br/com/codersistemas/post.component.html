@@ -1,0 +1,79 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+	
+<p class="titulo">post-cad works!</p>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm">
+
+			<div class="form-group">
+				<label for="id">Cod.</label> <input id="id" [(ngModel)]="post.id" class="form-control" />
+			</div>
+
+			<div class="form-group">
+				<label for="ativo">Ativo</label> <input id="ativo" [(ngModel)]="post.ativo" type="checkbox" class="form-control" />
+			</div>
+
+			<div class="form-group">
+				<label for="titulo">Título</label> <input id="titulo" [(ngModel)]="post.titulo" class="form-control" />
+			</div>
+
+			<div class="form-group">
+				<label for="subtitulo">Subtitulo</label> <input id="subtitulo" [(ngModel)]="post.subtitulo" class="form-control" />
+			</div>
+
+			<div class="form-group">
+				<label for="departamento">Departamento</label> <select id="departamento" [(ngModel)]="post.departamento" class="form-control">
+					<option *ngFor="let obj of departamentos" [ngValue]="obj">{{obj.nome}}</option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="usuario">Usuário</label> <select id="usuario" [(ngModel)]="post.usuario" class="form-control">
+					<option *ngFor="let obj of usuarios" [ngValue]="obj">{{obj.nome}}</option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="conteudo">Conteúdo</label>
+				<textarea id="conteudo" [(ngModel)]="post.conteudo" class="form-control" role="10"></textarea>
+			</div>
+
+			<button type="button" class="btn btn-primary" (click)="novo()">Novo</button>
+			<button type="button" class="btn btn-primary" (click)="salvar()">Salvar</button>
+			<button type="button" class="btn btn-primary" (click)="consultar()">Consultar</button>
+			<button type="button" class="btn btn-primary" (click)="excluir()">Excluir</button>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Cod.</th>
+						<th>Título</th>
+						<th>Subtitulo</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let post of posts" (click)="selecionar(post)">
+						<td>{{ post.id }}</td>
+						<td>{{ post.titulo }}</td>
+						<td>{{ post.subtitulo }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-3">1</div>
+		<div class="col-sm-3">1</div>
+		<div class="col-sm-3">1</div>
+		<div class="col-sm-3">1</div>
+	</div>
+</div>
