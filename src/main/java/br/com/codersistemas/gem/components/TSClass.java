@@ -6,19 +6,22 @@ import br.com.codersistemas.gem.util.TypeScriptUtils;
 import br.com.codersistemas.libs.utils.ReflectionUtils;
 
 public class TSClass extends Component {
+	
+	StringBuilder sb = new StringBuilder();
 
 	public TSClass(Object obj) {
-		System.out.println("export class " + obj.getClass().getSimpleName() + " {");
+		super(null);
+		sb.append("export class " + obj.getClass().getSimpleName() + " {\n");
 		Field[] fields = ReflectionUtils.getFields(obj);
 		for (Field field : fields) {
-			System.out.println("\t"+field.getName() + ": " + TypeScriptUtils.toTypeScript(field.getType()) + ";");
+			sb.append("\t"+field.getName() + ": " + TypeScriptUtils.toTypeScript(field.getType()) + ";\n");
 		}
-		System.out.println("}");
+		sb.append("}\n");
 	}
 
 	@Override
 	public String print() {
-		return null;
+		return sb.toString();
 	}
 
 }

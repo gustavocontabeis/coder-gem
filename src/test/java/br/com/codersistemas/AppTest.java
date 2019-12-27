@@ -15,7 +15,11 @@ import org.jsoup.select.Elements;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.com.codersistemas.gem.components.Replacememnt;
 import br.com.codersistemas.gem.components.TSClass;
+import br.com.codersistemas.gem.components.fe.NgComponent;
+import br.com.codersistemas.gem.components.fe.NgComponentHtml;
+import br.com.codersistemas.gem.components.fe.NgService;
 import br.com.codersistemas.libs.utils.mock.Genero;
 import br.com.codersistemas.libs.utils.mock.Pessoa;
 
@@ -24,9 +28,12 @@ public class AppTest {
 	private Pessoa rom;
 	private Pessoa gi;
 	private Pessoa gus;
+	
+	private Replacememnt replacement;
 
 	@Before
 	public void antes(){
+		
 		System.out.println("====================================================================");
 		
 		rom = new Pessoa();
@@ -60,11 +67,20 @@ public class AppTest {
 		rom.getFilhos().add(gus);
 		gus.setMae(rom);
 		gi.setMae(rom);
-
+		
+		replacement = Replacememnt.builder()
+				.replace("Usuarios", "Pessoas")
+				.replace("usuarios", "pessoas")
+				.replace("Usuario", "Pessoa")
+				.replace("usuario", "pessoa")
+				.build();
+		
 	}
 	
 	@Test
-	public void gerarPojo(){}
+	public void gerarPojo(){
+		
+	}
 
 	@Test
 	public void gerarRepository(){}
@@ -75,39 +91,30 @@ public class AppTest {
 	@Test
 	public void gerarTSClass(){
 		TSClass tsClass = new TSClass(rom); 
+		System.err.println(tsClass.print());
 	}
 
 	@Test
 	public void gerarRestController(){}
 
 	@Test
+	public void gerarNGService() throws Exception {
+		NgService controller = new NgService(replacement);
+		System.out.println(controller.print());
+	}
+
+	@Test
+	public void gerarNGComponent() throws Exception {
+		
+		NgComponent controller = new NgComponent(rom, replacement);
+		System.out.println(controller.print());
+		
+	}
+
+	@Test
 	public void gerarFormulario() throws Exception {
-		List<String> readAllLines = Files.readAllLines(Paths.get(this.getClass().getResource("post.component.html").toURI()), Charset.defaultCharset());
-		for (String string : readAllLines) {
-			String x = string.replace("Post", "Pessoa");
-			x = string.replace("post", "pessoa");
-			System.out.println(x);
-		}
-	}
-
-	@Test
-	public void gerarComponent() throws Exception {
-		List<String> readAllLines = Files.readAllLines(Paths.get(this.getClass().getResource("post.component.ts").toURI()), Charset.defaultCharset());
-		for (String string : readAllLines) {
-			String x = string.replace("Post", "Pessoa");
-			x = string.replace("post", "pessoa");
-			System.out.println(x);
-		}
-	}
-
-	@Test
-	public void gerarAngularService() throws Exception {
-		List<String> readAllLines = Files.readAllLines(Paths.get(this.getClass().getResource("post.service.ts").toURI()), Charset.defaultCharset());
-		for (String string : readAllLines) {
-			String x = string.replace("Post", "Pessoa");
-			x = string.replace("post", "pessoa");
-			System.out.println(x);
-		}
+		NgComponentHtml ngHtmlCrud = new NgComponentHtml(rom, replacement);
+		System.out.println(ngHtmlCrud.print());
 	}
 
 	@Test
