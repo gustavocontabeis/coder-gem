@@ -24,5 +24,11 @@ public class TSClass extends Component {
 		return sb.toString();
 	}
 
+	@Override
+	protected String getResourceName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
 

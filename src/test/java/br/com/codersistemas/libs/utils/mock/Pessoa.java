@@ -1,5 +1,6 @@
 package br.com.codersistemas.libs.utils.mock;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -34,6 +35,7 @@ public class Pessoa {
 	
 	private Boolean ativo;
 	
+	private Date dataDeNacimento;
 	
 	private Pessoa mae;
 	private List<Pessoa>filhos;
