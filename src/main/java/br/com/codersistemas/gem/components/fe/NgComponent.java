@@ -1,16 +1,16 @@
 package br.com.codersistemas.gem.components.fe;
 
-import br.com.codersistemas.gem.components.Component;
 import br.com.codersistemas.gem.components.Replacememnt;
+import br.com.codersistemas.gem.components.ResourceComponent;
 
-public class NgComponent extends Component {
+public class NgComponent extends ResourceComponent {
 	
-	public NgComponent(Object obj, Replacememnt replacement) {
+	public NgComponent(Replacememnt replacement) {
 		super(replacement);
 	}
 
 	@Override
-	protected String getResourceName() {
+	public String getResourceName() {
 		return "usuario.component.ts";
 	}
 

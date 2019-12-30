@@ -4,15 +4,16 @@ import java.lang.reflect.Field;
 
 import org.jsoup.nodes.Document;
 
-import br.com.codersistemas.gem.components.Component;
 import br.com.codersistemas.gem.components.Replacememnt;
+import br.com.codersistemas.gem.components.ResourceComponent;
 import br.com.codersistemas.libs.utils.ReflectionUtils;
 import br.com.codersistemas.libs.utils.StringUtil;
 
-public class NgComponentHtml extends Component {
+public class NgComponentHtml extends ResourceComponent {
 
 	private String colunasTitulos;
 	private String colunasConteudos;
+	private Object obj;
 	
 	@Override
 	protected Document document(Document document) {
@@ -23,7 +24,8 @@ public class NgComponentHtml extends Component {
 	}
 
 	public NgComponentHtml(Object obj, Replacememnt replacement) {
-		
+		super(replacement);
+		this.obj = obj;
 		Document document = getResourceAsDocument("usuario.component.html");
 		System.out.println("=======================================================");
 		System.out.println(document.outerHtml());
@@ -57,7 +59,7 @@ public class NgComponentHtml extends Component {
 	}
 
 	@Override
-	protected String getResourceName() {
+	public String getResourceName() {
 		return "usuario.component.html";
 	}
 

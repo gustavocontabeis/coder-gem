@@ -1,7 +1,6 @@
 package br.com.codersistemas;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -16,7 +15,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.com.codersistemas.gem.components.Replacememnt;
+import br.com.codersistemas.gem.components.ResourceComponent;
 import br.com.codersistemas.gem.components.TSClass;
+import br.com.codersistemas.gem.components.be.ControllerComponent;
+import br.com.codersistemas.gem.components.be.PojoComponent;
+import br.com.codersistemas.gem.components.be.RespositoryComponent;
 import br.com.codersistemas.gem.components.fe.NgComponent;
 import br.com.codersistemas.gem.components.fe.NgComponentHtml;
 import br.com.codersistemas.gem.components.fe.NgService;
@@ -79,11 +82,15 @@ public class AppTest {
 	
 	@Test
 	public void gerarPojo(){
-		
+		PojoComponent component = new PojoComponent(rom);
+		System.out.println(component.print());
 	}
 
 	@Test
-	public void gerarRepository(){}
+	public void gerarRepository(){
+		ResourceComponent component = new RespositoryComponent(replacement);
+		System.out.println(component.print());
+	}
 
 	@Test
 	public void gerarService(){}
@@ -95,7 +102,10 @@ public class AppTest {
 	}
 
 	@Test
-	public void gerarRestController(){}
+	public void gerarRestController(){
+		ResourceComponent component = new ControllerComponent(replacement);
+		System.out.println(component.print());
+	}
 
 	@Test
 	public void gerarNGService() throws Exception {
@@ -104,11 +114,9 @@ public class AppTest {
 	}
 
 	@Test
-	public void gerarNGComponent() throws Exception {
-		
-		NgComponent controller = new NgComponent(rom, replacement);
+	public void gerarNGComponent() throws Exception {		
+		NgComponent controller = new NgComponent(replacement);
 		System.out.println(controller.print());
-		
 	}
 
 	@Test
@@ -119,13 +127,13 @@ public class AppTest {
 
 	@Test
 	public void gerarFormularioPrime() throws IOException, URISyntaxException {
-		InputStream resourceAsStream = this.getClass().getResourceAsStream("teste.txt");
-		System.out.println(resourceAsStream);
-		
-		List<String> readAllLines = Files.readAllLines(Paths.get(this.getClass().getResource("teste.txt").toURI()), Charset.defaultCharset());
-		for (String string : readAllLines) {
-			System.out.println(string);
-		}
+//		InputStream resourceAsStream = this.getClass().getResourceAsStream("teste.txt");
+//		System.out.println(resourceAsStream);
+//		
+//		List<String> readAllLines = Files.readAllLines(Paths.get(this.getClass().getResource("teste.txt").toURI()), Charset.defaultCharset());
+//		for (String string : readAllLines) {
+//			System.out.println(string);
+//		}
 	}
 	
 	/**
