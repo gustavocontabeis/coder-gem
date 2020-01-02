@@ -1,16 +1,15 @@
 package br.com.codersistemas.gem.components;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-import br.com.codersistemas.codergemapi.domain.Atributo;
 import br.com.codersistemas.libs.utils.StringUtil;
 
 public class Replacememnt {
 	
 	static Replacememnt instance = new Replacememnt();
 	
-	private Map<String, String> map = new HashMap<>();
+	private Map<String, String> map = new LinkedHashMap<>();
 	
 	private Replacememnt() {
 		super();

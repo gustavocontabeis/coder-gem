@@ -19,23 +19,13 @@ public abstract class ResourceComponent implements IComponent, IResourceComponen
 	protected List<ResourceComponent> components;
 	protected Replacememnt replacement;
 	protected String content;
-	private Document document;
+	protected Document document;
 	
 	public ResourceComponent(Replacememnt replacement) {
 		super();
 		this.replacement = replacement;
 		content = getResourceAsString(getResourceName());
-		content = content(content);
 		document = getResourceAsDocument(getResourceName());
-		document = document(document);
-	}
-
-	protected String content(String content) {
-		return content;
-	}
-
-	protected Document document(Document document) {
-		return document;
 	}
 
 	protected String getResourceAsString(String resourceName) {

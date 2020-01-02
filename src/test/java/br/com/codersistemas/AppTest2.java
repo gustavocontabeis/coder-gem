@@ -28,7 +28,9 @@ import br.com.codersistemas.gem.components.be.PojoComponent;
 import br.com.codersistemas.gem.components.be.RespositoryComponent;
 import br.com.codersistemas.gem.components.fe.NgComponent;
 import br.com.codersistemas.gem.components.fe.NgComponentHtml;
+import br.com.codersistemas.gem.components.fe.NgFormularioHtml;
 import br.com.codersistemas.gem.components.fe.NgService;
+import br.com.codersistemas.libs.utils.MockUtils;
 import br.com.codersistemas.libs.utils.ReflectionUtils;
 import br.com.codersistemas.libs.utils.mock.Genero;
 import br.com.codersistemas.libs.utils.mock.Pessoa;
@@ -98,22 +100,27 @@ public class AppTest2 {
 //				.build();
 		
 		replacement = Replacememnt.builder()
-				.tche(Aplicacao.class)
+				.tche(Pessoa.class)
 				.build();
 		
 	}
 	
 	@Test
-	public void gerarJson(){
+	public void gerarJson() throws Exception {
 		Gson gson = new GsonBuilder().create();
+		Aplicacao app = (Aplicacao) MockUtils.create(this.app);
 		System.out.println(gson.toJson(app));
 		//System.out.println(component.print());
 	}
 
 	@Test
 	public void gerarPojo(){
-		PojoComponent component = new PojoComponent(app.getEntidades().get(0).getAtributos().iterator().next());
+		PojoComponent component = new PojoComponent(rom);
 		System.out.println(component.print());
+	}
+
+	@Test
+	public void gerarSQLInserts(){
 	}
 
 	@Test
@@ -158,6 +165,12 @@ public class AppTest2 {
 	@Test
 	public void gerarFormulario() throws Exception {
 		NgComponentHtml ngHtmlCrud = new NgComponentHtml(rom, replacement);
+		System.out.println(ngHtmlCrud.print());
+	}
+
+	@Test
+	public void gerarCampos() throws Exception {
+		NgFormularioHtml ngHtmlCrud = new NgFormularioHtml(rom, replacement);
 		System.out.println(ngHtmlCrud.print());
 	}
 
