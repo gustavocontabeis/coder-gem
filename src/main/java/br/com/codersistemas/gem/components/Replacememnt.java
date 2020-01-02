@@ -3,6 +3,9 @@ package br.com.codersistemas.gem.components;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.codersistemas.codergemapi.domain.Atributo;
+import br.com.codersistemas.libs.utils.StringUtil;
+
 public class Replacememnt {
 	
 	static Replacememnt instance = new Replacememnt();
@@ -28,6 +31,16 @@ public class Replacememnt {
 
 	public Map<String, String> getReplaces() {
 		return map;
+	}
+
+	public Replacememnt tche(Class class1) {
+		
+		replace("Usuarios", StringUtil.caplitalizePlural(class1.getSimpleName()));
+		replace("usuarios", StringUtil.uncaplitalizePlural(class1.getSimpleName()));
+		replace("Usuario", StringUtil.caplitalizeSingular(class1.getSimpleName()));
+		replace("usuario", StringUtil.uncaplitalizeSingular(class1.getSimpleName()));
+		
+		return instance;
 	}
 
 }
