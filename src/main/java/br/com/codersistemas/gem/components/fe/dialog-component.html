@@ -1,0 +1,12 @@
+<p-dialog header="#{headerText}" [(visible)]="#{exibirDialog}" [focusOnShow]="false" [responsive]="true" showEffect="fade"
+  [modal]="true" [style]="{width: '400px'}">
+  <div class="ui-g ui-fluid" *ngIf="usuario">
+	#{body}
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" pButton icon="pi pi-check" (click)="salvar()" label="Salvar"></button>
+      <button type="button" pButton icon="pi pi-times" (click)="confirmarExcluir()" label="Excluir" class="ui-button-secondary" *ngIf="usuario.id"></button>
+    </div>
+  </p-footer>
+</p-dialog>

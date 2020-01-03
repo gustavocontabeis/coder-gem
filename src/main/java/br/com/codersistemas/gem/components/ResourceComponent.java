@@ -53,9 +53,14 @@ public abstract class ResourceComponent implements IComponent, IResourceComponen
 	
 	@Override
 	public String print() {
+		printAntes();
 		return content;
 	}
 	
+	protected void printAntes() {
+		
+	}
+
 	protected Document getResourceAsDocument(String resourceName) {
 		String resourceAsString = getResourceAsString(resourceName);
 		return Jsoup.parse(resourceAsString, "", Parser.xmlParser());

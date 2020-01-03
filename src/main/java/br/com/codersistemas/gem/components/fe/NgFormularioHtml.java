@@ -16,14 +16,14 @@ public class NgFormularioHtml extends ResourceComponent {
 
 	private String gerarCampos(Object obj) {
 		Field[] fields = ReflectionUtils.getFields(obj.getClass());
-		String x = "";
+		String content = "";
 		String prefix = StringUtil.uncapitalize(obj.getClass().getSimpleName());
 		for (Field field : fields) {
-			x += content
+			content += this.content
 					.replace("#{label}", StringUtil.label( field.getName()) )
 					.replace("#{field}", prefix + "." + field.getName());
 		}
-		return x;
+		return content;
 	}
 
 	@Override

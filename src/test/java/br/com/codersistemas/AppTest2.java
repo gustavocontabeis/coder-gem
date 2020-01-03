@@ -1,7 +1,5 @@
 package br.com.codersistemas;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -28,10 +26,10 @@ import br.com.codersistemas.gem.components.be.PojoComponent;
 import br.com.codersistemas.gem.components.be.RespositoryComponent;
 import br.com.codersistemas.gem.components.fe.NgComponent;
 import br.com.codersistemas.gem.components.fe.NgComponentHtml;
+import br.com.codersistemas.gem.components.fe.NgDialogHtml;
 import br.com.codersistemas.gem.components.fe.NgFormularioHtml;
 import br.com.codersistemas.gem.components.fe.NgService;
 import br.com.codersistemas.libs.utils.MockUtils;
-import br.com.codersistemas.libs.utils.ReflectionUtils;
 import br.com.codersistemas.libs.utils.mock.Genero;
 import br.com.codersistemas.libs.utils.mock.Pessoa;
 
@@ -175,16 +173,13 @@ public class AppTest2 {
 	}
 
 	@Test
-	public void gerarFormularioPrime() throws IOException, URISyntaxException {
-//		InputStream resourceAsStream = this.getClass().getResourceAsStream("teste.txt");
-//		System.out.println(resourceAsStream);
-//		
-//		List<String> readAllLines = Files.readAllLines(Paths.get(this.getClass().getResource("teste.txt").toURI()), Charset.defaultCharset());
-//		for (String string : readAllLines) {
-//			System.out.println(string);
-//		}
+	public void gerarDialog() throws Exception {
+		NgDialogHtml obj = new NgDialogHtml(rom, replacement);
+		obj.setHeaderText("OK");
+		obj.setExibirDialog("exibirDialog");
+		System.out.println(obj.print());
 	}
-	
+
 	/**
 	 * https://www.baeldung.com/java-with-jsoup
 	 */

@@ -25,20 +25,20 @@ public class NgComponentHtml extends ResourceComponent {
 
 	private String gerarColunasConteudos(Object obj) {
 		Field[] fields = ReflectionUtils.getFields(obj.getClass());
-		String x = "";
+		String content = "";
 		for (Field field : fields) {
-			x += "<td>{{pessoa."+ field.getName() +"}}</td>\n";
+			content += "<td>{{pessoa."+ field.getName() +"}}</td>\n";
 		}
-		return x;
+		return content;
 	}
 
 	private String gerarColunasTitulos(Object obj) {
 		Field[] fields = ReflectionUtils.getFields(obj.getClass());
-		String x = "";
+		String content = "";
 		for (Field field : fields) {
-			x += "<th>"+ StringUtil.label(field.getName()) +"</th>\n";
+			content += "<th>"+ StringUtil.label(field.getName()) +"</th>\n";
 		}
-		return x;
+		return content;
 	}
 
 	@Override
