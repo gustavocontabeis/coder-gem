@@ -1,0 +1,46 @@
+{
+	app-name: "Coder-Gem",
+	entidades: [
+					{
+						nome: "aplicacao", 
+						rotulo: "Aplicação", 
+						tabela: "aplicacao", 
+						url-api: "aplicacoes",
+						atributos: [
+							{nome: "id", rotulo: "Cód.", coluna: "id_aplicacao", tipo: "LONG", obrigatorio: true, tamanho-maximo: null, pk: true, fk: null},
+							{nome: "nome", rotulo: "Nome", coluna: "nome", tipo: "STRING", obrigatorio: true, tamanho-maximo: 100, pk: false, fk: null},
+							{nome: "entidades", rotulo: "Entidades", coluna: null, tipo: "LIST", obrigatorio: false, tamanho-maximo: 0, pk:false, fk: "entidade"},
+						]
+					},
+					{
+						nome: "entidade", 
+						rotulo: "Entidade", 
+						tabela: "entidade", 
+						url-api: "entidades",
+						atributos: [
+							{nome: "id", rotulo: "Cód.", coluna: "id_entidade", tipo: "LONG", obrigatorio: true, tamanho-maximo: null, pk: true, fk: null},
+							{nome: "nome", rotulo: "Nome", coluna: "nome", tipo: "STRING", obrigatorio: true, tamanho-maximo: 100, pk: false, fk: null},
+							{nome: "rotulo", rotulo: "Rótulo", coluna: "Rótulo", tipo: "STRING", obrigatorio: true, tamanho-maximo: 100, descricao: 'Valor a ser exibido na tela', pk:false, fk: null},
+							{nome: "tabela", rotulo: "Tabela", coluna: "tabela", tipo: "STRING", obrigatorio: true, tamanho-maximo: 100, descricao: 'Nome da culona a ser criada no Banco de dados', pk:false, fk: null},
+							{nome: "atributos", rotulo: "Atributos", coluna: null, tipo: "LIST", obrigatorio: false, tamanho-maximo: 0, pk:false, fk: "atributo"},
+						]
+					},
+					{
+						nome: "atributo", 
+						rotulo: "Atributo", 
+						tabela: "atributo", 
+						url-api: "atributos",
+						
+						XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+						
+						atributos: [
+							{nome: "id", rotulo: "Cód.", coluna: "id_entidade", tipo: "LONG", obrigatorio: true, tamanho-maximo: null, pk: true, fk: null},
+							{nome: "nome", rotulo: "Nome", coluna: "nome", tipo: "STRING", obrigatorio: true, tamanho-maximo: 100, pk: false, fk: null},
+							{nome: "rotulo", rotulo: "Rótulo", coluna: "Rótulo", tipo: "STRING", obrigatorio: true, tamanho-maximo: 100, descricao: 'Valor a ser exibido na tela', pk:false, fk: null},
+							{nome: "tabela", rotulo: "Tabela", coluna: "tabela", tipo: "STRING", obrigatorio: true, tamanho-maximo: 100, descricao: 'Nome da culona a ser criada no Banco de dados', pk:false, fk: null},
+							{nome: "atributos", rotulo: "Atributos", coluna: null, tipo: "LIST", obrigatorio: false, tamanho-maximo: 0, pk:false, fk: "atributo"},
+						]
+					},
+		]
+	]
+}

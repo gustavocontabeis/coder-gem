@@ -13,7 +13,7 @@ public class ReplacememntTest {
 
 	@Test
 	public void testTche() {
-		Replacememnt build = Replacememnt.builder().tche(Pessoa.class).build();
+		Replacememnt build = Replacememnt.builder().addClass(Pessoa.class).build();
 		Map<String, String> replaces = build.getReplaces();
 		for(Entry<String, String> entry : replaces.entrySet()) {
 			System.out.print(entry.getKey());

@@ -14,8 +14,8 @@ public class Teste {
 		List<AtributoDTO> atributos = ReflectionUtils.getAtributos(Pessoa.class);
 		Field[] fields = ReflectionUtils.getFields(Pessoa.class);
 		Component panel = new Panel().add("width=800").add("height=600");
-		for (Field field : fields) {
-			panel.add(new FormGroup().add(new Label().add("id="+StringUtil.label(field.getName())).add(new Input().add("id=nome"))));
+		for (AtributoDTO dto : atributos) {
+			panel.add(new FormGroup().add(new Label().add("id='"+dto.getNome()+"'").addText(dto.getRotulo())).add(new Input().add("id=nome")));
 		}
 		System.out.println(panel.print());
 //		System.out.println(

@@ -39,7 +39,7 @@ public class AppTest2 {
 	private Pessoa gi;
 	private Pessoa gus;
 	
-	private Replacememnt replacement;
+	private Replacememnt r;
 	private Aplicacao app;
 
 	@Before
@@ -90,15 +90,8 @@ public class AppTest2 {
 		
 		//app = (Aplicacao) ReflectionUtils.createObjectWithValues();
 		
-//		replacement = Replacememnt.builder()
-//				.replace("Usuarios", "Aplicacoes")
-//				.replace("usuarios", "aplicacoes")
-//				.replace("Usuario", "Aplicacao")
-//				.replace("usuario", "aplicacao")
-//				.build();
-		
-		replacement = Replacememnt.builder()
-				.tche(Pessoa.class)
+		r = Replacememnt.builder()
+				.addClass(Aplicacao.class)
 				.build();
 		
 	}
@@ -123,7 +116,7 @@ public class AppTest2 {
 
 	@Test
 	public void gerarRepository(){
-		ResourceComponent component = new RespositoryComponent(replacement);
+		ResourceComponent component = new RespositoryComponent(r);
 		System.out.println(component.print());
 	}
 
@@ -132,7 +125,7 @@ public class AppTest2 {
 
 	@Test
 	public void gerarRestController(){
-		ResourceComponent component = new ControllerComponent(replacement);
+		ResourceComponent component = new ControllerComponent(r);
 		System.out.println(component.print());
 	}
 
@@ -150,31 +143,31 @@ public class AppTest2 {
 	
 	@Test
 	public void gerarNGService() throws Exception {
-		NgService controller = new NgService(replacement);
+		NgService controller = new NgService(r);
 		System.out.println(controller.print());
 	}
 
 	@Test
 	public void gerarNGComponent() throws Exception {		
-		NgComponent controller = new NgComponent(replacement);
+		NgComponent controller = new NgComponent(r);
 		System.out.println(controller.print());
 	}
 
 	@Test
 	public void gerarFormulario() throws Exception {
-		NgComponentHtml ngHtmlCrud = new NgComponentHtml(rom, replacement);
+		NgComponentHtml ngHtmlCrud = new NgComponentHtml(rom, r);
 		System.out.println(ngHtmlCrud.print());
 	}
 
 	@Test
 	public void gerarCampos() throws Exception {
-		NgFormularioHtml ngHtmlCrud = new NgFormularioHtml(rom, replacement);
+		NgFormularioHtml ngHtmlCrud = new NgFormularioHtml(rom, r);
 		System.out.println(ngHtmlCrud.print());
 	}
 
 	@Test
 	public void gerarDialog() throws Exception {
-		NgDialogHtml obj = new NgDialogHtml(rom, replacement);
+		NgDialogHtml obj = new NgDialogHtml(rom, r);
 		obj.setHeaderText("OK");
 		obj.setExibirDialog("exibirDialog");
 		System.out.println(obj.print());

@@ -19,7 +19,7 @@ public class Replacememnt {
 		return instance;
 	}
 
-	public Replacememnt replace(String string, String string2) {
+	private Replacememnt replace(String string, String string2) {
 		map.put(string, string2);
 		return instance;
 	}
@@ -32,7 +32,7 @@ public class Replacememnt {
 		return map;
 	}
 
-	public Replacememnt tche(Class class1) {
+	public Replacememnt addClass(Class class1) {
 		
 		replace("Usuarios", StringUtil.caplitalizePlural(class1.getSimpleName()));
 		replace("usuarios", StringUtil.uncaplitalizePlural(class1.getSimpleName()));
