@@ -1,11 +1,11 @@
 package br.com.codersistemas.gem.components.fe;
 
-import java.lang.reflect.Field;
+import java.util.List;
 
 import br.com.codersistemas.gem.components.Replacememnt;
 import br.com.codersistemas.gem.components.ResourceComponent;
+import br.com.codersistemas.libs.dto.AtributoDTO;
 import br.com.codersistemas.libs.utils.ReflectionUtils;
-import br.com.codersistemas.libs.utils.StringUtil;
 
 public class NgFormularioHtml extends ResourceComponent {
 
@@ -15,13 +15,12 @@ public class NgFormularioHtml extends ResourceComponent {
 	}
 
 	private String gerarCampos(Object obj) {
-		Field[] fields = ReflectionUtils.getFields(obj.getClass());
+		List<AtributoDTO> atributos = ReflectionUtils.getAtributos(obj.getClass());
 		String content = "";
-		String prefix = StringUtil.uncapitalize(obj.getClass().getSimpleName());
-		for (Field field : fields) {
+		for (AtributoDTO atributo : atributos) {
 			content += this.content
-					.replace("#{label}", StringUtil.label( field.getName()) )
-					.replace("#{field}", prefix + "." + field.getName());
+					.replace("#{label}", atributo.getRotulo())
+					.replace("#{field}", atributo.getClasseInstancia() + "." + atributo.getNome());
 		}
 		return content;
 	}

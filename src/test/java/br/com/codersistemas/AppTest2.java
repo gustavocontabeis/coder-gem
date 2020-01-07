@@ -1,10 +1,15 @@
 package br.com.codersistemas;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,6 +34,7 @@ import br.com.codersistemas.gem.components.fe.NgComponentHtml;
 import br.com.codersistemas.gem.components.fe.NgDialogHtml;
 import br.com.codersistemas.gem.components.fe.NgFormularioHtml;
 import br.com.codersistemas.gem.components.fe.NgService;
+import br.com.codersistemas.libs.utils.FileUtil;
 import br.com.codersistemas.libs.utils.MockUtils;
 import br.com.codersistemas.libs.utils.mock.Genero;
 import br.com.codersistemas.libs.utils.mock.Pessoa;
@@ -41,6 +47,7 @@ public class AppTest2 {
 	
 	private Replacememnt r;
 	private Aplicacao app;
+	private Object obj;
 
 	@Before
 	public void antes(){
@@ -91,22 +98,34 @@ public class AppTest2 {
 		//app = (Aplicacao) ReflectionUtils.createObjectWithValues();
 		
 		r = Replacememnt.builder()
-				.addClass(Aplicacao.class)
+				.addClass(obj.getClass())
 				.build();
+		
+//		try {
+//			Gson gson = new GsonBuilder().create();
+//			String str = new String(Files.readAllBytes(Paths.get(this.getClass().getResource("modelo.json").toURI())));
+//			System.out.println(str);
+//			app = gson.fromJson(str, Aplicacao.class);
+//		} catch (IOException | URISyntaxException e) {
+//			e.printStackTrace();
+//		}
+		
+		
+		obj = rom;
 		
 	}
 	
 	@Test
 	public void gerarJson() throws Exception {
 		Gson gson = new GsonBuilder().create();
-		Aplicacao app = (Aplicacao) MockUtils.create(this.app);
+		Aplicacao app = (Aplicacao) MockUtils.create(this.obj);
 		System.out.println(gson.toJson(app));
 		//System.out.println(component.print());
 	}
 
 	@Test
 	public void gerarPojo(){
-		PojoComponent component = new PojoComponent(rom);
+		PojoComponent component = new PojoComponent(obj);
 		System.out.println(component.print());
 	}
 
@@ -137,7 +156,7 @@ public class AppTest2 {
 
 	@Test
 	public void gerarTSClass(){
-		TSClass tsClass = new TSClass(rom); 
+		TSClass tsClass = new TSClass(obj); 
 		System.err.println(tsClass.print());
 	}
 	
@@ -155,19 +174,19 @@ public class AppTest2 {
 
 	@Test
 	public void gerarFormulario() throws Exception {
-		NgComponentHtml ngHtmlCrud = new NgComponentHtml(rom, r);
+		NgComponentHtml ngHtmlCrud = new NgComponentHtml(obj, r);
 		System.out.println(ngHtmlCrud.print());
 	}
 
 	@Test
 	public void gerarCampos() throws Exception {
-		NgFormularioHtml ngHtmlCrud = new NgFormularioHtml(rom, r);
+		NgFormularioHtml ngHtmlCrud = new NgFormularioHtml(obj, r);
 		System.out.println(ngHtmlCrud.print());
 	}
 
 	@Test
 	public void gerarDialog() throws Exception {
-		NgDialogHtml obj = new NgDialogHtml(rom, r);
+		NgDialogHtml obj = new NgDialogHtml(this.obj, r);
 		obj.setHeaderText("OK");
 		obj.setExibirDialog("exibirDialog");
 		System.out.println(obj.print());

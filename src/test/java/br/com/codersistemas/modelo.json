@@ -1,0 +1,46 @@
+{
+	"nome": "Coder-Gem",
+	"entidades": [
+					{
+						"nome": "aplicacao", 
+						"rotulo": "Aplicação", 
+						"tabela": "aplicacao", 
+						"url-api": "aplicacoes",
+						"atributos": [
+							{"nome": "id", "rotulo": "Cód.", "coluna": "id_aplicacao", "tipo": "LONG", "obrigatorio": true, "tamanho-maximo": null, "pk": true, "fk": null},
+							{"nome": "nome", "rotulo": "Nome", "coluna": "nome", "tipo": "STRING", "obrigatorio": true, "tamanho-maximo": 100, "pk": false, "fk": null},
+							{"nome": "entidades", "rotulo": "Entidades", "coluna": null, "tipo": "LIST", "obrigatorio": false, "tamanho-maximo": 0, "pk":false, "fk": "entidade"}
+						]
+					},
+					{
+						"nome": "entidade", 
+						"rotulo": "Entidade", 
+						"tabela": "entidade", 
+						"url-api": "entidades",
+						"atributos": [
+							{"nome": "id", "rotulo": "Cód.", "coluna": "id_entidade", "tipo": "LONG", "obrigatorio": true, "tamanho-maximo": null, "pk": true, "fk": null},
+							{"nome": "nome", "rotulo": "Nome", "coluna": "nome", "tipo": "STRING", "obrigatorio": true, "tamanho-maximo": 100, "pk": false, "fk": null},
+							{"nome": "rotulo", "rotulo": "Rótulo", "coluna": "Rótulo", "tipo": "STRING", "obrigatorio": true, "tamanho-maximo": 100, "descricao": "Valor a ser exibido na tela", "pk":false, "fk": null},
+							{"nome": "tabela", "rotulo": "Tabela", "coluna": "tabela", "tipo": "STRING", "obrigatorio": true, "tamanho-maximo": 100, "descricao": "Nome da culona a ser criada no Banco de dados", "pk":false, "fk": null},
+							{"nome": "atributos", "rotulo": "Atributos", "coluna": null, "tipo": "LIST", "obrigatorio": false, "tamanho-maximo": 0, "pk":false, "fk": "atributo"}
+						]
+					},
+					{
+						"nome": "atributo", 
+						"rotulo": "Atributo", 
+						"tabela": "atributo", 
+						"url-api": "atributos",
+						"atributos": [
+							{"nome": "id", "rotulo": "Cód", "coluna": "id_entidade", "tipo": "LONG", "obrigatorio": true, "tamanho-maximo": null, "pk": true, "fk": null},
+							{"nome": "entidade", "rotulo": "Entidade", "coluna": "id_entidade", "tipo": "LONG", "obrigatorio": true, "tamanho-maximo": 100, "pk": false, "fk": "entidade"},
+							{"nome": "nome", "rotulo": "Nome", "coluna": "nome", "tipo": "STRING", "obrigatorio": true, "tamanho-maximo": 100, "descricao": "o nome no código", "pk":false, "fk": null},
+							{"nome": "rotulo", "rotulo": "Rótulo", "coluna": "rotulo", "tipo": "STRING", "obrigatorio": true, "tamanho-maximo": 100, "descricao": "Valor a ser exibido na tela", "pk":false, "fk": null},
+							{"nome": "coluna", "rotulo": "Coluna", "coluna": "coluna", "tipo": "STRING", "obrigatorio": true, "tamanho-maximo": 100, "descricao": "Nome da colona a ser criada no Banco de dados", "pk":false, "fk": null},
+							{"nome": "tipo", "rotulo": "Tipo de dado", "coluna": "tipo", "tipo": "ENUM", "obrigatorio": true, "tamanho-maximo": 100, "valoresPossiveis":["BOOLEAN", "STRING", "LONG", "INTEGER", "DOUBLE", "FLOAT", "DATE", "TIME", "ENUM", "FK", "LIST"], "pk":false, "fk": false},
+							{"nome": "obritatorio", "rotulo": "obritatório", "coluna": "obritatorio", "tipo": "BOOLEAN", "obrigatorio": true, "tamanho-maximo": 1, "pk":false, "fk": false},
+							{"nome": "tamanhoMinimo", "rotulo": "tamanhoMínimo", "coluna": "tamanhoMinimo", "tipo": "INT", "obrigatorio": true, "tamanho-maximo": 10, "pk":false, "fk": false},
+							{"nome": "tamanhoMaximo", "rotulo": "Tamanho Máximo", "coluna": "tamanhoMaximo", "tipo": "INT", "obrigatorio": true, "tamanho-maximo": 10, "pk":false, "fk": false}
+						]
+					}
+		]
+	}

@@ -72,10 +72,7 @@ public class AppTest {
 		gi.setMae(rom);
 		
 		replacement = Replacememnt.builder()
-				.replace("Usuarios", "Pessoas")
-				.replace("usuarios", "pessoas")
-				.replace("Usuario", "Pessoa")
-				.replace("usuario", "pessoa")
+				.addClass(Pessoa.class)
 				.build();
 		
 	}
