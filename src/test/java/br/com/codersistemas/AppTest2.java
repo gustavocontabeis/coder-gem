@@ -52,7 +52,7 @@ public class AppTest2 {
 	@Before
 	public void antes(){
 		
-		System.out.println("====================================================================");
+		//System.out.println("====================================================================");
 		
 		rom = new Pessoa();
 		rom.setAltura(1.7F);
@@ -97,6 +97,8 @@ public class AppTest2 {
 		
 		//app = (Aplicacao) ReflectionUtils.createObjectWithValues();
 		
+		obj = rom;
+		
 		r = Replacememnt.builder()
 				.addClass(obj.getClass())
 				.build();
@@ -110,8 +112,6 @@ public class AppTest2 {
 //			e.printStackTrace();
 //		}
 		
-		
-		obj = rom;
 		
 	}
 	
