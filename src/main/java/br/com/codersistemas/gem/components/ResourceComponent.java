@@ -28,16 +28,18 @@ public abstract class ResourceComponent implements IComponent, IResourceComponen
 		document = getResourceAsDocument(getResourceName());
 	}
 
-	protected String getResourceAsString(String resourceName) {
+	protected String getResourceAsString(String resourceName) {		
 		if(resourceName != null) {
 			StringBuilder sb = new StringBuilder();
 			try {
 				List<String> readAllLines = Files.readAllLines(Paths.get(this.getClass().getResource(resourceName).toURI()), Charset.defaultCharset());
 				for (String line : readAllLines) {
-					Map<String, String> map = replacement.getReplaces();
-					Set<Entry<String, String>> entrySet = map.entrySet();
-					for (Entry<String, String> entry : entrySet) 
-						line = line.replaceAll(entry.getKey(), entry.getValue());
+					if(replacement != null) {
+						Map<String, String> map = replacement.getReplaces();
+						Set<Entry<String, String>> entrySet = map.entrySet();
+						for (Entry<String, String> entry : entrySet) 
+							line = line.replaceAll(entry.getKey(), entry.getValue());
+					}
 					sb.append(line+"\n");
 				}
 			} catch (IOException e) {

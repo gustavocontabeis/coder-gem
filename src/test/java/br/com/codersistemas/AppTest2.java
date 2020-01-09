@@ -1,15 +1,10 @@
 package br.com.codersistemas;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,7 +29,8 @@ import br.com.codersistemas.gem.components.fe.NgComponentHtml;
 import br.com.codersistemas.gem.components.fe.NgDialogHtml;
 import br.com.codersistemas.gem.components.fe.NgFormularioHtml;
 import br.com.codersistemas.gem.components.fe.NgService;
-import br.com.codersistemas.libs.utils.FileUtil;
+import br.com.codersistemas.libs.dto.AplicacaoDTO;
+import br.com.codersistemas.libs.dto.EntidadeDTO;
 import br.com.codersistemas.libs.utils.MockUtils;
 import br.com.codersistemas.libs.utils.mock.Genero;
 import br.com.codersistemas.libs.utils.mock.Pessoa;
@@ -48,12 +44,38 @@ public class AppTest2 {
 	private Replacememnt r;
 	private Aplicacao app;
 	private Object obj;
+	
+	private AplicacaoDTO appDTO;
+	private EntidadeDTO entidadeDTO;
 
 	@Before
 	public void antes(){
 		
 		//System.out.println("====================================================================");
 		
+		//gerarPessoa();
+		
+		//app = (Aplicacao) ReflectionUtils.createObjectWithValues();
+		
+//		r = Replacememnt.builder()
+//				.addClass(obj.getClass())
+//				.build();
+		
+		try {
+			Gson gson = new GsonBuilder().create();
+			String str = new String(Files.readAllBytes(Paths.get(this.getClass().getResource("pessoa.json").toURI())));
+			System.out.println(str);
+			appDTO = gson.fromJson(str, AplicacaoDTO.class);
+			entidadeDTO = appDTO.getEntidades().get(0);
+			System.out.println(appDTO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	private void gerarPessoa() {
 		rom = new Pessoa();
 		rom.setAltura(1.7F);
 		rom.setAtivo(true);
@@ -95,24 +117,8 @@ public class AppTest2 {
 		app.getEntidades().iterator().next().setAtributos(new ArrayList<Atributo>());
 		app.getEntidades().iterator().next().getAtributos().add(new Atributo());
 		
-		//app = (Aplicacao) ReflectionUtils.createObjectWithValues();
-		
 		obj = rom;
-		
-		r = Replacememnt.builder()
-				.addClass(obj.getClass())
-				.build();
-		
-//		try {
-//			Gson gson = new GsonBuilder().create();
-//			String str = new String(Files.readAllBytes(Paths.get(this.getClass().getResource("modelo.json").toURI())));
-//			System.out.println(str);
-//			app = gson.fromJson(str, Aplicacao.class);
-//		} catch (IOException | URISyntaxException e) {
-//			e.printStackTrace();
-//		}
-		
-		
+
 	}
 	
 	@Test
@@ -180,7 +186,7 @@ public class AppTest2 {
 
 	@Test
 	public void gerarCampos() throws Exception {
-		NgFormularioHtml ngHtmlCrud = new NgFormularioHtml(obj, r);
+		NgFormularioHtml ngHtmlCrud = new NgFormularioHtml(entidadeDTO);
 		System.out.println(ngHtmlCrud.print());
 	}
 
