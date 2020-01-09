@@ -50,6 +50,10 @@ public class NgFormularioHtml extends ResourceComponent {
             Element divInput = divContainer.appendElement("div");
             divInput.addClass("ui-g-8 input");
             
+            
+            //TODO incluir mask
+            // <p-inputMask id="altura" [(ngModel)]="pessoa.altura" mask="99-9999"></p-inputMask>
+            
             if(atributo.getTipo().equals(java.util.Date.class)) {
             	Element input = divInput.appendElement("p-calendar");
             	input.attr("id", atributo.getNome());
@@ -68,11 +72,10 @@ public class NgFormularioHtml extends ResourceComponent {
             	if(atributo.isObrigatorio())
                 	input.attr("required", atributo.getRotulo());
             } else if(atributo.getTipo().equals(java.lang.Boolean.class)) {
-            	Element input = divInput.appendElement("input");
+            	// <p-checkbox [(ngModel)]="pessoa.ativo" binary="true"></p-checkbox>
+            	Element input = divInput.appendElement("p-checkbox");
             	input.attr("id", atributo.getNome());
-            	input.attr("pInputText");
-            	input.attr("pKeyFilter", "int");
-            	input.attr("placeholder", atributo.getRotulo());
+            	input.attr("binary", "true");
             	input.attr("[(ngModel)]", atributo.getClasseInstancia()+"."+atributo.getNome());
             	if(atributo.isObrigatorio())
                 	input.attr("required", atributo.getRotulo());
