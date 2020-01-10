@@ -16,7 +16,7 @@ import org.jsoup.parser.Parser;
 
 public abstract class ResourceComponent implements IComponent, IResourceComponent {
 	
-	protected List<ResourceComponent> components;
+	protected List<IComponent> components;
 	protected Replacememnt replacement;
 	protected String content;
 	protected Document document;

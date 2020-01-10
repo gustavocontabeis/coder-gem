@@ -6,24 +6,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import br.com.codersistemas.gem.components.Replacememnt;
 import br.com.codersistemas.gem.components.ResourceComponent;
 import br.com.codersistemas.libs.dto.AtributoDTO;
 import br.com.codersistemas.libs.dto.EntidadeDTO;
-import br.com.codersistemas.libs.utils.ReflectionUtils;
 import br.com.codersistemas.libs.utils.StringUtil;
 
 public class NgFormularioHtml extends ResourceComponent {
 
 	private Document container;
 
-//	public NgFormularioHtml(Object obj, Replacememnt replacement) {
-//		super(replacement);
-//		gerarCampos(obj);
-//	}
-
 	public NgFormularioHtml(EntidadeDTO dto) {
-		//super(replacement);
 		super(null);
 		gerarCampos(dto);
 	}

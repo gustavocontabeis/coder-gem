@@ -7,13 +7,14 @@
 						"tabela": "pessoa", 
 						"url-api": "pessoas",
 						"atributos": [
-							{"nome": "id", "rotulo": "Cód.", "coluna": "id_pessoa", "tipo": "LONG", "obrigatorio": true, "tamanho-maximo": null, "pk": true, "fk": null},
-							{"nome": "nome", "rotulo": "Nome", "coluna": "nome", "tipo": "STRING", "obrigatorio": true, "tamanho-maximo": 100, "pk": false, "fk": null},
-							{"nome": "genero", "rotulo": "Gênero", "coluna": "genero", "tipo": "ENUM", "obrigatorio": true, "tamanho-maximo": 100, "valoresPossiveis":["M", "F"], "pk": false, "fk": null},
-							{"nome": "altura", "rotulo": "Altura", "coluna": "altura", "tipo": "FLOAT", "obrigatorio": true, "tamanho-maximo": 100, "precisao": 3, "pk": false, "fk": null},
-							{"nome": "salario", "rotulo": "Salário", "coluna": "salario", "tipo": "DOUBLE", "obrigatorio": false, "tamanho-maximo": 100, "precisao": 2, "pk": false, "fk": null},
-							{"nome": "ativo", "rotulo": "Ativo", "coluna": "ativo", "tipo": "BOOLEAN", "obrigatorio": true, "tamanho-maximo": 1, "pk": false, "fk": null},
-							{"nome": "dataDeNacimento", "rotulo": "Data de Nacimento", "coluna": "dataDeNacimento", "tipo": "DATE", "obrigatorio": true, "tamanho-maximo": 20, "pk": false, "fk": null}
+							{"nome": "id", "rotulo": "Cód.", "coluna": "id_pessoa", "tipo": "LONG", "obrigatorio": true, "tamanho-maximo": null, "pk": true, "fk": false, "classeInstancia":"pessoa"},
+							{"nome": "nome", "rotulo": "Nome", "coluna": "nome", "tipo": "STRING", "obrigatorio": true, "tamanho-maximo": 100, "pk": false, "fk": false, "classeInstancia":"pessoa"},
+							{"nome": "genero", "rotulo": "Gênero", "coluna": "genero", "tipo": "ENUM", "obrigatorio": true, "tamanho-maximo": 100, "valoresPossiveis":["M", "F"], "pk": false, "fk": false, "classeInstancia":"pessoa"},
+							{"nome": "altura", "rotulo": "Altura", "coluna": "altura", "tipo": "FLOAT", "obrigatorio": true, "tamanho-maximo": 100, "precisao": 3, "pk": false, "fk": false, "classeInstancia":"pessoa"},
+							{"nome": "salario", "rotulo": "Salário", "coluna": "salario", "tipo": "DOUBLE", "obrigatorio": false, "tamanho-maximo": 100, "precisao": 2, "pk": false, "fk": false, "classeInstancia":"pessoa"},
+							{"nome": "ativo", "rotulo": "Ativo", "coluna": "ativo", "tipo": "BOOLEAN", "obrigatorio": true, "tamanho-maximo": 1, "pk": false, "fk": null, "classeInstancia":"pessoa"},
+							{"nome": "dataDeNacimento", "rotulo": "Data de Nacimento", "coluna": "dataDeNacimento", "tipo": "DATE", "obrigatorio": true, "tamanho-maximo": 20, "pk": false, "fk": false, "classeInstancia":"pessoa"},
+							{"nome": "mae", "rotulo": "Mae", "coluna": "id_pessoa", "tipo": "FK", "obrigatorio": false, "tamanho-maximo": 20, "pk": false, "fk": true, "classeInstancia":"pessoa"}
 						]
 					}
 				]

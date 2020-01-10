@@ -1,10 +1,13 @@
 package br.com.codersistemas;
 
+import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,6 +21,7 @@ import com.google.gson.GsonBuilder;
 import br.com.codersistemas.codergemapi.domain.Aplicacao;
 import br.com.codersistemas.codergemapi.domain.Atributo;
 import br.com.codersistemas.codergemapi.domain.Entidade;
+import br.com.codersistemas.gem.components.IComponent;
 import br.com.codersistemas.gem.components.Replacememnt;
 import br.com.codersistemas.gem.components.ResourceComponent;
 import br.com.codersistemas.gem.components.TSClass;
@@ -29,11 +33,17 @@ import br.com.codersistemas.gem.components.fe.NgComponentHtml;
 import br.com.codersistemas.gem.components.fe.NgDialogHtml;
 import br.com.codersistemas.gem.components.fe.NgFormularioHtml;
 import br.com.codersistemas.gem.components.fe.NgService;
+import br.com.codersistemas.gem.components.fe.NgTabelaHtml;
 import br.com.codersistemas.libs.dto.AplicacaoDTO;
+import br.com.codersistemas.libs.dto.AtributoDTO;
+import br.com.codersistemas.libs.dto.ColumnDTO;
 import br.com.codersistemas.libs.dto.EntidadeDTO;
+import br.com.codersistemas.libs.utils.JPAUtil;
 import br.com.codersistemas.libs.utils.MockUtils;
+import br.com.codersistemas.libs.utils.StringUtil;
 import br.com.codersistemas.libs.utils.mock.Genero;
 import br.com.codersistemas.libs.utils.mock.Pessoa;
+import br.gov.caixa.pedes.sistemas.siarr.util.ReflectionUtils;
 
 public class AppTest2 {
 	
@@ -130,6 +140,26 @@ public class AppTest2 {
 	}
 
 	@Test
+	public void gerarAplicacaoDTO() throws Exception {
+		
+		AplicacaoDTO dto = gerarAplicacaoDTO("minha-app", br.gov.caixa.pedes.sistemas.siarr.domain.Contrato.class);
+		
+		List<EntidadeDTO> entidades = dto.getEntidades();
+		for (EntidadeDTO entidade : entidades) {
+			entidade.setAplicacao(null);
+			List<AtributoDTO> atributos = entidade.getAtributos();
+			for (AtributoDTO atributo : atributos) {
+				atributo.setEntidade(null);
+			}
+		}
+		
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		//Aplicacao app = (Aplicacao) MockUtils.create(dto);
+		System.out.println(gson.toJson(dto));
+		//System.out.println(component.print());
+	}
+
+	@Test
 	public void gerarPojo(){
 		PojoComponent component = new PojoComponent(obj);
 		System.out.println(component.print());
@@ -147,6 +177,11 @@ public class AppTest2 {
 
 	@Test
 	public void gerarService(){}
+
+	@Test
+	public void gerarSpecification(){
+		gerarSpecification(entidadeDTO);
+	}
 
 	@Test
 	public void gerarRestController(){
@@ -185,8 +220,14 @@ public class AppTest2 {
 	}
 
 	@Test
+	public void gerarTabela() throws Exception {
+		IComponent ngHtmlCrud = new NgTabelaHtml(entidadeDTO);
+		System.out.println(ngHtmlCrud.print());
+	}
+
+	@Test
 	public void gerarCampos() throws Exception {
-		NgFormularioHtml ngHtmlCrud = new NgFormularioHtml(entidadeDTO);
+		IComponent ngHtmlCrud = new NgFormularioHtml(entidadeDTO);
 		System.out.println(ngHtmlCrud.print());
 	}
 
@@ -221,8 +262,83 @@ public class AppTest2 {
 		
 	}
 	
-	
-	
+	private void gerarSpecification(EntidadeDTO entidadeDTO) {
+		
+		List<AtributoDTO> atributos = entidadeDTO.getAtributos();
+		for (AtributoDTO atributo : atributos) {
+			if(atributo.isFk()) {
+				System.out.println("Join<Object, Object> join" + StringUtil.capitalize(atributo.getNome()) + " = root.join(\"" + atributo.getNome() + "\");");
+			}
+		}
+		
+		System.out.println("List<Predicate> predicates = new ArrayList<>();");
+		
+		for (AtributoDTO atributo : atributos) {
+			if(!atributo.isFk()) {
+				System.out.println("predicates.add(cb.equal(" + atributo.getEntidade().getNomeInstancia() + ".get(\"" + atributo.getNome() + "\"), filter.get" + StringUtil.capitalize(atributo.getNome()) + "()));");
+			}
+		}
+		
+	}
 
+	private AplicacaoDTO gerarAplicacaoDTO(String nomeAplicacao, Class<?>...classes) {
+		
+		AplicacaoDTO aplicacao = new AplicacaoDTO();
+		aplicacao.setNome(nomeAplicacao);
+		aplicacao.setEntidades(new ArrayList<EntidadeDTO>());
+		
+		for (Class<?> classe : classes) {
+			
+			EntidadeDTO entidade = new EntidadeDTO();
+			entidade.setAtributos(new ArrayList<>());
+			entidade.setNome(classe.getSimpleName());
+			entidade.setNomeClasse(classe.getName());
+			entidade.setNomeInstancia(StringUtil.uncapitalize(classe.getSimpleName()));
+			entidade.setRotulo(StringUtil.label(classe.getSimpleName()));
+			entidade.setTabela(StringUtil.toUnderlineCase(classe.getSimpleName().toLowerCase()));
+			entidade.setAplicacao(aplicacao);
+			aplicacao.getEntidades().add(entidade);
+			
+			Field[] fields = ReflectionUtils.getFields(classe);
+			for (Field field : fields) {
+				AtributoDTO atributo = new AtributoDTO();
+				if(field.getType().isEnum()) {
+					List<String> enumValues = new ArrayList<>();
+					Class enummClass = field.getType();
+					Object[] enumConstants = enummClass.getEnumConstants();
+					for (Object object : enumConstants) {
+						Enum e = (Enum) object;
+						enumValues.add(e.name());
+					}
+					atributo.setEnum(true);
+					atributo.setEnumaracao(enumValues.toArray(new String[enumValues.size()]));
+				}
+				
+				atributo.setTipoClasse(field.getType().getName());
+				atributo.setFk(!atributo.getTipoClasse().startsWith("java.") && !atributo.isEnum());
+				atributo.setNome(field.getName());
+				atributo.setRotulo(StringUtil.label(field.getName()));
+				atributo.setCollection(field.getType().isArray() || field.getType() == List.class || field.getType() == Set.class || field.getType() == Map.class);
+				ColumnDTO columnDTO = JPAUtil.getDto(classe, field);
+				
+				if(StringUtil.isNotBlank(columnDTO.getName())){
+					atributo.setColuna(columnDTO.getName());
+				} else {
+					atributo.setColuna(field.getName());
+				}
+				
+				atributo.setPk(columnDTO.isPk());
+				atributo.setObrigatorio(!columnDTO.isNullable());
+				atributo.setPrecisao(columnDTO.getPrecision());
+				atributo.setTamanho(columnDTO.getLength());
+				atributo.setTipo(field.getType().getSimpleName().toUpperCase());
+				atributo.setEntidade(entidade);
+				entidade.getAtributos().add(atributo);
+			}
+		}
+		
+		return aplicacao;
+		
+	}
 
 }
