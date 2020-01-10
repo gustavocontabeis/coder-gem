@@ -1,6 +1,7 @@
 package br.com.codersistemas;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -333,6 +334,16 @@ public class AppTest2 {
 				atributo.setTamanho(columnDTO.getLength());
 				atributo.setTipo(field.getType().getSimpleName().toUpperCase());
 				atributo.setEntidade(entidade);
+				
+				
+				Method getter = ReflectionUtils.getGetter(classe, field);
+				if(getter != null) {
+					Class tipoGenericoRetorno = ReflectionUtils.getTipoGenericoRetorno(getter);
+					if(tipoGenericoRetorno != null) {
+						atributo.setTipoClasseGenerica(tipoGenericoRetorno.getName());
+						atributo.setTipoClasseGenericaNome(tipoGenericoRetorno.getSimpleName());
+					}
+				}
 				entidade.getAtributos().add(atributo);
 			}
 		}
