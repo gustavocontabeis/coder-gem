@@ -6,24 +6,23 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import br.com.codersistemas.gem.components.Replacememnt;
 import br.com.codersistemas.gem.components.ResourceComponent;
 import br.com.codersistemas.libs.dto.AtributoDTO;
-import br.com.codersistemas.libs.utils.ReflectionUtils;
+import br.com.codersistemas.libs.dto.EntidadeDTO;
 import br.com.codersistemas.libs.utils.StringUtil;
 
 public class NgFormularioHtml extends ResourceComponent {
 
 	private Document container;
 
-	public NgFormularioHtml(Object obj, Replacememnt replacement) {
-		super(replacement);
-		gerarCampos(obj);
+	public NgFormularioHtml(EntidadeDTO dto) {
+		super(null);
+		gerarCampos(dto);
 	}
 
-	private void gerarCampos(Object obj) {
+	private void gerarCampos(EntidadeDTO obj) {
 		
-		List<AtributoDTO> atributos = ReflectionUtils.getAtributos(obj.getClass());
+		List<AtributoDTO> atributos = obj.getAtributos();
 		
 		Elements elements = new Elements();
 		Element divFluid = new Element("div");
@@ -54,39 +53,35 @@ public class NgFormularioHtml extends ResourceComponent {
             //TODO incluir mask
             // <p-inputMask id="altura" [(ngModel)]="pessoa.altura" mask="99-9999"></p-inputMask>
             
-            if(atributo.getTipo().equals(java.util.Date.class)) {
+            if("DATE".equals(atributo.getTipo())) {
             	Element input = divInput.appendElement("p-calendar");
             	input.attr("id", atributo.getNome());
             	input.attr("dateFormat", "dd/mm/yy");
-            	input.attr("[(ngModel)]", atributo.getClasseInstancia()+"."+atributo.getNome());
-            	if(atributo.isObrigatorio())
-                	input.attr("required", atributo.getRotulo());
-            } else if(atributo.getTipo().equals(java.lang.Integer.class)
-            		|| atributo.getTipo().equals(java.lang.Long.class)) {
+            	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
+               	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
+            } else if("INTEGER".equals(atributo.getTipo())
+            		|| "LONG".equals(atributo.getTipo())) {
             	Element input = divInput.appendElement("input");
             	input.attr("id", atributo.getNome());
             	input.attr("pInputText");
             	input.attr("pKeyFilter", "int");
             	input.attr("placeholder", atributo.getRotulo());
-            	input.attr("[(ngModel)]", atributo.getClasseInstancia()+"."+atributo.getNome());
-            	if(atributo.isObrigatorio())
-                	input.attr("required", atributo.getRotulo());
-            } else if(atributo.getTipo().equals(java.lang.Boolean.class)) {
-            	// <p-checkbox [(ngModel)]="pessoa.ativo" binary="true"></p-checkbox>
-            	Element input = divInput.appendElement("p-checkbox");
+            	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
+               	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
+            } else if("BOOLEAN".equals(atributo.getTipo())) {
+            	Element input = divInput.appendElement("input");
             	input.attr("id", atributo.getNome());
             	input.attr("binary", "true");
-            	input.attr("[(ngModel)]", atributo.getClasseInstancia()+"."+atributo.getNome());
-            	if(atributo.isObrigatorio())
-                	input.attr("required", atributo.getRotulo());
+            	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
+               	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
             } else {
             	Element input = divInput.appendElement("input");
             	input.attr("id", atributo.getNome());
             	input.attr("pInputText", "ok");
             	input.attr("placeholder", atributo.getRotulo());
-            	input.attr("[(ngModel)]", atributo.getClasseInstancia()+"."+atributo.getNome());
-            	if(atributo.isObrigatorio())
-            		input.attr("required", atributo.getRotulo());
+            	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
+               	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
+
             }
 					
 		}

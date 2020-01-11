@@ -1,0 +1,145 @@
+{
+  "nome": "minha-app",
+  "entidades": [
+    {
+      "nome": "PessoaEntity",
+      "nomeInstancia": "pessoaEntity",
+      "nomeClasse": "br.com.codersistemas.libs.utils.mock.PessoaEntity",
+      "rotulo": "Pessoa entity",
+      "tabela": "pessoa_entity",
+      "atributos": [
+        {
+          "nome": "id",
+          "coluna": "id_pessoa",
+          "rotulo": "Id",
+          "obrigatorio": false,
+          "isEnum": false,
+          "collection": false,
+          "tipo": "LONG",
+          "tipoClasse": "java.lang.Long",
+          "tamanho": 255,
+          "precisao": 0,
+          "fk": false,
+          "pk": true
+        },
+        {
+          "nome": "nome",
+          "coluna": "nome",
+          "rotulo": "Nome",
+          "obrigatorio": true,
+          "isEnum": false,
+          "collection": false,
+          "tipo": "STRING",
+          "tipoClasse": "java.lang.String",
+          "tamanho": 255,
+          "precisao": 0,
+          "fk": false,
+          "pk": false
+        },
+        {
+          "nome": "genero",
+          "coluna": "genero",
+          "rotulo": "Genero",
+          "obrigatorio": true,
+          "isEnum": true,
+          "collection": false,
+          "tipo": "GENERO",
+          "tipoClasse": "br.com.codersistemas.libs.utils.mock.Genero",
+          "tamanho": 255,
+          "precisao": 0,
+          "fk": false,
+          "pk": false,
+          "enumaracao": [
+            "MASCULINO",
+            "FEMININO"
+          ]
+        },
+        {
+          "nome": "altura",
+          "coluna": "altura",
+          "rotulo": "Altura",
+          "obrigatorio": true,
+          "isEnum": false,
+          "collection": false,
+          "tipo": "FLOAT",
+          "tipoClasse": "java.lang.Float",
+          "tamanho": 10,
+          "precisao": 10,
+          "fk": false,
+          "pk": false
+        },
+        {
+          "nome": "salario",
+          "coluna": "salario",
+          "rotulo": "Salario",
+          "obrigatorio": true,
+          "isEnum": false,
+          "collection": false,
+          "tipo": "DOUBLE",
+          "tipoClasse": "java.lang.Double",
+          "tamanho": 10,
+          "precisao": 10,
+          "fk": false,
+          "pk": false
+        },
+        {
+          "nome": "ativo",
+          "coluna": "ativo",
+          "rotulo": "Ativo",
+          "obrigatorio": true,
+          "isEnum": false,
+          "collection": false,
+          "tipo": "BOOLEAN",
+          "tipoClasse": "java.lang.Boolean",
+          "tamanho": 1,
+          "precisao": 0,
+          "fk": false,
+          "pk": false
+        },
+        {
+          "nome": "dataDeNacimento",
+          "coluna": "data_de_nacimento",
+          "rotulo": "Data de nacimento",
+          "obrigatorio": true,
+          "isEnum": false,
+          "collection": false,
+          "tipo": "DATE",
+          "tipoClasse": "java.util.Date",
+          "tamanho": 255,
+          "precisao": 0,
+          "fk": false,
+          "pk": false
+        },
+        {
+          "nome": "mae",
+          "coluna": "id_pessoa",
+          "rotulo": "Mae",
+          "obrigatorio": true,
+          "isEnum": false,
+          "collection": false,
+          "tipo": "PESSOAENTITY",
+          "tipoClasse": "br.com.codersistemas.libs.utils.mock.PessoaEntity",
+          "tamanho": 0,
+          "precisao": 0,
+          "fk": true,
+          "pk": false
+        },
+        {
+          "nome": "filhos",
+          "rotulo": "Filhos",
+          "obrigatorio": false,
+          "isEnum": false,
+          "collection": true,
+          "tipo": "LIST",
+          "tipoClasse": "java.util.List",
+          "tipoClasseGenerica": "br.com.codersistemas.libs.utils.mock.PessoaEntity",
+          "tipoClasseGenericaNome": "PessoaEntity",
+          "tamanho": 0,
+          "precisao": 0,
+          "fk": true,
+          "pk": false
+        }
+      ]
+    }
+  ]
+}

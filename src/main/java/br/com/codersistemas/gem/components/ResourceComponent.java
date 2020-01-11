@@ -16,7 +16,7 @@ import org.jsoup.parser.Parser;
 
 public abstract class ResourceComponent implements IComponent, IResourceComponent {
 	
-	protected List<ResourceComponent> components;
+	protected List<IComponent> components;
 	protected Replacememnt replacement;
 	protected String content;
 	protected Document document;
@@ -28,16 +28,18 @@ public abstract class ResourceComponent implements IComponent, IResourceComponen
 		document = getResourceAsDocument(getResourceName());
 	}
 
-	protected String getResourceAsString(String resourceName) {
+	protected String getResourceAsString(String resourceName) {		
 		if(resourceName != null) {
 			StringBuilder sb = new StringBuilder();
 			try {
 				List<String> readAllLines = Files.readAllLines(Paths.get(this.getClass().getResource(resourceName).toURI()), Charset.defaultCharset());
 				for (String line : readAllLines) {
-					Map<String, String> map = replacement.getReplaces();
-					Set<Entry<String, String>> entrySet = map.entrySet();
-					for (Entry<String, String> entry : entrySet) 
-						line = line.replaceAll(entry.getKey(), entry.getValue());
+					if(replacement != null) {
+						Map<String, String> map = replacement.getReplaces();
+						Set<Entry<String, String>> entrySet = map.entrySet();
+						for (Entry<String, String> entry : entrySet) 
+							line = line.replaceAll(entry.getKey(), entry.getValue());
+					}
 					sb.append(line+"\n");
 				}
 			} catch (IOException e) {
