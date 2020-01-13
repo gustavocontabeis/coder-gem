@@ -63,7 +63,7 @@ public class AppTest2 {
 	@Before
 	public void antes() throws Exception{
 		
-		classe = PessoaFisica.class;
+		classe = Entidade.class;
 		
 		r = Replacememnt.builder()
 				.addClass(classe)
@@ -75,7 +75,6 @@ public class AppTest2 {
 		
 	}
 
-	//@Test
 	public void gerarAplicacaoDTO() throws Exception {
 		
 		appDTO = gerarAplicacaoDTO("minha-app", classe);
@@ -93,7 +92,15 @@ public class AppTest2 {
 		json = gson.toJson(appDTO);
 		
 		appDTO = gerarAplicacaoDTO("minha-app", classe);
+		for(EntidadeDTO a : appDTO.getEntidades()) {
+			entidadeDTO = a;
+		}
 
+	}
+	
+	@Test
+	public void gerarJson() throws Exception {
+		System.out.println(json);
 	}
 
 	@Test
@@ -104,6 +111,56 @@ public class AppTest2 {
 
 	@Test
 	public void gerarSQLInserts(){
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("INSERT INTO public."+entidadeDTO.getTabela()+" (");
+		
+		String x = "";
+		for(AtributoDTO atributo : entidadeDTO.getAtributos()) {
+			if(atributo.isCollection())
+				continue;
+			x += atributo.getColuna()+", ";
+		}
+		
+		x = StringUtil.removeEnd(x, ", ") + ") values (";
+		sb.append(x);
+		
+		x = "";
+		for(AtributoDTO atributo : entidadeDTO.getAtributos()) {
+			if(atributo.isCollection())
+				continue;
+			
+			switch (atributo.getTipo()) {
+			case "BOOLEAN":
+				x += "FALSE, ";
+				break;
+			case "INTEGER":
+				x += "1, ";
+				break;
+			case "LONG":
+				x += "2, ";
+				break;
+			case "FLOAT":
+				x += "3.5, ";
+				break;
+			case "DOUBLE":
+				x += "4.5, ";
+				break;
+			case "DATE":
+				x += "'2000-12-31', ";
+				break;
+			case "STRING":
+				x += "'OK', ";
+				break;
+			}
+		}
+
+		x = StringUtil.removeEnd(x, ", ");
+		x += ");";
+		sb.append(x);
+		
+		System.out.println(sb);
+		
 	}
 
 	@Test

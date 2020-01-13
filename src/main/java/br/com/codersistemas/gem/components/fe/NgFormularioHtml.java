@@ -35,6 +35,9 @@ public class NgFormularioHtml extends ResourceComponent {
 			
 			System.out.println(atributo);
 			
+			if(atributo.isCollection())
+				continue;
+			
 			Element divContainer = divFluid.appendElement("div");
 			divContainer.addClass("ui-g-12");
 			    

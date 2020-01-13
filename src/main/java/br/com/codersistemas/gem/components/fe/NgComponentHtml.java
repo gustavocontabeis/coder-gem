@@ -21,6 +21,7 @@ public class NgComponentHtml extends ResourceComponent {
 		document.select(".coder-colunas-titulos").html(colunasTitulos);
 		document.select(".coder-colunas-conteudo").html(colunasConteudos);
 		content = document.outerHtml();
+		content = content.replace("#confirmacaoDialog=\"\"", "#confirmacaoDialog");
 	}
 
 	private String gerarColunasConteudos(Object obj) {

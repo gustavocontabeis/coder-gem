@@ -76,4 +76,11 @@
     </div>
   </p-footer>
 </p-dialog>
+<p-confirmDialog #confirmacaoDialog header="Confirmação" icon="pi pi-exclamation-triangle">
+    <p-footer>
+        <button type="button" pButton icon="pi pi-times" label="Não" (click)="confirmacaoDialog.reject()"></button>
+        <button type="button" pButton icon="pi pi-check" label="Sim" (click)="confirmacaoDialog.accept()"></button>
+    </p-footer>
+</p-confirmDialog>
+
 </div>
