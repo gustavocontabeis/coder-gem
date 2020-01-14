@@ -19,14 +19,12 @@ import org.junit.Test;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import br.com.codersistemas.codergemapi.domain.Aplicacao;
-import br.com.codersistemas.codergemapi.domain.Atributo;
-import br.com.codersistemas.codergemapi.domain.Entidade;
 import br.com.codersistemas.gem.components.IComponent;
 import br.com.codersistemas.gem.components.Replacememnt;
 import br.com.codersistemas.gem.components.ResourceComponent;
 import br.com.codersistemas.gem.components.TSClass;
 import br.com.codersistemas.gem.components.be.ControllerComponent;
+import br.com.codersistemas.gem.components.be.HQLComponent;
 import br.com.codersistemas.gem.components.be.PojoComponent;
 import br.com.codersistemas.gem.components.be.RespositoryComponent;
 import br.com.codersistemas.gem.components.fe.NgComponent;
@@ -40,12 +38,10 @@ import br.com.codersistemas.libs.dto.AtributoDTO;
 import br.com.codersistemas.libs.dto.ColumnDTO;
 import br.com.codersistemas.libs.dto.EntidadeDTO;
 import br.com.codersistemas.libs.utils.JPAUtil;
-import br.com.codersistemas.libs.utils.MockUtils;
 import br.com.codersistemas.libs.utils.ReflectionUtils;
 import br.com.codersistemas.libs.utils.StringUtil;
-import br.com.codersistemas.libs.utils.mock.Genero;
-import br.com.codersistemas.libs.utils.mock.Pessoa;
-import br.com.codersistemas.libs.utils.mock.PessoaFisica;
+import br.gov.caixa.pedes.sistemas.siarr.domain.Contrato;
+import br.gov.caixa.pedes.sistemas.siarr.dto.ContratoHistoricoDTO;
 
 public class AppTest2 {
 	
@@ -251,13 +247,28 @@ public class AppTest2 {
 	}
 	
 	@Test
-	public void alterarFormularioXXX() throws Exception {
+	public void gerarHQL() throws Exception {
 		
+		String str = "Contrato contato = new Contrato();\n";
+    	str += "Empreendimento empreendimento = contato.empreendimento\n";
+    	str += "Unidade unidade = empreendimento.unidade\n";
+    	str += "\n";
+    	str += "unidade.cidade\n";
+    	str += "contato.diasAtraso;";
+
+		IComponent component = new HQLComponent(str);
+		System.out.println(component.print());
+		System.out.println("-----------------------------");
+		
+		//String s = "Empreendimento empreendimento = contato.empreendimento";
+		//String s = "Empreendimento empreendimento = contato.empreendimento";
+		//System.out.println(s.matches("\\w*.? \\w*.? = \\w*.?\\.\\w*.?"));
 		
 	}
 	
 	private void gerarSpecification(EntidadeDTO entidadeDTO) {
 		
+		System.out.println("");
 		List<AtributoDTO> atributos = entidadeDTO.getAtributos();
 		for (AtributoDTO atributo : atributos) {
 			if(atributo.isFk()) {
@@ -265,11 +276,15 @@ public class AppTest2 {
 			}
 		}
 		
+		System.out.println("");
 		System.out.println("List<Predicate> predicates = new ArrayList<>();");
 		
 		for (AtributoDTO atributo : atributos) {
 			if(!atributo.isFk()) {
-				System.out.println("predicates.add(cb.equal(" + atributo.getEntidade().getNomeInstancia() + ".get(\"" + atributo.getNome() + "\"), filter.get" + StringUtil.capitalize(atributo.getNome()) + "()));");
+				System.out.println("");
+				System.out.println("if(filter.get" + StringUtil.capitalize(atributo.getNome()) + "() != null)){");
+				System.out.println("   predicates.add(cb.equal(" + atributo.getEntidade().getNomeInstancia() + ".get(\"" + atributo.getNome() + "\"), filter.get" + StringUtil.capitalize(atributo.getNome()) + "()));");
+				System.out.println("}");
 			}
 		}
 		
