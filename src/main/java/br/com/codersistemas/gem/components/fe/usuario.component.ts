@@ -15,7 +15,6 @@ export class UsuarioComponent implements OnInit {
   usuarios: Usuario[];
   exibirDialog: boolean;
   novoRegistro: boolean;
-  tiposUsuario: SelectItem[] = [];
 
   constructor(
     private messageService: MessageService,

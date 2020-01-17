@@ -20,20 +20,33 @@ public class NgFormularioHtml extends ResourceComponent {
 		gerarCampos(dto);
 	}
 
-	private void gerarCampos(EntidadeDTO obj) {
+	/**
+	 * https://www.tektutorialshub.com/angular/template-driven-form-validation-in-angular/#component-class
+	 * @param entidade
+	 */
+	private void gerarCampos(EntidadeDTO entidade) {
 		
-		List<AtributoDTO> atributos = obj.getAtributos();
+		List<AtributoDTO> atributos = entidade.getAtributos();
 		
 		Elements elements = new Elements();
+		
+		Element divForm = new Element("form");
+		String formName = entidade.getNomeInstancia()+"Form"; 
+		divForm.attr("#"+formName, "ngForm");
+		divForm.attr("(ngSubmit)", "onSubmit("+formName+")");
+		
 		Element divFluid = new Element("div");
 		divFluid.addClass("ui-g ui-fluid");
-		elements.add(divFluid);
 		
-		divFluid.attr("*ngIf", StringUtil.uncapitalize(obj.getClass().getSimpleName()));
+		divForm.appendChild(divFluid);
+		
+		elements.add(divForm);
+		
+		divFluid.attr("*ngIf", entidade.getNomeInstancia());
 		
 		for (AtributoDTO atributo : atributos) {
 			
-			System.out.println(atributo);
+			//System.out.println(atributo);
 			
 			if(atributo.isCollection())
 				continue;
@@ -56,9 +69,27 @@ public class NgFormularioHtml extends ResourceComponent {
             //TODO incluir mask
             // <p-inputMask id="altura" [(ngModel)]="pessoa.altura" mask="99-9999"></p-inputMask>
             
-            if("DATE".equals(atributo.getTipo())) {
+            if(atributo.isFk()) {
+            	Element input = divInput.appendElement("p-dropdown");
+            	input.attr("id", atributo.getNome());
+            	input.attr("name", atributo.getNome());
+            	input.attr("#"+atributo.getNome(), "ngModel");
+            	input.attr("[options]", StringUtil.uncaplitalizePlural(atributo.getNome()));
+            	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
+               	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
+            } else if(atributo.isEnum()) {
+            	Element input = divInput.appendElement("p-dropdown");
+            	input.attr("id", atributo.getNome());
+            	input.attr("name", atributo.getNome());
+            	input.attr("#"+atributo.getNome(), "ngModel");
+            	input.attr("[options]", StringUtil.uncaplitalizePlural(atributo.getNome()));
+            	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
+               	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
+            } else if("DATE".equals(atributo.getTipo())) {
             	Element input = divInput.appendElement("p-calendar");
             	input.attr("id", atributo.getNome());
+            	input.attr("name", atributo.getNome());
+            	input.attr("#"+atributo.getNome(), "ngModel");
             	input.attr("dateFormat", "dd/mm/yy");
             	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
                	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
@@ -66,30 +97,72 @@ public class NgFormularioHtml extends ResourceComponent {
             		|| "LONG".equals(atributo.getTipo())) {
             	Element input = divInput.appendElement("input");
             	input.attr("id", atributo.getNome());
+            	input.attr("name", atributo.getNome());
+            	input.attr("#"+atributo.getNome(), "ngModel");
             	input.attr("pInputText");
             	input.attr("pKeyFilter", "int");
             	input.attr("placeholder", atributo.getRotulo());
             	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
-               	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
+            	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
+            	input.attr("pattern", "^\\d+$");
+            } else if("FLOAT".equals(atributo.getTipo())
+            		|| "DOUBLE".equals(atributo.getTipo())) {
+            	Element input = divInput.appendElement("input");
+            	input.attr("id", atributo.getNome());
+            	input.attr("name", atributo.getNome());
+            	input.attr("#"+atributo.getNome(), "ngModel");
+            	input.attr("pInputText");
+            	input.attr("pKeyFilter", "int");
+            	input.attr("placeholder", atributo.getRotulo());
+            	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
+            	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
+            	input.attr("pattern", "^[+-]?\\d+(\\,\\d+)?$");
             } else if("BOOLEAN".equals(atributo.getTipo())) {
             	Element input = divInput.appendElement("input");
             	input.attr("id", atributo.getNome());
+            	input.attr("name", atributo.getNome());
+            	input.attr("#"+atributo.getNome(), "ngModel");
             	input.attr("binary", "true");
             	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
                	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
             } else {
             	Element input = divInput.appendElement("input");
             	input.attr("id", atributo.getNome());
+            	input.attr("name", atributo.getNome());
+            	input.attr("#"+atributo.getNome(), "ngModel");
             	input.attr("pInputText", "ok");
             	input.attr("placeholder", atributo.getRotulo());
             	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
                	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
-
             }
-					
+           	
 		}
 		
-		System.out.println(elements.html().replace("=\"ok\"", ""));
+		Element divControls = new Element("div");
+		divControls.addClass("ui-dialog-buttonpane ui-helper-clearfix");
+		
+		Element buttonSalvar = new Element("button");
+		buttonSalvar.attr("pButton", "ok");
+		buttonSalvar.attr("icon", "pi pi-check");
+		buttonSalvar.attr("(click)", "salvar()");
+		buttonSalvar.attr("label", "Salvar");
+		buttonSalvar.attr("[disabled]", "!"+formName+".valid");
+		
+		divControls.appendChild(buttonSalvar);
+		
+		Element buttonExcluir = new Element("button");
+		buttonExcluir.attr("pButton", "ok");
+		buttonExcluir.attr("icon", "pi pi-times");
+		buttonExcluir.attr("(click)", "confirmarExcluir()");
+		buttonExcluir.attr("label", "Excluir");
+		buttonExcluir.addClass("ui-button-secondary");
+		buttonExcluir.attr("*ngIf", entidade.getNomeInstancia()+".id");
+		
+		divControls.appendChild(buttonExcluir);
+		
+		elements.add(divControls);
+		
+		System.out.println(elements.outerHtml().replace("=\"ok\"", ""));
 	}
 
 	@Override

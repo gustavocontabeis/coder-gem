@@ -2,6 +2,7 @@ package br.com.codersistemas;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -40,41 +41,39 @@ import br.com.codersistemas.libs.dto.EntidadeDTO;
 import br.com.codersistemas.libs.utils.JPAUtil;
 import br.com.codersistemas.libs.utils.ReflectionUtils;
 import br.com.codersistemas.libs.utils.StringUtil;
-import br.gov.caixa.pedes.sistemas.siarr.domain.Contrato;
-import br.gov.caixa.pedes.sistemas.siarr.dto.ContratoHistoricoDTO;
+import br.gov.caixa.pedes.sistemas.siarr.service.ImovelHistoricoService;
+import br.gov.caixa.pedes.sistemas.siarr.service.SifobAtivoService;
 
 public class AppTest2 {
-	
-	
+
 	private Class classe = null;
-	
+
 	private Replacememnt r;
-	
+
 	private AplicacaoDTO appDTO;
 	private EntidadeDTO entidadeDTO;
 	private String json;
-	
+
 	private Object obj;
 
 	@Before
-	public void antes() throws Exception{
-		
-		classe = Entidade.class;
-		
-		r = Replacememnt.builder()
-				.addClass(classe)
-				.build();
-		
+	public void antes() throws Exception {
+
+		// classe = Entidade.class;
+		classe = SifobAtivoService.class;
+
+		r = Replacememnt.builder().addClass(classe).build();
+
 		gerarAplicacaoDTO();
-		
-		obj = classe.newInstance();
-		
+
+		obj = ReflectionUtils.newInstance(classe);
+
 	}
 
 	public void gerarAplicacaoDTO() throws Exception {
-		
+
 		appDTO = gerarAplicacaoDTO("minha-app", classe);
-		
+
 		List<EntidadeDTO> entidades = appDTO.getEntidades();
 		for (EntidadeDTO entidade : entidades) {
 			entidade.setAplicacao(null);
@@ -83,49 +82,49 @@ public class AppTest2 {
 				atributo.setEntidade(null);
 			}
 		}
-		
+
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		json = gson.toJson(appDTO);
-		
+
 		appDTO = gerarAplicacaoDTO("minha-app", classe);
-		for(EntidadeDTO a : appDTO.getEntidades()) {
+		for (EntidadeDTO a : appDTO.getEntidades()) {
 			entidadeDTO = a;
 		}
 
 	}
-	
+
 	@Test
 	public void gerarJson() throws Exception {
 		System.out.println(json);
 	}
 
 	@Test
-	public void gerarPojo(){
+	public void gerarPojo() {
 		PojoComponent component = new PojoComponent(obj);
 		System.out.println(component.print());
 	}
 
 	@Test
-	public void gerarSQLInserts(){
-		
+	public void gerarSQLInserts() {
+
 		StringBuilder sb = new StringBuilder();
-		sb.append("INSERT INTO public."+entidadeDTO.getTabela()+" (");
-		
+		sb.append("INSERT INTO public." + entidadeDTO.getTabela() + " (");
+
 		String x = "";
-		for(AtributoDTO atributo : entidadeDTO.getAtributos()) {
-			if(atributo.isCollection())
+		for (AtributoDTO atributo : entidadeDTO.getAtributos()) {
+			if (atributo.isCollection())
 				continue;
-			x += atributo.getColuna()+", ";
+			x += atributo.getColuna() + ", ";
 		}
-		
+
 		x = StringUtil.removeEnd(x, ", ") + ") values (";
 		sb.append(x);
-		
+
 		x = "";
-		for(AtributoDTO atributo : entidadeDTO.getAtributos()) {
-			if(atributo.isCollection())
+		for (AtributoDTO atributo : entidadeDTO.getAtributos()) {
+			if (atributo.isCollection())
 				continue;
-			
+
 			switch (atributo.getTipo()) {
 			case "BOOLEAN":
 				x += "FALSE, ";
@@ -154,43 +153,100 @@ public class AppTest2 {
 		x = StringUtil.removeEnd(x, ", ");
 		x += ");";
 		sb.append(x);
-		
+
 		System.out.println(sb);
-		
+
 	}
 
 	@Test
-	public void gerarRepository(){
+	public void gerarRepository() {
 		ResourceComponent component = new RespositoryComponent(r);
 		System.out.println(component.print());
 	}
 
 	@Test
-	public void gerarService(){}
+	public void gerarRepositoryTest() {
+
+	}
 
 	@Test
-	public void gerarSpecification(){
+	public void gerarService() {
+	}
+
+	@Test
+	public void gerarServiceTest() {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("import static org.junit.Assert.*;\r\n");
+		sb.append("import static org.mockito.Mockito.*;\r\n");
+		sb.append("import java.time.LocalDateTime;\r\n");
+		sb.append("import org.junit.Test;\r\n");
+		sb.append("import org.junit.runner.RunWith;\r\n");
+		sb.append("import org.mockito.InjectMocks;\r\n");
+		sb.append("import org.mockito.Mock;\r\n");
+		sb.append("import org.springframework.test.context.junit4.SpringRunner;\r\n");
+		sb.append("\r\n");
+		sb.append("@RunWith(SpringRunner.class)\r\n");
+		sb.append("public class ImovelHistoricoServiceTest {\r\n");
+		sb.append("\r\n");
+		sb.append("	@InjectMocks\r\n");
+		sb.append("	private ImovelHistoricoService service;\r\n");
+		sb.append("	\r\n");
+
+		List<AtributoDTO> atributos = entidadeDTO.getAtributos();
+		for (AtributoDTO atributo : atributos) {
+			if (atributo.isFk()) {
+				sb.append("	@Mock\r\n");
+				sb.append("	private " + atributo.getNome() + " " + atributo.getNomeInstancia() + ";\r\n");
+			}
+		}
+		
+		Method[] methods = ReflectionUtils.getMethods(classe);
+		for (Method method : methods) {
+			 if (Modifier.isPublic(method.getModifiers())) {
+				 
+					sb.append("	@Test\r\n");
+					sb.append("	public void when_" + method.getName() + "_when_success() {\r\n");
+					sb.append("		//when(authenticationFacade.getUsuarioLogado()).thenReturn(Usuario.builder().build());\r\n");
+					sb.append("		//service." + method.getName() + "();\r\n");
+					sb.append("	}\r\n");
+			 }
+		}
+
+		sb.append("}\r\n");
+		String str = sb.toString().replace("ImovelHistorico", entidadeDTO.getNome());
+		System.out.println(str);
+
+	}
+
+	@Test
+	public void gerarSpecification() {
 		gerarSpecification(entidadeDTO);
 	}
 
 	@Test
-	public void gerarRestController(){
+	public void gerarRestController() {
 		ResourceComponent component = new ControllerComponent(r);
 		System.out.println(component.print());
 	}
 
 	@Test
-	public void gerarRestControllerTestes(){
-		//gerar URL
-		//Gerar body post
+	public void gerarRestControllerTestes() {
+		// gerar URL
+		// Gerar body post
 	}
 
 	@Test
-	public void gerarTSClass(){
-		TSClass tsClass = new TSClass(obj); 
-		System.err.println(tsClass.print());
+	public void gerarTSClass() {
+
+		System.out.println(StringUtil.toUnderlineCase(entidadeDTO.getNome()).replace("_", "-") + ".model.ts");
+
+		TSClass tsClass = new TSClass(obj);
+
+		System.out.println(tsClass.print());
 	}
-	
+
 	@Test
 	public void gerarNGService() throws Exception {
 		NgService controller = new NgService(r);
@@ -198,8 +254,8 @@ public class AppTest2 {
 	}
 
 	@Test
-	public void gerarNGComponent() throws Exception {		
-		NgComponent controller = new NgComponent(r);
+	public void gerarNGComponent() throws Exception {
+		NgComponent controller = new NgComponent(appDTO, entidadeDTO, r);
 		System.out.println(controller.print());
 	}
 
@@ -234,70 +290,73 @@ public class AppTest2 {
 	 */
 	@Test
 	public void alterarFormulario() throws Exception {
-		
-		List<String> readAllLines = Files.readAllLines(Paths.get(this.getClass().getResource("post.component.html").toURI()), Charset.defaultCharset());
+
+		List<String> readAllLines = Files.readAllLines(
+				Paths.get(this.getClass().getResource("post.component.html").toURI()), Charset.defaultCharset());
 		StringBuilder sb = new StringBuilder();
-		readAllLines.stream().forEach(s->sb.append(s+"\n"));
+		readAllLines.stream().forEach(s -> sb.append(s + "\n"));
 		String text = sb.toString();
-		
+
 		Document document = Jsoup.parse(text);
 		Elements titulo = document.select(".titulo");
-		text = text.replace(titulo.outerHtml(), "["+titulo.outerHtml()+"]");
+		text = text.replace(titulo.outerHtml(), "[" + titulo.outerHtml() + "]");
 		System.out.println(text);
 	}
-	
+
 	@Test
 	public void gerarHQL() throws Exception {
-		
+
 		String str = "Contrato contato = new Contrato();\n";
-    	str += "Empreendimento empreendimento = contato.empreendimento\n";
-    	str += "Unidade unidade = empreendimento.unidade\n";
-    	str += "\n";
-    	str += "unidade.cidade\n";
-    	str += "contato.diasAtraso;";
+		str += "Empreendimento empreendimento = contato.empreendimento\n";
+		str += "Unidade unidade = empreendimento.unidade\n";
+		str += "\n";
+		str += "unidade.cidade\n";
+		str += "contato.diasAtraso;";
 
 		IComponent component = new HQLComponent(str);
 		System.out.println(component.print());
 		System.out.println("-----------------------------");
-		
-		//String s = "Empreendimento empreendimento = contato.empreendimento";
-		//String s = "Empreendimento empreendimento = contato.empreendimento";
-		//System.out.println(s.matches("\\w*.? \\w*.? = \\w*.?\\.\\w*.?"));
-		
+
+		// String s = "Empreendimento empreendimento = contato.empreendimento";
+		// String s = "Empreendimento empreendimento = contato.empreendimento";
+		// System.out.println(s.matches("\\w*.? \\w*.? = \\w*.?\\.\\w*.?"));
+
 	}
-	
+
 	private void gerarSpecification(EntidadeDTO entidadeDTO) {
-		
+
 		System.out.println("");
 		List<AtributoDTO> atributos = entidadeDTO.getAtributos();
 		for (AtributoDTO atributo : atributos) {
-			if(atributo.isFk()) {
-				System.out.println("Join<Object, Object> join" + StringUtil.capitalize(atributo.getNome()) + " = root.join(\"" + atributo.getNome() + "\");");
+			if (atributo.isFk()) {
+				System.out.println("Join<Object, Object> join" + StringUtil.capitalize(atributo.getNome())
+						+ " = root.join(\"" + atributo.getNome() + "\");");
 			}
 		}
-		
+
 		System.out.println("");
 		System.out.println("List<Predicate> predicates = new ArrayList<>();");
-		
+
 		for (AtributoDTO atributo : atributos) {
-			if(!atributo.isFk()) {
+			if (!atributo.isFk()) {
 				System.out.println("");
 				System.out.println("if(filter.get" + StringUtil.capitalize(atributo.getNome()) + "() != null)){");
-				System.out.println("   predicates.add(cb.equal(" + atributo.getEntidade().getNomeInstancia() + ".get(\"" + atributo.getNome() + "\"), filter.get" + StringUtil.capitalize(atributo.getNome()) + "()));");
+				System.out.println("   predicates.add(cb.equal(" + atributo.getEntidade().getNomeInstancia() + ".get(\""
+						+ atributo.getNome() + "\"), filter.get" + StringUtil.capitalize(atributo.getNome()) + "()));");
 				System.out.println("}");
 			}
 		}
-		
+
 	}
 
-	private AplicacaoDTO gerarAplicacaoDTO(String nomeAplicacao, Class<?>...classes) {
-		
+	private AplicacaoDTO gerarAplicacaoDTO(String nomeAplicacao, Class<?>... classes) {
+
 		AplicacaoDTO aplicacao = new AplicacaoDTO();
 		aplicacao.setNome(nomeAplicacao);
 		aplicacao.setEntidades(new ArrayList<EntidadeDTO>());
-		
+
 		for (Class<?> classe : classes) {
-			
+
 			EntidadeDTO entidade = new EntidadeDTO();
 			entidade.setAtributos(new ArrayList<>());
 			entidade.setNome(classe.getSimpleName());
@@ -306,13 +365,13 @@ public class AppTest2 {
 			entidade.setRotulo(StringUtil.label(classe.getSimpleName()));
 			entidade.setTabela(StringUtil.toUnderlineCase(classe.getSimpleName()).toLowerCase());
 			entidade.setAplicacao(aplicacao);
-			entidade.setRestURI("/"+StringUtil.uncaplitalizePlural(entidade.getTabela().replace("_", "-")));
+			entidade.setRestURI("/" + StringUtil.uncaplitalizePlural(entidade.getTabela().replace("_", "-")));
 			aplicacao.getEntidades().add(entidade);
-			
+
 			Field[] fields = ReflectionUtils.getFields(classe);
 			for (Field field : fields) {
 				AtributoDTO atributo = new AtributoDTO();
-				if(field.getType().isEnum()) {
+				if (field.getType().isEnum()) {
 					List<String> enumValues = new ArrayList<>();
 					Class enummClass = field.getType();
 					Object[] enumConstants = enummClass.getEnumConstants();
@@ -323,53 +382,56 @@ public class AppTest2 {
 					atributo.setEnum(true);
 					atributo.setEnumaracao(enumValues.toArray(new String[enumValues.size()]));
 				}
-				
+
 				atributo.setTipoClasse(field.getType().getName());
 				atributo.setNome(field.getName());
+				atributo.setNomeInstancia(StringUtil.uncapitalize(field.getName()));
+				atributo.setNomeLista(StringUtil.uncaplitalizePlural(field.getName()));
 				atributo.setRotulo(StringUtil.label(field.getName()));
-				atributo.setCollection(field.getType().isArray() || field.getType() == List.class || field.getType() == Set.class || field.getType() == Map.class);
-				atributo.setFk((!atributo.getTipoClasse().startsWith("java.") && !atributo.isEnum()) || atributo.isCollection());
+				atributo.setCollection(field.getType().isArray() || field.getType() == List.class
+						|| field.getType() == Set.class || field.getType() == Map.class);
+				atributo.setFk((!atributo.getTipoClasse().startsWith("java.") && !atributo.isEnum())
+						|| atributo.isCollection());
 				ColumnDTO columnDTO = JPAUtil.getDto(classe, field);
-				
-				if(StringUtil.isNotBlank(columnDTO.getName())){
+
+				if (StringUtil.isNotBlank(columnDTO.getName())) {
 					atributo.setColuna(columnDTO.getName());
 				} else {
 					atributo.setColuna(field.getName());
 				}
-				
+
 				atributo.setPk(columnDTO.isPk());
-				
-				if(atributo.isPk() && !atributo.getColuna().startsWith("id_")) {
-					atributo.setColuna("id_"+atributo.getColuna());
+
+				if (atributo.isPk() && !atributo.getColuna().startsWith("id_")) {
+					atributo.setColuna("id_" + atributo.getColuna());
 				}
-				
+
 				atributo.setObrigatorio(!columnDTO.isNullable());
 				atributo.setPrecisao(columnDTO.getPrecision());
 				atributo.setTamanho(columnDTO.getLength());
 				atributo.setTipo(field.getType().getSimpleName().toUpperCase());
 				atributo.setEntidade(entidade);
-				
-				
+
 				Method getter = ReflectionUtils.getGetter(classe, field);
-				if(getter != null) {
+				if (getter != null) {
 					Class tipoGenericoRetorno = ReflectionUtils.getTipoGenericoRetorno(getter);
-					if(tipoGenericoRetorno != null) {
+					if (tipoGenericoRetorno != null) {
 						atributo.setTipoClasseGenerica(tipoGenericoRetorno.getName());
 						atributo.setTipoClasseGenericaNome(tipoGenericoRetorno.getSimpleName());
 					}
 				}
-				
-				if(atributo.isCollection()) {
+
+				if (atributo.isCollection()) {
 					atributo.setColuna(null);
 					atributo.setObrigatorio(false);
 				}
-				
+
 				entidade.getAtributos().add(atributo);
 			}
 		}
-		
+
 		return aplicacao;
-		
+
 	}
 
 }

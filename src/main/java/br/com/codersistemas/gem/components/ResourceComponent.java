@@ -24,8 +24,16 @@ public abstract class ResourceComponent implements IComponent, IResourceComponen
 	public ResourceComponent(Replacememnt replacement) {
 		super();
 		this.replacement = replacement;
-		content = getResourceAsString(getResourceName());
+		generateContent();
+		generateDocument();
+	}
+
+	protected void generateDocument() {
 		document = getResourceAsDocument(getResourceName());
+	}
+
+	protected void generateContent() {
+		content = getResourceAsString(getResourceName());
 	}
 
 	protected String getResourceAsString(String resourceName) {		
@@ -56,11 +64,15 @@ public abstract class ResourceComponent implements IComponent, IResourceComponen
 	@Override
 	public String print() {
 		printAntes();
-		return content;
+		return printDepois(content);
 	}
 	
 	protected void printAntes() {
 		
+	}
+
+	protected String printDepois(String content) {
+		return content;
 	}
 
 	protected Document getResourceAsDocument(String resourceName) {
