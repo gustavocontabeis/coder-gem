@@ -20,6 +20,7 @@ import org.junit.Test;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import br.com.codersistemas.codergemapi.domain.Pessoa;
 import br.com.codersistemas.gem.components.IComponent;
 import br.com.codersistemas.gem.components.Replacememnt;
 import br.com.codersistemas.gem.components.ResourceComponent;
@@ -41,8 +42,6 @@ import br.com.codersistemas.libs.dto.EntidadeDTO;
 import br.com.codersistemas.libs.utils.JPAUtil;
 import br.com.codersistemas.libs.utils.ReflectionUtils;
 import br.com.codersistemas.libs.utils.StringUtil;
-import br.gov.caixa.pedes.sistemas.siarr.service.ImovelHistoricoService;
-import br.gov.caixa.pedes.sistemas.siarr.service.SifobAtivoService;
 
 public class AppTest2 {
 
@@ -59,8 +58,8 @@ public class AppTest2 {
 	@Before
 	public void antes() throws Exception {
 
-		// classe = Entidade.class;
-		classe = SifobAtivoService.class;
+		classe = Pessoa.class;
+		//classe = br.gov.caixa.pedes.sistemas.siarr.domain.Termo.class;
 
 		r = Replacememnt.builder().addClass(classe).build();
 
@@ -221,7 +220,7 @@ public class AppTest2 {
 	}
 
 	@Test
-	public void gerarSpecification() {
+	public void gerarSpecification() { 
 		gerarSpecification(entidadeDTO);
 	}
 
@@ -322,6 +321,211 @@ public class AppTest2 {
 		// System.out.println(s.matches("\\w*.? \\w*.? = \\w*.?\\.\\w*.?"));
 
 	}
+	
+	@Test
+	public void limparSQL() throws Exception {
+		String sb = 
+				"select\n" +
+				"	itempagope0_.co_item_pago_periodo as co_item_1_29_0_,\n" +
+				"	periodo12_.co_periodo as co_perio1_28_1_,\n" +
+				"	vigenciaad13_.co_vigencia as co_vigen1_31_2_,\n" +
+				"	termo14_.co_termo as co_termo1_30_3_,\n" +
+				"	itempagar15_.co_item_pagar as co_item_1_27_4_,\n" +
+				"	contrato16_.co_contrato as co_contr1_22_5_,\n" +
+				"	imovel17_.co_imovel as co_imove1_20_6_,\n" +
+				"	empreendim18_.co_empreendimento as co_empre1_19_7_,\n" +
+				"	unidade19_.co_unidade as co_unida2_7_8_,\n" +
+				"	composicao20_.co_composicao_identificador as co_compo1_10_9_,\n" +
+				"	tipounidad21_.co_tipo_unidade as co_tipo_1_9_10_,\n" +
+				"	uf22_.co_uf as co_uf1_8_11_,\n" +
+				"	unidade23_.co_unidade as co_unida2_7_12_,\n" +
+				"	tipounidad24_.co_tipo_unidade as co_tipo_1_9_13_,\n" +
+				"	uf25_.co_uf as co_uf1_8_14_,\n" +
+				"	itempagope0_.dt_pagamento as dt_pagam2_29_0_,\n" +
+				"	itempagope0_.co_item_pagar as co_item_5_29_0_,\n" +
+				"	itempagope0_.co_periodo as co_perio6_29_0_,\n" +
+				"	itempagope0_.ic_pagto_adm as ic_pagto3_29_0_,\n" +
+				"	itempagope0_.ic_tipo_item_pago as ic_tipo_4_29_0_,\n" +
+				"	itempagope0_.co_vigencia as co_vigen7_29_0_,\n" +
+				"	periodo12_.dt_final_periodo as dt_final2_28_1_,\n" +
+				"	periodo12_.dt_inicio_periodo as dt_inici3_28_1_,\n" +
+				"	periodo12_.no_periodo as no_perio4_28_1_,\n" +
+				"	vigenciaad13_.dt_fim as dt_fim2_31_2_,\n" +
+				"	vigenciaad13_.dt_inicio as dt_inici3_31_2_,\n" +
+				"	vigenciaad13_.co_empreendimento as co_empre5_31_2_,\n" +
+				"	vigenciaad13_.ic_atual as ic_atual4_31_2_,\n" +
+				"	vigenciaad13_.co_termo as co_termo6_31_2_,\n" +
+				"	vigenciaad13_.co_unidade_administradora as co_unida7_31_2_,\n" +
+				"	termo14_.nu_ano as nu_ano2_30_3_,\n" +
+				"	termo14_.ic_glosa_fim_termo as ic_glosa3_30_3_,\n" +
+				"	termo14_.ic_glosa_pagamento_realizado as ic_glosa4_30_3_,\n" +
+				"	termo14_.ic_pagamento_imediato as ic_pagam5_30_3_,\n" +
+				"	termo14_.ic_pagamento_previsto as ic_pagam6_30_3_,\n" +
+				"	termo14_.qt_dias_ate_glosa_definitiva as qt_dias_7_30_3_,\n" +
+				"	termo14_.qt_dias_ate_pagamento_cancelado as qt_dias_8_30_3_,\n" +
+				"	termo14_.tp_pagamento as tp_pagam9_30_3_,\n" +
+				"	termo14_.ic_termo as ic_term10_30_3_,\n" +
+				"	termo14_.vl_pagamento as vl_paga11_30_3_,\n" +
+				"	itempagar15_.co_contrato as co_cont11_27_4_,\n" +
+				"	itempagar15_.dt_final_pagamento_previsto as dt_final2_27_4_,\n" +
+				"	itempagar15_.dt_glosa_final as dt_glosa3_27_4_,\n" +
+				"	itempagar15_.dt_glosa_inicial as dt_glosa4_27_4_,\n" +
+				"	itempagar15_.dt_inicial_pagamento_previsto as dt_inici5_27_4_,\n" +
+				"	itempagar15_.dt_retido_final as dt_retid6_27_4_,\n" +
+				"	itempagar15_.dt_retido_inicial as dt_retid7_27_4_,\n" +
+				"	itempagar15_.ic_glosa as ic_glosa8_27_4_,\n" +
+				"	itempagar15_.ic_retido as ic_retid9_27_4_,\n" +
+				"	itempagar15_.ic_pagto_adm as ic_pagt10_27_4_,\n" +
+				"	contrato16_.co_arquivo_sifob as co_arqu30_22_5_,\n" +
+				"	contrato16_.co_centralizadora as co_centr2_22_5_,\n" +
+				"	contrato16_.dt_assinatura_contrato as dt_assin3_22_5_,\n" +
+				"	contrato16_.dt_termino_contrato as dt_termi4_22_5_,\n" +
+				"	contrato16_.dt_termino_pagamento_administradora as dt_termi5_22_5_,\n" +
+				"	contrato16_.dt_ultma_prestacao as dt_ultma6_22_5_,\n" +
+				"	contrato16_.qt_dias_atraso as qt_dias_7_22_5_,\n" +
+				"	contrato16_.dv_contrato as dv_contr8_22_5_,\n" +
+				"	contrato16_.co_empreendimento as co_empr31_22_5_,\n" +
+				"	contrato16_.co_imovel as co_imov32_22_5_,\n" +
+				"	contrato16_.ic_mip as ic_mip9_22_5_,\n" +
+				"	contrato16_.nu_imovel_anterior as nu_imov10_22_5_,\n" +
+				"	contrato16_.nu_prestacao as nu_pres11_22_5_,\n" +
+				"	contrato16_.nu_unidade_operacional as nu_unid12_22_5_,\n" +
+				"	contrato16_.pz_remanescente as pz_rema13_22_5_,\n" +
+				"	contrato16_.qt_coobrigados as qt_coob14_22_5_,\n" +
+				"	contrato16_.qt_prestacao_ataso as qt_pres15_22_5_,\n" +
+				"	contrato16_.pz_amortizacao as pz_amor16_22_5_,\n" +
+				"	contrato16_.ic_situacao_contrato as ic_situ17_22_5_,\n" +
+				"	contrato16_.ic_situacao_inadimplencia as ic_situ18_22_5_,\n" +
+				"	contrato16_.ic_situacao_pagamento_administradora as ic_situ19_22_5_,\n" +
+				"	contrato16_.tx_arrendamento as tx_arre20_22_5_,\n" +
+				"	contrato16_.ic_transferido_arrendatario as ic_tran21_22_5_,\n" +
+				"	contrato16_.vr_arrendamento as vr_arre22_22_5_,\n" +
+				"	contrato16_.vr_diferenca_prestacao as vr_dife23_22_5_,\n" +
+				"	contrato16_.vr_divida_vencida as vr_divi24_22_5_,\n" +
+				"	contrato16_.vr_encargo as vr_enca25_22_5_,\n" +
+				"	contrato16_.vr_encargo_atraso as vr_enca26_22_5_,\n" +
+				"	contrato16_.vr_moratorio_total as vr_mora27_22_5_,\n" +
+				"	contrato16_.qt_prestacao as qt_pres28_22_5_,\n" +
+				"	contrato16_.vr_seguro as vr_segu29_22_5_,\n" +
+				"	imovel17_.no_bairro as no_bairr2_20_6_,\n" +
+				"	imovel17_.ds_cep as ds_cep3_20_6_,\n" +
+				"	imovel17_.no_cidade as no_cidad4_20_6_,\n" +
+				"	imovel17_.de_complemento_logradouro as de_compl5_20_6_,\n" +
+				"	imovel17_.qt_dias_ociosidade as qt_dias_6_20_6_,\n" +
+				"	imovel17_.co_empreendimento as co_empr12_20_6_,\n" +
+				"	imovel17_.no_logradouro as no_logra7_20_6_,\n" +
+				"	imovel17_.nu_imovel as nu_imove8_20_6_,\n" +
+				"	imovel17_.ic_situacao_imovel as ic_situa9_20_6_,\n" +
+				"	imovel17_.ic_situacao_ocupacao as ic_situ10_20_6_,\n" +
+				"	imovel17_.sg_uf as sg_uf11_20_6_,\n" +
+				"	empreendim18_.no_empreendimento as no_empre2_19_7_,\n" +
+				"	empreendim18_.co_unidade as co_unida3_19_7_,\n" +
+				"	empreendim18_.co_vigencia as co_vigen4_19_7_,\n" +
+				"	unidade19_.ic_ativo as ic_ativo3_7_8_,\n" +
+				"	unidade19_.ds_bairro as ds_bairr4_7_8_,\n" +
+				"	unidade19_.no_cidade as no_cidad5_7_8_,\n" +
+				"	unidade19_.cod_unidade as cod_unid6_7_8_,\n" +
+				"	unidade19_.co_composicao_identificador as co_comp14_7_8_,\n" +
+				"	unidade19_.ds_email as ds_email7_7_8_,\n" +
+				"	unidade19_.ds_endereco as ds_ender8_7_8_,\n" +
+				"	unidade19_.ic_exclo as ic_exclo9_7_8_,\n" +
+				"	unidade19_.ds_identificador_unidade as ds_iden10_7_8_,\n" +
+				"	unidade19_.no_unidade as no_unid11_7_8_,\n" +
+				"	unidade19_.sg_unidade as sg_unid12_7_8_,\n" +
+				"	unidade19_.ds_telefone as ds_tele13_7_8_,\n" +
+				"	unidade19_.co_tipo_unidade as co_tipo15_7_8_,\n" +
+				"	unidade19_.co_uf as co_uf16_7_8_,\n" +
+				"	unidade19_.co_unidade_vinculada as co_unid17_7_8_,\n" +
+				"	unidade19_.ic_tipo as ic_tipo1_7_8_,\n" +
+				"	composicao20_.de_composicao_identificador as de_compo2_10_9_,\n" +
+				"	composicao20_.sg_camposicao_identificador as sg_campo3_10_9_,\n" +
+				"	tipounidad21_.de_descricao as de_descr2_9_10_,\n" +
+				"	tipounidad21_.sg_tipo_unidade as sg_tipo_3_9_10_,\n" +
+				"	uf22_.no_uf as no_uf2_8_11_,\n" +
+				"	uf22_.sg_uf as sg_uf3_8_11_,\n" +
+				"	unidade23_.ic_ativo as ic_ativo3_7_12_,\n" +
+				"	unidade23_.ds_bairro as ds_bairr4_7_12_,\n" +
+				"	unidade23_.no_cidade as no_cidad5_7_12_,\n" +
+				"	unidade23_.cod_unidade as cod_unid6_7_12_,\n" +
+				"	unidade23_.co_composicao_identificador as co_comp14_7_12_,\n" +
+				"	unidade23_.ds_email as ds_email7_7_12_,\n" +
+				"	unidade23_.ds_endereco as ds_ender8_7_12_,\n" +
+				"	unidade23_.ic_exclo as ic_exclo9_7_12_,\n" +
+				"	unidade23_.ds_identificador_unidade as ds_iden10_7_12_,\n" +
+				"	unidade23_.no_unidade as no_unid11_7_12_,\n" +
+				"	unidade23_.sg_unidade as sg_unid12_7_12_,\n" +
+				"	unidade23_.ds_telefone as ds_tele13_7_12_,\n" +
+				"	unidade23_.co_tipo_unidade as co_tipo15_7_12_,\n" +
+				"	unidade23_.co_uf as co_uf16_7_12_,\n" +
+				"	unidade23_.co_unidade_vinculada as co_unid17_7_12_,\n" +
+				"	unidade23_.ic_tipo as ic_tipo1_7_12_,\n" +
+				"	tipounidad24_.de_descricao as de_descr2_9_13_,\n" +
+				"	tipounidad24_.sg_tipo_unidade as sg_tipo_3_9_13_,\n" +
+				"	uf25_.no_uf as no_uf2_8_14_,\n" +
+				"	uf25_.sg_uf as sg_uf3_8_14_\n" +
+				"from\n" +
+				"	arrsm001.arrtb030_item_pago_periodo itempagope0_\n" +
+				"inner join arrsm001.arrtb029_periodo periodo1_ on\n" +
+				"	itempagope0_.co_periodo = periodo1_.co_periodo\n" +
+				"inner join arrsm001.arrtb032_vigencia_administradora_empreendimento vigenciaad2_ on\n" +
+				"	itempagope0_.co_vigencia = vigenciaad2_.co_vigencia\n" +
+				"inner join arrsm001.arrtb031_termo termo3_ on\n" +
+				"	vigenciaad2_.co_termo = termo3_.co_termo\n" +
+				"inner join arrsm001.arrtb028_item_pagar itempagar4_ on\n" +
+				"	itempagope0_.co_item_pagar = itempagar4_.co_item_pagar\n" +
+				"inner join arrsm001.arrtb023_sifob_contrato contrato5_ on\n" +
+				"	itempagar4_.co_contrato = contrato5_.co_contrato\n" +
+				"inner join arrsm001.arrtb021_sifob_imovel imovel6_ on\n" +
+				"	contrato5_.co_imovel = imovel6_.co_imovel\n" +
+				"inner join arrsm001.arrtb020_empreendimento empreendim7_ on\n" +
+				"	contrato5_.co_empreendimento = empreendim7_.co_empreendimento\n" +
+				"inner join arrsm001.arrtb008_unidade unidade8_ on\n" +
+				"	empreendim7_.co_unidade = unidade8_.co_unidade\n" +
+				"inner join arrsm001.arrtb008_unidade unidade9_ on\n" +
+				"	unidade8_.co_unidade_vinculada = unidade9_.co_unidade\n" +
+				"inner join arrsm001.arrtb008_unidade unidade10_ on\n" +
+				"	unidade9_.co_unidade_vinculada = unidade10_.co_unidade\n" +
+				"inner join arrsm001.arrtb008_unidade unidade11_ on\n" +
+				"	unidade10_.co_unidade_vinculada = unidade11_.co_unidade\n" +
+				"inner join arrsm001.arrtb029_periodo periodo12_ on\n" +
+				"	itempagope0_.co_periodo = periodo12_.co_periodo\n" +
+				"inner join arrsm001.arrtb032_vigencia_administradora_empreendimento vigenciaad13_ on\n" +
+				"	itempagope0_.co_vigencia = vigenciaad13_.co_vigencia\n" +
+				"inner join arrsm001.arrtb031_termo termo14_ on\n" +
+				"	vigenciaad13_.co_termo = termo14_.co_termo\n" +
+				"inner join arrsm001.arrtb028_item_pagar itempagar15_ on\n" +
+				"	itempagope0_.co_item_pagar = itempagar15_.co_item_pagar\n" +
+				"inner join arrsm001.arrtb023_sifob_contrato contrato16_ on\n" +
+				"	itempagar15_.co_contrato = contrato16_.co_contrato\n" +
+				"inner join arrsm001.arrtb021_sifob_imovel imovel17_ on\n" +
+				"	contrato16_.co_imovel = imovel17_.co_imovel\n" +
+				"inner join arrsm001.arrtb020_empreendimento empreendim18_ on\n" +
+				"	contrato16_.co_empreendimento = empreendim18_.co_empreendimento\n" +
+				"inner join arrsm001.arrtb008_unidade unidade19_ on\n" +
+				"	empreendim18_.co_unidade = unidade19_.co_unidade\n" +
+				"inner join arrsm001.arrtb011_composicao_identificador composicao20_ on\n" +
+				"	unidade19_.co_composicao_identificador = composicao20_.co_composicao_identificador\n" +
+				"inner join arrsm001.arrtb010_tipo_unidade tipounidad21_ on\n" +
+				"	unidade19_.co_tipo_unidade = tipounidad21_.co_tipo_unidade\n" +
+				"inner join arrsm001.arrtb009_uf uf22_ on\n" +
+				"	unidade19_.co_uf = uf22_.co_uf\n" +
+				"inner join arrsm001.arrtb008_unidade unidade23_ on\n" +
+				"	unidade19_.co_unidade_vinculada = unidade23_.co_unidade\n" +
+				"inner join arrsm001.arrtb010_tipo_unidade tipounidad24_ on\n" +
+				"	unidade23_.co_tipo_unidade = tipounidad24_.co_tipo_unidade\n" +
+				"inner join arrsm001.arrtb009_uf uf25_ on\n" +
+				"	unidade23_.co_uf = uf25_.co_uf\n" +
+				"where\n" +
+				"	termo3_.co_termo = 7\n" +
+				"	and itempagar4_.ic_pagto_adm =?\n" +
+				"	and itempagope0_.ic_tipo_item_pago =?\n" +
+				"order by\n" +
+				"	itempagope0_.co_item_pago_periodo asc\n" +
+				"limit ?";
+		
+
+	}
+	
 
 	private void gerarSpecification(EntidadeDTO entidadeDTO) {
 
