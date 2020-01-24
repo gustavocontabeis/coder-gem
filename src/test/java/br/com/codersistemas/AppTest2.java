@@ -58,8 +58,8 @@ public class AppTest2 {
 	@Before
 	public void antes() throws Exception {
 
-		classe = Pessoa.class;
-		//classe = br.gov.caixa.pedes.sistemas.siarr.domain.Termo.class;
+		//classe = Pessoa.class;
+		classe = br.gov.caixa.pedes.sistemas.siarr.domain.Termo.class;
 
 		r = Replacememnt.builder().addClass(classe).build();
 

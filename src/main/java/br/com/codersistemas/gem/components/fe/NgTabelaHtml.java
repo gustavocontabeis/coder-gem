@@ -98,7 +98,6 @@ public class NgTabelaHtml implements IComponent {
 		tdActions.html(html);
 		trBody.appendChild(tdActions);
 
-
 		System.out.println(pPanelElements.html().replace("=\"ok\"", ""));
 	}
 
