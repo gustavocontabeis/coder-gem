@@ -19,6 +19,11 @@ export class UsuarioService {
     return this.httpClient.post(this.apiUrl, usuario);
   }
 
+  buscar(id: number) {
+    console.log('buscar', this.apiUrl);
+    return this.httpClient.get(this.apiUrl + '/' + id);
+  }
+  
   consultar() {
     console.log('consultar', this.apiUrl);
     return this.httpClient.get(this.apiUrl);

@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { UsuarioService } from './usuario.service';
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from './usuario';
@@ -20,7 +20,8 @@ export class UsuarioComponent implements OnInit {
   //[declaracoes]
 
   constructor(
-	private router: Router,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private usuarioService: UsuarioService) { }
@@ -31,6 +32,24 @@ export class UsuarioComponent implements OnInit {
     this.consultar();
     this.usuario = new Usuario();
     //[ngOnInit]
+    this.activatedRoute.params.subscribe(params => {
+      const id = params.id ? Number(params.id) : null;
+      console.log(id);
+      if (id != null) {
+      console.log("contem id" + id);
+        this.buscar(id);
+      }
+    });
+
+  }
+  
+  buscar(id: number) {
+    this.usuarioService.buscar(id).subscribe(resposta => {
+      this.usuario = resposta as Usuario;
+    }, error => {
+      console.log(error);
+      alert('erro usuarios.' + error);
+    });
   }
 
   consultar() {

@@ -30,6 +30,7 @@ import br.com.codersistemas.gem.components.fe.NgComponentHtml;
 import br.com.codersistemas.gem.components.fe.NgDialogHtml;
 import br.com.codersistemas.gem.components.fe.NgFormularioHtml;
 import br.com.codersistemas.gem.components.fe.NgHtmlFormAdd;
+import br.com.codersistemas.gem.components.fe.NgModule;
 import br.com.codersistemas.gem.components.fe.NgService;
 import br.com.codersistemas.gem.components.fe.NgTabelaHtml;
 import br.com.codersistemas.libs.dto.AplicacaoDTO;
@@ -163,7 +164,7 @@ public class AppTest2 {
 
 	@Test
 	public void gerarNGModule() throws Exception {
-		NgService controller = new NgService(entidadeDTO);
+		IComponent controller = new NgModule(entidadeDTO);
 		System.out.println(controller.print());
 	}
 

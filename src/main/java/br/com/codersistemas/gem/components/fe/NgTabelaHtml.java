@@ -70,7 +70,10 @@ public class NgTabelaHtml implements IComponent {
 				continue;
 			Element td = new Element("td");
 			String html = "";
-			if ("DATE".equals(atributo.getTipo())) {
+			
+			if(atributo.isFk()) {
+				td.html("<a [routerLink]=\"['/"+atributo.getNome()+"/"+atributo.getNome()+"-add/', "+obj.getNomeInstancia()+"."+atributo.getNome()+".id]\">{{" + atributo.getEntidade().getNomeInstancia() + "." + atributo.getFkField() + "}}</a>");
+			} else if ("DATE".equals(atributo.getTipo())) {
 				td.html("{{" + atributo.getEntidade().getNomeInstancia() + "." + atributo.getNome()
 						+ " | date: 'dd/MM/yyyy hh:mm:ss'}}");
 			} else if ("INTEGER".equals(atributo.getTipo()) || "LONG".equals(atributo.getTipo())) {

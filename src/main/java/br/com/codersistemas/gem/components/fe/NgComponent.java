@@ -43,12 +43,12 @@ public class NgComponent extends ResourceComponent {
 			} else if(atributo.isFk()) {
 //				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 //				System.out.println(atributo.getNomeLista()+": SelectItem[] = [];");
-				declaracoes.append(atributo.getNomeLista()+": SelectItem[] = [];");
+				declaracoes.append(atributo.getNomeLista()+": SelectItem[] = [];\n");
 //				System.out.println();
 //				System.out.println("this."+atributo.getNomeLista()+" = [");
 //				System.out.println("];");
 				onInit.append("this."+atributo.getNomeLista()+" = [");
-				onInit.append("];");
+				onInit.append("];\n");
 //				System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 			}
 		}
