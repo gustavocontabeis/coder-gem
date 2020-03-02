@@ -1,20 +1,18 @@
 package br.com.codersistemas.gem.components;
 
-import java.lang.reflect.Field;
-
 import br.com.codersistemas.gem.util.TypeScriptUtils;
-import br.com.codersistemas.libs.utils.ReflectionUtils;
+import br.com.codersistemas.libs.dto.AtributoDTO;
+import br.com.codersistemas.libs.dto.EntidadeDTO;
 
 public class TSClass extends Component {
 	
 	StringBuilder sb = new StringBuilder();
 
-	public TSClass(Object obj) {
+	public TSClass(EntidadeDTO entidade) {
 		super(null);
-		sb.append("export class " + obj.getClass().getSimpleName() + " {\n");
-		Field[] fields = ReflectionUtils.getFields(obj);
-		for (Field field : fields) {
-			sb.append("\t"+field.getName() + ": " + TypeScriptUtils.toTypeScript(field.getType()) + ";\n");
+		sb.append("export class " + entidade.getNomeCapitalizado() + " {\n");
+		for (AtributoDTO atributo : entidade.getAtributos()) {
+			sb.append("\t"+atributo.getNome() + ": " + TypeScriptUtils.toTypeScript(atributo.getClasse()) + ";\n");
 		}
 		sb.append("}\n");
 	}

@@ -10,26 +10,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.parser.Parser;
-
 public abstract class ResourceComponent implements IComponent, IResourceComponent {
 	
 	protected List<IComponent> components;
 	protected Replacememnt replacement;
 	protected String content;
-	protected Document document;
 	
 	public ResourceComponent(Replacememnt replacement) {
 		super();
 		this.replacement = replacement;
 		generateContent();
-		generateDocument();
-	}
-
-	protected void generateDocument() {
-		document = getResourceAsDocument(getResourceName());
 	}
 
 	protected void generateContent() {
@@ -75,9 +65,4 @@ public abstract class ResourceComponent implements IComponent, IResourceComponen
 		return content;
 	}
 
-	protected Document getResourceAsDocument(String resourceName) {
-		String resourceAsString = getResourceAsString(resourceName);
-		return Jsoup.parse(resourceAsString, "", Parser.xmlParser());
-	}
-	
 }

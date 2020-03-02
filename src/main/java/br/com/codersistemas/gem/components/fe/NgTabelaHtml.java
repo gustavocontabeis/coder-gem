@@ -13,7 +13,7 @@ import br.com.codersistemas.libs.utils.StringUtil;
 
 public class NgTabelaHtml implements IComponent {
 
-	private Document container;
+	private Elements pPanelElements = new Elements();
 
 	public NgTabelaHtml(EntidadeDTO dto) {
 		gerarCampos(dto);
@@ -23,7 +23,6 @@ public class NgTabelaHtml implements IComponent {
 
 		List<AtributoDTO> atributos = obj.getAtributos();
 
-		Elements pPanelElements = new Elements();
 		Element pPanel = new Element("p-panel");
 		pPanel.attr("header", obj.getRotulo());
 		pPanelElements.add(pPanel);
@@ -94,16 +93,24 @@ public class NgTabelaHtml implements IComponent {
 		templateBody.appendChild(trBody);
 		
 		Element tdActions = new Element("td");
-		String html = "<button type=\"button\" pButton icon=\"pi pi-pencil\" (click)=\"exibirModal(" + obj.getNomeInstancia() + ")\" title=\"Selecionar\"></button>";
+		String html = "<button pButton icon=\"pi pi-pencil\" [routerLink]=\"['/"+obj.getNomeInstancia()+"/"+obj.getNomeInstancia()+"-add/', "+obj.getNomeInstancia()+".id]\" title=\"Selecionar "+obj.getRotulo()+"\"></button>";
+		
+		for (AtributoDTO i : atributos) {
+			if (!i.isCollection())
+				continue;
+			html += ("<button pButton icon=\"pi pi-pencil\" [routerLink]=\"['/"+ i.getNomeInstancia() +"/"+obj.getNomeInstancia()+"/', "+obj.getNomeInstancia()+".id]\" title=\"Selecionar "+i.getRotulo()+"\"></button>");
+		}
 		tdActions.html(html);
 		trBody.appendChild(tdActions);
 
-		System.out.println(pPanelElements.html().replace("=\"ok\"", ""));
 	}
 
 	@Override
 	public String print() {
-		return container.body().html();
+		return pPanelElements.html()
+				.replace("=\"ok\"", "")
+				.replace("routerlink", "routerLink")
+				.replace("pbutton", "pButton");
 	}
 
 }

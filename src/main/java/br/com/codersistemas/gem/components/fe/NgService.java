@@ -2,11 +2,12 @@ package br.com.codersistemas.gem.components.fe;
 
 import br.com.codersistemas.gem.components.Replacememnt;
 import br.com.codersistemas.gem.components.ResourceComponent;
+import br.com.codersistemas.libs.dto.EntidadeDTO;
 
 public class NgService extends ResourceComponent {
 
-	public NgService(Replacememnt replacement) {
-		super(replacement);
+	public NgService(EntidadeDTO entidade) {
+		super(Replacememnt.builder().addClass(entidade.getClasse()).build());
 	}
 
 	@Override

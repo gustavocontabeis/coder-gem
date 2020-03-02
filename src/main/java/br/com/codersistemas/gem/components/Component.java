@@ -6,7 +6,7 @@ import org.jsoup.nodes.Document;
 
 public abstract class Component implements IComponent {
 	
-	protected List<Component> components;
+	protected List<IComponent> components;
 	protected Replacememnt replacement;
 	protected String content;
 	

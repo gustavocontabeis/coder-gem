@@ -2,14 +2,12 @@ package br.com.codersistemas.gem.components.fe;
 
 import java.lang.reflect.Field;
 
-import org.jsoup.nodes.Document;
-
 import br.com.codersistemas.gem.components.Replacememnt;
-import br.com.codersistemas.gem.components.ResourceComponent;
+import br.com.codersistemas.gem.components.ResourceXMLComponent;
 import br.com.codersistemas.libs.utils.ReflectionUtils;
 import br.com.codersistemas.libs.utils.StringUtil;
 
-public class NgComponentHtml extends ResourceComponent {
+public class NgComponentHtml extends ResourceXMLComponent {
 
 	private String colunasTitulos;
 	private String colunasConteudos;

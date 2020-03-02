@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { UsuarioService } from './usuario.service';
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from './usuario';
@@ -15,8 +16,11 @@ export class UsuarioComponent implements OnInit {
   usuarios: Usuario[];
   exibirDialog: boolean;
   novoRegistro: boolean;
+  
+  //[declaracoes]
 
   constructor(
+	private router: Router,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private usuarioService: UsuarioService) { }
@@ -26,6 +30,7 @@ export class UsuarioComponent implements OnInit {
     this.novoRegistro = false;
     this.consultar();
     this.usuario = new Usuario();
+    //[ngOnInit]
   }
 
   consultar() {
@@ -89,6 +94,10 @@ export class UsuarioComponent implements OnInit {
 
   aoSelecionar(event) {
     this.novoRegistro = false;
+  }
+  
+  onSubmit(usuarioForm) {
+
   }
 
 }
