@@ -1,69 +1,53 @@
 package br.com.codersistemas.gem.components.be;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.List;
+import java.util.Arrays;
 
-import br.com.codersistemas.gem.components.IComponent;
-import br.com.codersistemas.libs.dto.AtributoDTO;
-import br.com.codersistemas.libs.dto.EntidadeDTO;
+import br.com.codersistemas.gem.components.Replacememnt;
+import br.com.codersistemas.gem.components.ResourceComponent;
 import br.com.codersistemas.libs.utils.ReflectionUtils;
 
-public class ServiceTestComponent implements IComponent {
+public class ServiceTestComponent extends ResourceComponent {
 
-	private EntidadeDTO entidadeDTO;
+	private Class classe;
 
-	public ServiceTestComponent(EntidadeDTO entidadeDTO) {
-		super();
-		this.entidadeDTO = entidadeDTO;
+	public ServiceTestComponent(Class classe) {
+		super(Replacememnt.builder().addClass(classe).build());
+		this.classe = classe;
 	}
 
 	@Override
-	public String print() {
-		
+	protected String printDepois(String content) {
+		content = declararMocks(content);
+		content = declararMetodosTeste(content);
+		return content;
+	}
+
+	private String declararMocks(String content) {
+
 		StringBuilder sb = new StringBuilder();
+		ReflectionUtils.getAtributos(classe).stream().filter(field->!"log".equals(field.getNome())).forEach(field->{
+			sb.append("\t@Mock\n");
+			sb.append("\tprivate ");
+			sb.append(field.getClasse().getSimpleName()+" ");
+			sb.append(field.getNome()+";\n");
+		});
 
-		sb.append("import static org.junit.Assert.*;\r\n");
-		sb.append("import static org.mockito.Mockito.*;\r\n");
-		sb.append("import java.time.LocalDateTime;\r\n");
-		sb.append("import org.junit.Test;\r\n");
-		sb.append("import org.junit.runner.RunWith;\r\n");
-		sb.append("import org.mockito.InjectMocks;\r\n");
-		sb.append("import org.mockito.Mock;\r\n");
-		sb.append("import org.springframework.test.context.junit4.SpringRunner;\r\n");
-		sb.append("\r\n");
-		sb.append("@RunWith(SpringRunner.class)\r\n");
-		sb.append("public class ImovelHistoricoServiceTest {\r\n");
-		sb.append("\r\n");
-		sb.append("	@InjectMocks\r\n");
-		sb.append("	private ImovelHistoricoService service;\r\n");
-		sb.append("	\r\n");
+		return content.replace("//[atributos]", sb.toString());
+	}
 
-		List<AtributoDTO> atributos = entidadeDTO.getAtributos();
-		for (AtributoDTO atributo : atributos) {
-			if (atributo.isFk()) {
-				sb.append("	@Mock\r\n");
-				sb.append("	private " + atributo.getNome() + " " + atributo.getNomeInstancia() + ";\r\n");
-			}
-		}
-		
-		Method[] methods = ReflectionUtils.getMethods(entidadeDTO.getClasse());
-		for (Method method : methods) {
-			 if (Modifier.isPublic(method.getModifiers())) {
-				 
-					sb.append("	@Test\r\n");
-					sb.append("	public void when_" + method.getName() + "_when_success() {\r\n");
-					sb.append("		//when(authenticationFacade.getUsuarioLogado()).thenReturn(Usuario.builder().build());\r\n");
-					sb.append("		//service." + method.getName() + "();\r\n");
-					sb.append("	}\r\n");
-			 }
-		}
+	private String declararMetodosTeste(String content) {
+		StringBuilder sb = new StringBuilder();
+		Arrays.asList(ReflectionUtils.getMethods(classe)).stream().filter(method->!method.getName().startsWith("lambda$")&& Modifier.isPublic(method.getModifiers())).forEach(method->{
+			sb.append("\t@Test\n");
+			sb.append("\tprivate void when_"+method.getName()+"_then_success(){\n\t}\n\n");
+		});
+		return content.replace("//[metodos]", sb.toString());
+	}
 
-		sb.append("}\r\n");
-		String str = sb.toString().replace("ImovelHistorico", entidadeDTO.getNome());
-		System.out.println(str);
-
-		return null;
+	@Override
+	public String getResourceName() {
+		return "UsuarioServiceTest.txt";
 	}
 
 }
