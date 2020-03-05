@@ -24,6 +24,7 @@ import br.com.codersistemas.gem.components.be.HQLComponent;
 import br.com.codersistemas.gem.components.be.PojoComponent;
 import br.com.codersistemas.gem.components.be.RespositoryComponent;
 import br.com.codersistemas.gem.components.be.SQLInsertComponent;
+import br.com.codersistemas.gem.components.be.ServiceTestComponent;
 import br.com.codersistemas.gem.components.fe.NgCli;
 import br.com.codersistemas.gem.components.fe.NgComponent;
 import br.com.codersistemas.gem.components.fe.NgComponentHtml;
@@ -86,7 +87,7 @@ public class AppTest2 {
 		for (EntidadeDTO a : appDTO.getEntidades()) {
 			entidadeDTO = a;
 		}
-		
+
 		entidadeDTO = appDTO.getEntidades().get(1);
 
 	}
@@ -126,12 +127,12 @@ public class AppTest2 {
 
 	@Test
 	public void gerarServiceTest() {
-
-
+		IComponent x = new ServiceTestComponent(PessoaService.class);
+		System.out.println(x.print());
 	}
 
 	@Test
-	public void gerarSpecification() { 
+	public void gerarSpecification() {
 		gerarSpecification(entidadeDTO);
 	}
 
@@ -151,7 +152,7 @@ public class AppTest2 {
 	public void gerarAngularCliCode() {
 		new NgCli(appDTO).print();
 	}
-	
+
 	@Test
 	public void gerarTSClass() {
 
@@ -249,7 +250,7 @@ public class AppTest2 {
 		// String s = "Empreendimento empreendimento = contato.empreendimento";
 		// System.out.println(s.matches("\\w*.? \\w*.? = \\w*.?\\.\\w*.?"));
 
-	}	
+	}
 
 	private void gerarSpecification(EntidadeDTO entidadeDTO) {
 
