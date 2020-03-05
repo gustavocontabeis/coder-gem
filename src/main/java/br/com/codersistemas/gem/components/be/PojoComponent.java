@@ -1,13 +1,14 @@
 package br.com.codersistemas.gem.components.be;
 
+import br.com.codersistemas.gem.components.IComponent;
 import br.com.codersistemas.libs.utils.JPAUtil;
 
-public class PojoComponent {
-	
+public class PojoComponent implements IComponent {
+
 	String content;
-	
-	public PojoComponent(Object rom) {
-		content = gerarPojo(rom.getClass());
+
+	public PojoComponent(Class classe) {
+		content = gerarPojo(classe);
 	}
 
 	public String gerarPojo(Class classe) {
@@ -20,7 +21,8 @@ public class PojoComponent {
 		sb.append("//Ajuste os tamanhos dos campos.\n");
 		return sb.toString();
 	}
-	
+
+	@Override
 	public String print() {
 		return content;
 	}

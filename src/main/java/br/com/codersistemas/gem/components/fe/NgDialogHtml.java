@@ -6,21 +6,19 @@ import lombok.Data;
 
 @Data
 public class NgDialogHtml extends ResourceComponent {
-	
-	private String headerText, exibirDialog;
-	private Object obj;
 
-	public NgDialogHtml(Object obj, Replacememnt replacement) {
-		super(replacement);
-		this.obj = obj;
+	private String headerText, exibirDialog;
+
+	public NgDialogHtml(Class classe) {
+		super(Replacememnt.builder().addClass(classe).build());
 	}
-	
+
 	@Override
 	protected void printAntes() {
-		content = gerarCampos(obj);
+		content = gerarCampos();
 	}
 
-	private String gerarCampos(Object obj) {
+	private String gerarCampos() {
 		String content = this.content
 				.replace("#{headerText}", headerText)
 				.replace("#{exibirDialog}", exibirDialog);

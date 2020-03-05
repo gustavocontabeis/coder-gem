@@ -2,14 +2,12 @@ package br.com.codersistemas.gem.components.be;
 
 import br.com.codersistemas.gem.components.Replacememnt;
 import br.com.codersistemas.gem.components.ResourceComponent;
+import br.com.codersistemas.libs.dto.EntidadeDTO;
 
 public class RespositoryComponent extends ResourceComponent {
 
-	private Replacememnt replacement;
-
-	public RespositoryComponent(Replacememnt replacement) {
-		super(replacement);
-		this.replacement = replacement;
+	public RespositoryComponent(EntidadeDTO entidade) {
+		super(Replacememnt.builder().addClass(entidade.getClasse()).build());
 	}
 
 	@Override

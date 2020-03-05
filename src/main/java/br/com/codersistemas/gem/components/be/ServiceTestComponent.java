@@ -1,5 +1,6 @@
 package br.com.codersistemas.gem.components.be;
 
+
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
@@ -40,7 +41,7 @@ public class ServiceTestComponent extends ResourceComponent {
 		StringBuilder sb = new StringBuilder();
 		Arrays.asList(ReflectionUtils.getMethods(classe)).stream().filter(method->!method.getName().startsWith("lambda$")&& Modifier.isPublic(method.getModifiers())).forEach(method->{
 			sb.append("\t@Test\n");
-			sb.append("\tprivate void when_"+method.getName()+"_then_success(){\n\t}\n\n");
+			sb.append("\tprivate void when_"+method.getName()+"_then_success(){\n\twhen(null).thenReturn(null);}\n\n");
 		});
 		return content.replace("//[metodos]", sb.toString());
 	}

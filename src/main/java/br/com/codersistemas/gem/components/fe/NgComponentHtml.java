@@ -12,10 +12,10 @@ public class NgComponentHtml extends ResourceXMLComponent {
 	private String colunasTitulos;
 	private String colunasConteudos;
 
-	public NgComponentHtml(Object obj, Replacememnt replacement) {
-		super(replacement);
-		colunasTitulos = gerarColunasTitulos(obj);
-		colunasConteudos = gerarColunasConteudos(obj);
+	public NgComponentHtml(Class classe) {
+		super(Replacememnt.builder().addClass(classe).build());
+		colunasTitulos = gerarColunasTitulos(classe);
+		colunasConteudos = gerarColunasConteudos(classe);
 		document.select(".coder-colunas-titulos").html(colunasTitulos);
 		document.select(".coder-colunas-conteudo").html(colunasConteudos);
 		content = document.outerHtml();

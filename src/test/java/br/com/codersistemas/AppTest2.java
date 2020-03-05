@@ -16,7 +16,6 @@ import br.com.codersistemas.codergemapi.domain.Atributo;
 import br.com.codersistemas.codergemapi.domain.Entidade;
 import br.com.codersistemas.codergemapi.domain.Pessoa;
 import br.com.codersistemas.gem.components.IComponent;
-import br.com.codersistemas.gem.components.Replacememnt;
 import br.com.codersistemas.gem.components.ResourceComponent;
 import br.com.codersistemas.gem.components.TSClass;
 import br.com.codersistemas.gem.components.be.ControllerComponent;
@@ -37,33 +36,26 @@ import br.com.codersistemas.gem.components.fe.NgTabelaHtml;
 import br.com.codersistemas.libs.dto.AplicacaoDTO;
 import br.com.codersistemas.libs.dto.AtributoDTO;
 import br.com.codersistemas.libs.dto.EntidadeDTO;
-import br.com.codersistemas.libs.utils.ReflectionUtils;
 import br.com.codersistemas.libs.utils.StringUtil;
 
 public class AppTest2 {
 
 	private Class classe = null;
 	private Class[] classes;
-	private Replacememnt r;
 	private AplicacaoDTO appDTO;
 	private EntidadeDTO entidadeDTO;
 	private String json;
 	private String appName;
-	private Object obj;
 
 	@Before
 	public void antes() throws Exception {
 
-		classe = br.com.codersistemas.codergemapi.domain.Aplicacao.class;
-		//classe = br.gov.caixa.pedes.sistemas.siarr.domain.Termo.class;
+		//classe = br.com.codersistemas.codergemapi.domain.Aplicacao.class;
+		classe = br.gov.caixa.pedes.sistemas.siarr.domain.Contrato.class;
 		classes = new Class[] {Aplicacao.class, Entidade.class, Atributo.class, Pessoa.class};
 		appName = "coder-gem-ui";
 
-		r = Replacememnt.builder().addClass(classe).build();
-
 		gerarAplicacaoDTO();
-
-		obj = ReflectionUtils.newInstance(classe);
 
 	}
 
@@ -99,7 +91,7 @@ public class AppTest2 {
 
 	@Test
 	public void gerarPojo() {
-		PojoComponent component = new PojoComponent(obj);
+		IComponent component = new PojoComponent(classe);
 		System.out.println(component.print());
 	}
 
@@ -112,7 +104,7 @@ public class AppTest2 {
 
 	@Test
 	public void gerarRepository() {
-		ResourceComponent component = new RespositoryComponent(r);
+		ResourceComponent component = new RespositoryComponent(entidadeDTO);
 		System.out.println(component.print());
 	}
 
@@ -127,8 +119,8 @@ public class AppTest2 {
 
 	@Test
 	public void gerarServiceTest() {
-		IComponent x = new ServiceTestComponent(PessoaService.class);
-		System.out.println(x.print());
+		IComponent component = new ServiceTestComponent(classe);
+		System.out.println(component.print());
 	}
 
 	@Test
@@ -183,7 +175,7 @@ public class AppTest2 {
 
 	@Test
 	public void gerarFormulario() throws Exception {
-		NgComponentHtml ngHtmlCrud = new NgComponentHtml(obj, r);
+		NgComponentHtml ngHtmlCrud = new NgComponentHtml(classe);
 		System.out.println(ngHtmlCrud.print());
 	}
 
@@ -208,7 +200,7 @@ public class AppTest2 {
 
 	@Test
 	public void gerarDialog() throws Exception {
-		NgDialogHtml obj = new NgDialogHtml(this.obj, r);
+		NgDialogHtml obj = new NgDialogHtml(classe);
 		obj.setHeaderText("OK");
 		obj.setExibirDialog("exibirDialog");
 		System.out.println(obj.print());
