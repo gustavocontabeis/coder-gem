@@ -50,9 +50,14 @@ public class AppTest2 {
 	@Before
 	public void antes() throws Exception {
 
-		//classe = br.com.codersistemas.codergemapi.domain.Aplicacao.class;
-		classe = br.gov.caixa.pedes.sistemas.siarr.domain.Contrato.class;
-		classes = new Class[] {Aplicacao.class, Entidade.class, Atributo.class, Pessoa.class};
+		classes = new Class[] {
+				//br.gov.caixa.pedes.sistemas.siarr.domain.Contrato.class,
+				Aplicacao.class, 
+				Entidade.class, 
+				Atributo.class, 
+				Pessoa.class};
+		
+		classe = classes[2];
 		appName = "coder-gem-ui";
 
 		gerarAplicacaoDTO();
@@ -80,7 +85,7 @@ public class AppTest2 {
 			entidadeDTO = a;
 		}
 
-		entidadeDTO = appDTO.getEntidades().get(1);
+		entidadeDTO = appDTO.getEntidades().get(2);
 
 	}
 
@@ -169,7 +174,7 @@ public class AppTest2 {
 
 	@Test
 	public void gerarNGComponent() throws Exception {
-		NgComponent controller = new NgComponent(entidadeDTO);
+		IComponent controller = new NgComponent(entidadeDTO);
 		System.out.println(controller.print());
 	}
 

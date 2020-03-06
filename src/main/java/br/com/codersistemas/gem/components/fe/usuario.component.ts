@@ -1,7 +1,7 @@
 import { Router, ActivatedRoute } from '@angular/router';
-import { UsuarioService } from './usuario.service';
+import { UsuarioService } from '../usuario.service';
 import { Component, OnInit } from '@angular/core';
-import { Usuario } from './usuario';
+import { Usuario } from '../usuario';
 import { MessageService, ConfirmationService, SelectItem } from 'primeng/api';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
@@ -24,7 +24,7 @@ export class UsuarioComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private usuarioService: UsuarioService) { }
+    private usuarioService: UsuarioService //[construtor]) { }
 
   ngOnInit() {
     this.exibirDialog = false;
@@ -79,6 +79,7 @@ export class UsuarioComponent implements OnInit {
       this.exibirDialog = false;
       this.novoRegistro = false;
       this.messageService.add({severity: 'success', summary: 'OK', detail: 'Registro adicionado com sucesso.'});
+      this.router.navigate(['/usuario/usuario-list']);
       }, error => {
         console.log(error);
         alert(error.ok);

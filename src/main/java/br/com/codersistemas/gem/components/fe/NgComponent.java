@@ -8,11 +8,13 @@ import br.com.codersistemas.gem.components.ResourceComponent;
 import br.com.codersistemas.libs.dto.AplicacaoDTO;
 import br.com.codersistemas.libs.dto.AtributoDTO;
 import br.com.codersistemas.libs.dto.EntidadeDTO;
+import br.com.codersistemas.libs.utils.StringUtil;
 
 public class NgComponent extends ResourceComponent {
 	
-	private StringBuilder declaracoes = new StringBuilder();
-	private StringBuilder onInit = new StringBuilder();
+	private StringBuilder selectItemDeclaracoes = new StringBuilder();
+	private StringBuilder selectItemOnInit = new StringBuilder();
+	private StringBuilder construtor = new StringBuilder(", ");
 	
 	public NgComponent(EntidadeDTO entidadeDTO) {
 		super(Replacememnt.builder().addClass(entidadeDTO.getClasse()).build());
@@ -20,44 +22,32 @@ public class NgComponent extends ResourceComponent {
 		List<AtributoDTO> atributos = entidadeDTO.getAtributos();
 		for (AtributoDTO atributo : atributos) {
 			if(atributo.isEnum()) {
-				//System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-				//System.out.println(atributo.getNomeLista()+": SelectItem[] = [];");
-				declaracoes.append(atributo.getNomeLista()+": SelectItem[] = [];\n");
-				//System.out.println();
-				//System.out.println("this."+atributo.getNomeLista()+" = [");
+				selectItemDeclaracoes.append(atributo.getNomeLista()+": SelectItem[] = [];\n");
 				String[] enumaracao = atributo.getEnumaracao();
-				//System.out.println(String.format("  {label: 'Selecione', value: null},"));
-				//for (String option : enumaracao) {
-				//	System.out.println(String.format("  {label: '%s', value: '%s'},", option, option));
-				//}
-				//System.out.println("];");
-				
-				onInit.append("this."+atributo.getNomeLista()+" = [");
-				onInit.append(String.format("  {label: 'Selecione', value: null},"));
+				selectItemOnInit.append("this."+atributo.getNomeLista()+" = [");
+				selectItemOnInit.append(String.format("  {label: 'Selecione', value: null},"));
 				for (String option : enumaracao) {
-					onInit.append(String.format("  {label: '%s', value: '%s'},", option, option));
+					selectItemOnInit.append(String.format("  {label: '%s', value: '%s'},", option, option));
 				}
-				onInit.append("];");
-				
-//				System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+				selectItemOnInit.append("];");
 			} else if(atributo.isFk()) {
-//				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-//				System.out.println(atributo.getNomeLista()+": SelectItem[] = [];");
-				declaracoes.append(atributo.getNomeLista()+": SelectItem[] = [];\n");
-//				System.out.println();
-//				System.out.println("this."+atributo.getNomeLista()+" = [");
-//				System.out.println("];");
-				onInit.append("this."+atributo.getNomeLista()+" = [");
-				onInit.append("];\n");
-//				System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+				selectItemDeclaracoes.append(atributo.getNomeLista()+": SelectItem[] = [];\n");
+				selectItemOnInit.append("this."+atributo.getNomeLista()+" = [");
+				selectItemOnInit.append("];\n");
 			}
 		}
 		
+		atributos.stream().filter(i->i.isFk()).forEach(i->{
+			construtor.append("private "+i.getNome()+"Service: "+i.getNomeCapitalizado()+"Service, ");
+		});
 	}
 	
 	@Override
 	protected String printDepois(String content) {
-		return content.replace("//[declaracoes]", declaracoes.toString()).replace("//[ngOnInit]", onInit.toString());
+		return content
+				.replace("//[declaracoes]", selectItemDeclaracoes.toString())
+				.replace("//[ngOnInit]", selectItemOnInit.toString())
+				.replace("//[construtor]", StringUtil.removeEnd(construtor.toString(), ", "));
 	}
 	
 	@Override
