@@ -52,11 +52,11 @@ public class AppTest2 {
 
 		classes = new Class[] {
 				//br.gov.caixa.pedes.sistemas.siarr.domain.Contrato.class,
-				Aplicacao.class, 
-				Entidade.class, 
-				Atributo.class, 
+				Aplicacao.class,
+				Entidade.class,
+				Atributo.class,
 				Pessoa.class};
-		
+
 		classe = classes[2];
 		appName = "coder-gem-ui";
 
@@ -87,6 +87,42 @@ public class AppTest2 {
 
 		entidadeDTO = appDTO.getEntidades().get(2);
 
+	}
+
+	@Test
+	public void exibirAplicacaoDTO() throws Exception {
+		System.out.println("getPacoteBackend: "+appDTO.getPacoteBackend());
+		System.out.println("getNome: "+appDTO.getNome());
+		for (EntidadeDTO entidadeDTO : appDTO.getEntidades()) {
+			System.out.println("	getClasse: "+entidadeDTO.getClasse());
+			System.out.println("	getNome: "+entidadeDTO.getNome());
+			System.out.println("	getNomeCapitalizado: "+entidadeDTO.getNomeCapitalizado());
+			System.out.println("	getNomeClasse: "+entidadeDTO.getNomeClasse());
+			System.out.println("	getNomeInstancia: "+entidadeDTO.getNomeInstancia());
+			System.out.println("	getRestURI: "+entidadeDTO.getRestURI());
+			System.out.println("	getRotulo: "+entidadeDTO.getRotulo());
+			System.out.println("	getTabela: "+entidadeDTO.getTabela());
+			List<AtributoDTO> atributos = entidadeDTO.getAtributos();
+			for (AtributoDTO atributo : atributos) {
+				System.out.println("		getNome: "+atributo.getNome());
+				System.out.println("		getColuna: "+atributo.getColuna());
+				System.out.println("		getFkField: "+atributo.getFkField());
+				System.out.println("		getNomeCapitalizado: "+atributo.getNomeCapitalizado());
+				System.out.println("		getNomeInstancia: "+atributo.getNomeInstancia());
+				System.out.println("		getNomeLista: "+atributo.getNomeLista());
+				System.out.println("		getPrecisao: "+atributo.getPrecisao());
+				System.out.println("		getRotulo: "+atributo.getRotulo());
+				System.out.println("		getTamanho: "+atributo.getTamanho());
+				System.out.println("		getTipo: "+atributo.getTipo());
+				System.out.println("		getTipoClasse: "+atributo.getTipoClasse());
+				System.out.println("		getTipoClasseGenerica: "+atributo.getTipoClasseGenerica());
+				System.out.println("		getTipoClasseGenericaNome: "+atributo.getTipoClasseGenericaNome());
+				System.out.println("		getClasse: "+atributo.getClasse());
+				System.out.println("		getEnumaracao: "+atributo.getEnumaracao());
+				System.out.println("		-------------------------");
+			}
+			System.out.println("	-----------------------------------------");
+		}
 	}
 
 	@Test
@@ -152,11 +188,8 @@ public class AppTest2 {
 
 	@Test
 	public void gerarTSClass() {
-
 		System.out.println(StringUtil.toUnderlineCase(entidadeDTO.getNome()).replace("_", "-") + ".ts");
-
 		TSClass tsClass = new TSClass(entidadeDTO);
-
 		System.out.println(tsClass.print());
 	}
 
