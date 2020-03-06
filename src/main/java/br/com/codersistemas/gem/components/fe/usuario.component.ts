@@ -17,21 +17,22 @@ export class UsuarioComponent implements OnInit {
   exibirDialog: boolean;
   novoRegistro: boolean;
   
-  //[declaracoes]
+//[declaracoes]
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private usuarioService: UsuarioService //[construtor]) { }
+    private usuarioService: UsuarioService//[construtor]) { }
 
   ngOnInit() {
     this.exibirDialog = false;
     this.novoRegistro = false;
     this.consultar();
     this.usuario = new Usuario();
-    //[ngOnInit]
+//[ngOnInit]
+//[buscarFK]
     this.activatedRoute.params.subscribe(params => {
       const id = params.id ? Number(params.id) : null;
       console.log(id);
@@ -43,6 +44,7 @@ export class UsuarioComponent implements OnInit {
 
   }
   
+//[buscarFK2]
   buscar(id: number) {
     this.usuarioService.buscar(id).subscribe(resposta => {
       this.usuario = resposta as Usuario;
