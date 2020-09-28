@@ -1,5 +1,5 @@
-package br.com.codersistemas.gem.components.be;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.codersistemas.entity.Usuario;
 import br.com.codersistemas.repository.UsuarioRepository;
+import br.com.codersistemas.libs.utils.ReflectionUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,19 +32,23 @@ import lombok.extern.slf4j.Slf4j;
 public class UsuarioController {
 	
 	@Autowired
-	private UsuarioRepository posts;
+	private UsuarioRepository usuarioRepository;
 	
 	//declaracoes
 	
 	@GetMapping
 	public List<Usuario> listar() {
 		log.debug("listar!");
-		return posts.findAll(Sort.by(Order.asc("nome")));
+		List<Usuario> findAll = usuarioRepository.findAll(Sort.by(Order.asc("nome"))); 
+		findAll.forEach(obj -> {
+			ReflectionUtils.mapToBasicDTO(obj);
+		});
+		return findAll;
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Usuario> buscar(@PathVariable Long id) {
-		Optional<Usuario> findById = posts.findById(id);
+		Optional<Usuario> findById = usuarioRepository.findById(id);
 		if(!findById.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
@@ -53,17 +58,19 @@ public class UsuarioController {
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public Usuario adicionar(@Valid @RequestBody Usuario entity) {
-		return posts.save(entity);
+		return usuarioRepository.save(entity);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Usuario> excluir(@PathVariable Long id) {
-		Optional<Usuario> findById = posts.findById(id);
+		Optional<Usuario> findById = usuarioRepository.findById(id);
 		if(!findById.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		posts.delete(findById.get());
+		usuarioRepository.delete(findById.get());
 		return new ResponseEntity<Usuario>(HttpStatus.NO_CONTENT);
 	}
+	
+//[findByFK]
 
 }

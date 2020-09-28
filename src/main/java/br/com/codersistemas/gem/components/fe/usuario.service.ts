@@ -14,24 +14,24 @@ export class UsuarioService {
     this.apiUrl = environment.apiUrl + '/usuarios';
   }
 
-  adicionar(usuario: Usuario) {
+  adicionar(usuario: Usuario): any {
     console.log('adicionar', usuario);
     return this.httpClient.post(this.apiUrl, usuario);
   }
 
-  buscar(id: number) {
+  buscar(id: number): any {
     console.log('buscar', this.apiUrl);
     return this.httpClient.get(this.apiUrl + '/' + id);
   }
   
-  consultar() {
+  consultar(): any {
     console.log('consultar', this.apiUrl);
     return this.httpClient.get(this.apiUrl);
   }
 
-  excluir(usuario: Usuario) {
+  excluir(usuario: Usuario): any {
     console.log('excluir', usuario);
     return this.httpClient.delete(this.apiUrl + '/' + usuario.id);
   }
-
+//[metodos]
 }

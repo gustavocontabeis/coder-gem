@@ -6,17 +6,17 @@ import { MessageService, ConfirmationService, SelectItem } from 'primeng/api';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 @Component({
-  selector: 'app-usuario[sufix]',
-  templateUrl: './usuario[sufix].component.html',
-  styleUrls: ['./usuario[sufix].component.css']
+  selector: 'app-usuario-list',
+  templateUrl: './usuario-list.component.html',
+  styleUrls: ['./usuario-list.component.css']
 })
-export class Usuario[sufix-class]Component implements OnInit {
+export class UsuarioListComponent implements OnInit {
 
   usuario: Usuario = new Usuario();
   usuarios: Usuario[];
   exibirDialog: boolean;
   novoRegistro: boolean;
-  
+
 //[declaracoes]
 
   constructor(
@@ -34,7 +34,7 @@ export class Usuario[sufix-class]Component implements OnInit {
 //[buscarFK]
 //[buscarPorParametros]
   }
-  
+
 //[buscarFK2]
   buscar(id: number) {
     this.usuarioService.buscar(id).subscribe(resposta => {
@@ -108,7 +108,7 @@ export class Usuario[sufix-class]Component implements OnInit {
   aoSelecionar(event) {
     this.novoRegistro = false;
   }
-  
+
   onSubmit(usuarioForm) {
 
   }

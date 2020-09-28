@@ -1,5 +1,6 @@
 package br.com.codersistemas.gem.util;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,8 @@ public class TypeScriptUtils {
 		map.put(java.util.Map.class, "any[]");
 		map.put(java.time.LocalDate.class, "string");
 		map.put(java.time.LocalDateTime.class, "string");
+		map.put(java.math.BigDecimal.class, "number");
+		map.put(java.math.BigInteger.class, "number");
 	}
 
 	

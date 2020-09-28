@@ -101,7 +101,7 @@ public class NgTabelaHtml implements IComponent {
 		for (AtributoDTO i : atributos) {
 			if (!i.isCollection())
 				continue;
-			html += ("<button pButton icon=\"pi pi-pencil\" [routerLink]=\"['/"+ i.getNomeInstancia() +"/"+obj.getNomeInstancia()+"/', "+obj.getNomeInstancia()+".id]\" title=\"Selecionar "+i.getRotulo()+"\"></button>");
+			html += ("<button pButton icon=\"pi pi-pencil\" [routerLink]=\"['/"+ StringUtil.uncapitalize(i.getTipoClasseGenericaNome()) +"/"+obj.getNomeInstancia()+"/', "+obj.getNomeInstancia()+".id]\" title=\"Selecionar "+i.getRotulo()+"\"></button>");
 		}
 		tdActions.html(html);
 		trBody.appendChild(tdActions);

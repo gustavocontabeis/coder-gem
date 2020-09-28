@@ -6,47 +6,44 @@ import java.util.stream.Collectors;
 
 import br.com.codersistemas.gem.components.Replacememnt;
 import br.com.codersistemas.gem.components.ResourceComponent;
-import br.com.codersistemas.libs.dto.AplicacaoDTO;
 import br.com.codersistemas.libs.dto.AtributoDTO;
 import br.com.codersistemas.libs.dto.EntidadeDTO;
 import br.com.codersistemas.libs.utils.StringUtil;
 
-public class NgComponent extends ResourceComponent {
+public class NgComponentList extends ResourceComponent {
 	
-	private StringBuilder selectItemDeclaracoes = new StringBuilder();
-	private StringBuilder selectItemOnInit = new StringBuilder();
+//	private StringBuilder selectItemDeclaracoes = new StringBuilder();
+//	private StringBuilder selectItemOnInit = new StringBuilder();
 	private StringBuilder construtor = new StringBuilder(", ");
-	private StringBuilder fks = new StringBuilder();
+//	private StringBuilder fks = new StringBuilder();
 	private StringBuilder fks2 = new StringBuilder();
 	private StringBuilder buscaPorParametros = new StringBuilder();
-	private String sufix;
 	
-	public NgComponent(EntidadeDTO entidadeDTO, String sufix) {
+	public NgComponentList(EntidadeDTO entidadeDTO) {
 		super(Replacememnt.builder().addClass(entidadeDTO.getClasse()).build());
-		this.sufix = sufix;
 		List<AtributoDTO> atributos = entidadeDTO.getAtributos();
-		for (AtributoDTO atributo : atributos) {
-			if(atributo.isEnum()) {
-				selectItemDeclaracoes.append("  "+atributo.getNomeLista()+": SelectItem[] = [];\n");
-				String[] enumaracao = atributo.getEnumaracao();
-				selectItemOnInit.append("    this."+atributo.getNomeLista()+" = [");
-				selectItemOnInit.append(String.format("{label: 'Selecione', value: null},\n"));
-				for (String option : enumaracao) {
-					selectItemOnInit.append(String.format("      {label: '%s', value: '%s'},\n", option, option));
-				}
-				selectItemOnInit.append("];");
-			} else if(atributo.isFk()) {
-				selectItemDeclaracoes.append("  "+atributo.getNomeLista()+": SelectItem[] = [];\n");
-				selectItemOnInit.append("  this."+atributo.getNomeLista()+" = [");
-				selectItemOnInit.append("];\n");
-			}
-		}
+//		for (AtributoDTO atributo : atributos) {
+//			if(atributo.isEnum()) {
+//				selectItemDeclaracoes.append("  "+atributo.getNomeLista()+": SelectItem[] = [];\n");
+//				String[] enumaracao = atributo.getEnumaracao();
+//				selectItemOnInit.append("    this."+atributo.getNomeLista()+" = [");
+//				selectItemOnInit.append(String.format("{label: 'Selecione', value: null},\n"));
+//				for (String option : enumaracao) {
+//					selectItemOnInit.append(String.format("      {label: '%s', value: '%s'},\n", option, option));
+//				}
+//				selectItemOnInit.append("];");
+//			} else if(atributo.isFk()) {
+//				selectItemDeclaracoes.append("  "+atributo.getNomeLista()+": SelectItem[] = [];\n");
+//				selectItemOnInit.append("  this."+atributo.getNomeLista()+" = [");
+//				selectItemOnInit.append("];\n");
+//			}
+//		}
 		
-		montarConstrutor(atributos);
+//		montarConstrutor(atributos);
 		
-		montarFK(atributos);
-		
-		montarFK2(atributos);
+//		montarFK(atributos);
+//		
+//		montarFK2(atributos);
 		
 		montarBuscaPorParametros(entidadeDTO, atributos);
 		
@@ -54,34 +51,34 @@ public class NgComponent extends ResourceComponent {
 
 	}
 
-	private void montarConstrutor(List<AtributoDTO> atributos) {
-		atributos.stream().filter(i->i.isFk()).forEach(i->{
-			construtor.append("\n    private "+i.getNome()+"Service: "+i.getNomeCapitalizado()+"Service, ");
-		});
-	}
+//	private void montarConstrutor(List<AtributoDTO> atributos) {
+//		atributos.stream().filter(i->i.isFk() ).forEach(i->{
+//			construtor.append("\n    private "+i.getNome()+"Service: "+i.getNomeCapitalizado()+"Service, ");
+//		});
+//	}
 
-	private void montarFK(List<AtributoDTO> atributos) {
-		atributos.stream().filter(i->i.isFk()).forEach(i->{
-			fks.append("    this.buscar"+i.getNomeCapitalizado()+"();\n");
-		});
-	}
+//	private void montarFK(List<AtributoDTO> atributos) {
+//		atributos.stream().filter(i->i.isFk()).forEach(i->{
+//			fks.append("    this.buscar"+i.getNomeCapitalizado()+"();\n");
+//		});
+//	}
 
-	private void montarFK2(List<AtributoDTO> atributos) {
-		atributos.stream().filter(i->i.isFk()).forEach(i->{
-			fks2.append("  buscar"+i.getNomeCapitalizado()+"(){\n");
-			fks2.append("    this."+i.getNome()+"Service.consultar().subscribe(resposta => {\n");
-			fks2.append("      const itens = resposta as "+i.getNomeCapitalizado()+"[];\n");
-			fks2.append("      itens.forEach(element => {\n");
-			fks2.append("         this."+i.getNomeLista()+".push({label: element.nome, value: element});\n");
-			fks2.append("      });\n");
-			fks2.append("      }, error => {\n");
-			fks2.append("        console.log(error);\n");
-			fks2.append("        alert(error.ok);\n");
-			fks2.append("      }\n");
-			fks2.append("    );\n");
-			fks2.append("  }\n");
-		});
-	}
+//	private void montarFK2(List<AtributoDTO> atributos) {
+//		atributos.stream().filter(i->i.isFk()).forEach(i->{
+//			fks2.append("  buscar"+i.getNomeCapitalizado()+"(){\n");
+//			fks2.append("    this."+i.getNome()+"Service.consultar().subscribe(resposta => {\n");
+//			fks2.append("      const itens = resposta as "+i.getNomeCapitalizado()+"[];\n");
+//			fks2.append("      itens.forEach(element => {\n");
+//			fks2.append("         this."+i.getNomeLista()+".push({label: element.nome, value: element});\n");
+//			fks2.append("      });\n");
+//			fks2.append("      }, error => {\n");
+//			fks2.append("        console.log(error);\n");
+//			fks2.append("        alert(error.ok);\n");
+//			fks2.append("      }\n");
+//			fks2.append("    );\n");
+//			fks2.append("  }\n");
+//		});
+//	}
 
 	private void montarBuscaPorParametros(EntidadeDTO entidadeDTO, List<AtributoDTO> atributos) {
 		if(atributos.stream().filter(i->i.isFk()&& !i.isCollection()).collect(Collectors.counting()) > 0){
@@ -133,14 +130,12 @@ public class NgComponent extends ResourceComponent {
 	@Override
 	protected String printDepois(String content) {
 		return content
-				.replace("//[declaracoes]", selectItemDeclaracoes.toString())
-				.replace("//[ngOnInit]", selectItemOnInit.toString())
+//				.replace("//[declaracoes]", selectItemDeclaracoes.toString())
+//				.replace("//[ngOnInit]", selectItemOnInit.toString())
 				.replace("//[construtor]", StringUtil.removeEnd(construtor.toString(), ", "))
-				.replace("//[buscarFK]", fks.toString())
+//				.replace("//[buscarFK]", fks.toString())
 				.replace("//[buscarFK2]", fks2.toString())
-				.replace("//[buscarPorParametros]", buscaPorParametros.toString())
-				.replace("[sufix]", "-"+sufix)
-				.replace("[sufix-class]", StringUtil.capitalize(sufix));
+				.replace("//[buscarPorParametros]", buscaPorParametros.toString());
 	}
 	
 	@Override
@@ -157,7 +152,7 @@ public class NgComponent extends ResourceComponent {
 
 	@Override
 	public String getResourceName() {
-		return "usuario.component.ts";
+		return "usuario-list.component.ts";
 	}
 
 }

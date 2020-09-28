@@ -11,10 +11,6 @@ import org.jsoup.select.Elements;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.codersistemas.codergemapi.domain.Aplicacao;
-import br.com.codersistemas.codergemapi.domain.Atributo;
-import br.com.codersistemas.codergemapi.domain.Entidade;
-import br.com.codersistemas.codergemapi.domain.Pessoa;
 import br.com.codersistemas.gem.components.IComponent;
 import br.com.codersistemas.gem.components.ResourceComponent;
 import br.com.codersistemas.gem.components.TSClass;
@@ -25,8 +21,9 @@ import br.com.codersistemas.gem.components.be.RespositoryComponent;
 import br.com.codersistemas.gem.components.be.SQLInsertComponent;
 import br.com.codersistemas.gem.components.be.ServiceTestComponent;
 import br.com.codersistemas.gem.components.fe.NgCli;
-import br.com.codersistemas.gem.components.fe.NgComponent;
+import br.com.codersistemas.gem.components.fe.NgComponentAdd;
 import br.com.codersistemas.gem.components.fe.NgComponentHtml;
+import br.com.codersistemas.gem.components.fe.NgComponentList;
 import br.com.codersistemas.gem.components.fe.NgDialogHtml;
 import br.com.codersistemas.gem.components.fe.NgFormularioHtml;
 import br.com.codersistemas.gem.components.fe.NgHtmlFormAdd;
@@ -40,6 +37,7 @@ import br.com.codersistemas.libs.utils.StringUtil;
 
 public class AppTest2 {
 
+	int indexEntidade;
 	private Class classe = null;
 	private Class[] classes;
 	private AplicacaoDTO appDTO;
@@ -50,15 +48,56 @@ public class AppTest2 {
 	@Before
 	public void antes() throws Exception {
 
-		classes = new Class[] {
-				//br.gov.caixa.pedes.sistemas.siarr.domain.Contrato.class,
-				Aplicacao.class,
-				Entidade.class,
-				Atributo.class,
-				Pessoa.class};
+//		classes = new Class[] {
+//				Aplicacao.class,
+//				Entidade.class,
+//				Atributo.class,
+//				Pessoa.class
+//			};
+//		
+//		indexEntidade = 2;
+//
+//		classe = classes[indexEntidade];
+//		appName = "coder-gem-ui";
+		
+		//----------------------
+		
+		//Catalogo Musical
+//		classes = new Class[] {
+//				br.com.codersistemas.catalogomusical.domain.Banda.class,
+//				br.com.codersistemas.catalogomusical.domain.Album.class,
+//				br.com.codersistemas.catalogomusical.domain.Paiz.class,
+//				br.com.codersistemas.catalogomusical.domain.Artista.class,
+//				br.com.codersistemas.catalogomusical.domain.Instrumento.class,
+//				br.com.codersistemas.catalogomusical.domain.Musica.class
+//			};
+//		appName = "catalogo-musical";
+		
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+		
+//		//Blog
+//		classes = new Class[] {
+//				br.com.codersistemas.entity.Departamento.class,
+//				br.com.codersistemas.entity.Post.class,
+//				br.com.codersistemas.entity.Usuario.class,
+//			};
+//		
+//		indexEntidade = 0;
+//
+//		classe = classes[indexEntidade];
+//		appName = "coder-blog-ui-cad";
 
-		classe = classes[2];
-		appName = "coder-gem-ui";
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+		
+		//Blog
+		classes = new Class[] {
+				br.com.codersistemas.brunapereiraapi.domain.Cadastro.class
+			};
+		
+		indexEntidade = 0;
+
+		classe = classes[indexEntidade];
+		appName = "coder-blog-ui-cad";
 
 		gerarAplicacaoDTO();
 
@@ -85,7 +124,7 @@ public class AppTest2 {
 			entidadeDTO = a;
 		}
 
-		entidadeDTO = appDTO.getEntidades().get(2);
+		entidadeDTO = appDTO.getEntidades().get(indexEntidade);
 
 	}
 
@@ -206,8 +245,14 @@ public class AppTest2 {
 	}
 
 	@Test
-	public void gerarNGComponent() throws Exception {
-		IComponent controller = new NgComponent(entidadeDTO);
+	public void gerarNGComponentAdd() throws Exception {
+		IComponent controller = new NgComponentAdd(entidadeDTO);
+		System.out.println(controller.print());
+	}
+
+	@Test
+	public void gerarNGComponentList() throws Exception {
+		IComponent controller = new NgComponentList(entidadeDTO);
 		System.out.println(controller.print());
 	}
 

@@ -29,32 +29,38 @@ public class SQLInsertComponent implements IComponent {
 		sb.append(x);
 
 		x = "";
+		
 		for (AtributoDTO atributo : entidadeDTO.getAtributos()) {
 			if (atributo.isCollection())
 				continue;
+			
+			if(entidadeDTO.getAtributos().indexOf(atributo) == 0) {
+				x += "nextval('public.seq_" + entidadeDTO.getTabela() + "'),";
+				continue;
+			}
 
 			switch (atributo.getTipo()) {
 			case "BOOLEAN":
 				x += "FALSE, ";
-				break;
+				//break;
 			case "INTEGER":
 				x += "1, ";
-				break;
+				//break;
 			case "LONG":
 				x += "2, ";
-				break;
+				//break;
 			case "FLOAT":
 				x += "3.5, ";
-				break;
+				//break;
 			case "DOUBLE":
 				x += "4.5, ";
-				break;
+				//break;
 			case "DATE":
 				x += "'2000-12-31', ";
-				break;
+				//break;
 			case "STRING":
-				x += "'OK', ";
-				break;
+				x += "'TEXTO', ";
+				//break;
 			}
 		}
 

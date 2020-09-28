@@ -28,6 +28,7 @@ public class NgCli implements IComponent {
 		System.out.println("	sudo npm install @angular/animations --save");
 		System.out.println("	sudo npm install @angular/cdk --save");
 		System.out.println("	sudo npm install primeflex --save");
+		System.out.println("	sudo npm install rxjs-compat --save");
 		System.out.println("#	Adicione os css... faça conforme a documentação!");
 		System.out.println("ng build --prod");
 		System.out.println("ng serve --open");
@@ -109,6 +110,10 @@ public class NgCli implements IComponent {
 			System.out.println("  { path: '"+entidade.getNomeInstancia()+"-add/:id', component: "+entidade.getNomeCapitalizado()+"AddComponent },");
 			System.out.println("  { path: '"+entidade.getNomeInstancia()+"-filter', component: "+entidade.getNomeCapitalizado()+"FilterComponent },");
 			System.out.println("  { path: '"+entidade.getNomeInstancia()+"-list', component: "+entidade.getNomeCapitalizado()+"ListComponent },");
+			entidade.getAtributos().stream().filter(i -> i.isFk() && !i.isCollection()).forEach(i -> {
+				System.out.println("  { path: '"+i.getNome()+"/:id_"+i.getNome()+"', component: "+entidade.getNomeCapitalizado()+"ListComponent },");
+			});
+			//XXXXXXXXXXXXXXXXXXXXXXXXXXX
 		}
 		
 		System.out.println("Atualizar o menu em app.component.html");

@@ -6,12 +6,11 @@ import java.util.stream.Collectors;
 
 import br.com.codersistemas.gem.components.Replacememnt;
 import br.com.codersistemas.gem.components.ResourceComponent;
-import br.com.codersistemas.libs.dto.AplicacaoDTO;
 import br.com.codersistemas.libs.dto.AtributoDTO;
 import br.com.codersistemas.libs.dto.EntidadeDTO;
 import br.com.codersistemas.libs.utils.StringUtil;
 
-public class NgComponent extends ResourceComponent {
+public class NgComponentAdd extends ResourceComponent {
 	
 	private StringBuilder selectItemDeclaracoes = new StringBuilder();
 	private StringBuilder selectItemOnInit = new StringBuilder();
@@ -19,11 +18,9 @@ public class NgComponent extends ResourceComponent {
 	private StringBuilder fks = new StringBuilder();
 	private StringBuilder fks2 = new StringBuilder();
 	private StringBuilder buscaPorParametros = new StringBuilder();
-	private String sufix;
 	
-	public NgComponent(EntidadeDTO entidadeDTO, String sufix) {
+	public NgComponentAdd(EntidadeDTO entidadeDTO) {
 		super(Replacememnt.builder().addClass(entidadeDTO.getClasse()).build());
-		this.sufix = sufix;
 		List<AtributoDTO> atributos = entidadeDTO.getAtributos();
 		for (AtributoDTO atributo : atributos) {
 			if(atributo.isEnum()) {
@@ -138,9 +135,7 @@ public class NgComponent extends ResourceComponent {
 				.replace("//[construtor]", StringUtil.removeEnd(construtor.toString(), ", "))
 				.replace("//[buscarFK]", fks.toString())
 				.replace("//[buscarFK2]", fks2.toString())
-				.replace("//[buscarPorParametros]", buscaPorParametros.toString())
-				.replace("[sufix]", "-"+sufix)
-				.replace("[sufix-class]", StringUtil.capitalize(sufix));
+				.replace("//[buscarPorParametros]", buscaPorParametros.toString());
 	}
 	
 	@Override
@@ -157,7 +152,7 @@ public class NgComponent extends ResourceComponent {
 
 	@Override
 	public String getResourceName() {
-		return "usuario.component.ts";
+		return "usuario-add.component.ts";
 	}
 
 }

@@ -6,17 +6,17 @@ import { MessageService, ConfirmationService, SelectItem } from 'primeng/api';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 @Component({
-  selector: 'app-usuario[sufix]',
-  templateUrl: './usuario[sufix].component.html',
-  styleUrls: ['./usuario[sufix].component.css']
+  selector: 'app-usuario-add',
+  templateUrl: './usuario-add.component.html',
+  styleUrls: ['./usuario-add.component.css']
 })
-export class Usuario[sufix-class]Component implements OnInit {
+export class UsuarioAddComponent implements OnInit {
 
   usuario: Usuario = new Usuario();
   usuarios: Usuario[];
   exibirDialog: boolean;
   novoRegistro: boolean;
-  
+
 //[declaracoes]
 
   constructor(
