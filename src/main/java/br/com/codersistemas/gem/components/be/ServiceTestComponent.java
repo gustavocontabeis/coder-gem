@@ -53,10 +53,13 @@ public class ServiceTestComponent extends ResourceComponent {
 			Parameter[] parameters = method.getParameters();
 			if(parameters.length > 0) {
 				for (Parameter parameter : parameters) {
-					sb.append("\t\t"+parameter.getType().getSimpleName()+" "+parameter.getName()+" = null;\n");
-					sb.append("\t\t//when(null).thenReturn(null);\n");
-					sb.append("\t\tservice."+method.getName()+"("+parameter.getName()+");\n");
+					sb.append("\t\t//"+parameter.getType().getSimpleName()+" "+parameter.getName()+" = null;\n");
+					sb.append("\t\t//Mockito.when(null).thenReturn(null);\n");
+					sb.append("\t\t//service."+method.getName()+"("+parameter.getName()+");\n");
 				}
+			}else {
+				sb.append("\t\t//Mockito.when(null).thenReturn(null);\n");
+				sb.append("\t\t//service."+method.getName()+"();\n");
 			}
 			sb.append("\t}\n\n");
 		});
