@@ -14,7 +14,9 @@ import org.junit.Test;
 import br.com.codersistemas.gem.components.IComponent;
 import br.com.codersistemas.gem.components.ResourceComponent;
 import br.com.codersistemas.gem.components.TSClass;
+import br.com.codersistemas.gem.components.be.AdapterComponent;
 import br.com.codersistemas.gem.components.be.ControllerComponent;
+import br.com.codersistemas.gem.components.be.DtoComponent;
 import br.com.codersistemas.gem.components.be.HQLComponent;
 import br.com.codersistemas.gem.components.be.PojoComponent;
 import br.com.codersistemas.gem.components.be.RespositoryComponent;
@@ -91,7 +93,7 @@ public class AppTest2 {
 		
 		//Blog
 		classes = new Class[] {
-				br.com.codersistemas.brunapereiraapi.domain.Cadastro.class
+				br.com.codersistemas.brunapereiraapi.domain.Parametro.class
 			};
 		
 		indexEntidade = 0;
@@ -172,6 +174,25 @@ public class AppTest2 {
 	@Test
 	public void gerarPojo() {
 		IComponent component = new PojoComponent(classe);
+		System.out.println(component.print());
+	}
+
+	@Test
+	public void gerarDDLPostgres() {
+		//CREATE TABLE
+		//CREATE SEQUENCE
+		//CONSTRAINTS, FK, UNIQUE, ETC
+	}
+
+	@Test
+	public void gerarDTO() {
+		IComponent component = new DtoComponent(classe);
+		System.out.println(component.print());
+	}
+
+	@Test
+	public void gerarAdapter() {
+		IComponent component = new AdapterComponent(entidadeDTO);
 		System.out.println(component.print());
 	}
 
