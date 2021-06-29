@@ -37,6 +37,8 @@ public class GeradorPessoaFisicaTest {
 			System.out.println("Logradouro:         " + ge.gerarLogradouro(true));
 			System.out.println("Logradouro:         " + ge.gerarLogradouro(false));
 			System.out.println("Número:             " + ge.gerarNumero());
+			System.out.println("Complemento:        " + ge.gerarComplemento());
+			System.out.println("CEP:                " + ge.gerarCep());
 		}
 	}
 

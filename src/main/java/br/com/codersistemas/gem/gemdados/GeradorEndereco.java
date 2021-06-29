@@ -70,12 +70,20 @@ public class GeradorEndereco {
 			"da Cultura"
 		};
 
+	private String[] complemento = {
+			"",
+			"apartamento nr %",
+			"apto %",
+			"fundos",
+			"% andar"
+	};
+	
 	private Random random;
-
 	
 	public String gerarTipoLogradouro() {
 		return tipoDeLogradouros[random.nextInt(tipoDeLogradouros.length)];
 	}
+	
 	public String gerarLogradouro(boolean comTipoLogradouro) {
 		return ( comTipoLogradouro ? gerarTipoLogradouro() + " " : "" ) + logradouros[random.nextInt(logradouros.length)];
 	}
@@ -83,10 +91,10 @@ public class GeradorEndereco {
 		return String.valueOf(random.nextInt(3000));
 	}
 	public String gerarComplemento() {
-		return "";
+		return complemento[random.nextInt(complemento.length)].replace("%", random.nextInt(12)+"");
 	}
 	public String gerarCep() {
-		return "";
+		return "91"+String.valueOf((random.nextLong()*123456)).substring(0, 3)+"-"+String.valueOf((random.nextLong()*123456)).substring(0, 3);
 	}
 	public String gerarCidade() {
 		return "";
