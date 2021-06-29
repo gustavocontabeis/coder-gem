@@ -1,0 +1,29 @@
+
+public Class [[${Pessoa}]]Controller {
+
+  private [[${Pessoa}]] [[${pessoa}]];
+  private List<[[${Pessoa}]]> [[${pessoas}]];
+  [# th:each="item : ${items}"]
+  private [(${item})]Repository [(${item})]Repository;
+  [/]
+  public [[${Pessoa}]]Controller([# th:each="item : ${items}"] [(${item})]Repository [(${item})]Repository, [/] ){
+  [# th:each="item : ${items}"]
+    this.[(${item})]Repository=[(${item})]Repository;
+  [/]
+  }
+  
+  public [[${Pessoa}]] get[[${Pessoa}]](){
+  
+  }
+  
+  public List<[[${Pessoa}]]> get[[${Pessoas}]](){
+  
+  }
+
+  [# th:each="item : ${items}"]
+  public List<[(${item})]> findBy[(${item})](){
+  	return xxx;
+  }
+  
+  [/]
+}

@@ -1,5 +1,6 @@
 package br.com.codersistemas;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -10,6 +11,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.junit.Before;
 import org.junit.Test;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.FileTemplateResolver;
+import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 import br.com.codersistemas.gem.components.IComponent;
 import br.com.codersistemas.gem.components.ResourceComponent;
@@ -35,9 +41,10 @@ import br.com.codersistemas.gem.components.fe.NgTabelaHtml;
 import br.com.codersistemas.libs.dto.AplicacaoDTO;
 import br.com.codersistemas.libs.dto.AtributoDTO;
 import br.com.codersistemas.libs.dto.EntidadeDTO;
+import br.com.codersistemas.libs.utils.FileUtil;
 import br.com.codersistemas.libs.utils.StringUtil;
 
-public class AppTest2 {
+public class CoderGem {
 
 	int indexEntidade;
 	private Class classe = null;
@@ -107,25 +114,11 @@ public class AppTest2 {
 
 	public void gerarAplicacaoDTO() throws Exception {
 
-//		appDTO = gerarAplicacaoDTO("coder-gem-ui", AplicacaoDTO.class, EntidadeDTO.class, AtributoDTO.class);
-//
-//		List<EntidadeDTO> entidades = appDTO.getEntidades();
-//		for (EntidadeDTO entidade : entidades) {
-//			entidade.setAplicacao(null);
-//			List<AtributoDTO> atributos = entidade.getAtributos();
-//			for (AtributoDTO atributo : atributos) {
-//				atributo.setEntidade(null);
-//			}
-//		}
-
 		//Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		//json = gson.toJson(appDTO);
 
 		appDTO = new AplicacaoDTO(appName, classes);
-		for (EntidadeDTO a : appDTO.getEntidades()) {
-			entidadeDTO = a;
-		}
-
+		
 		entidadeDTO = appDTO.getEntidades().get(indexEntidade);
 
 	}
@@ -373,5 +366,32 @@ public class AppTest2 {
 		}
 
 	}
+
+	@Test
+	public void asJavaClass() throws IOException {
+
+		String fileContent = FileUtil.readResource(this, "meutemplate.txt");
+
+		StringTemplateResolver templateResolver = new StringTemplateResolver();
+		templateResolver.setOrder(1);
+		templateResolver.setTemplateMode(TemplateMode.TEXT);
+		templateResolver.setCacheable(false);
+		TemplateEngine templateEngine = new TemplateEngine();
+		templateEngine.setTemplateResolver(templateResolver);
+
+		Context context = new Context();
+
+		context.setVariable("Pessoa", "Cliente");
+		context.setVariable("pessoa", "cliente");
+		context.setVariable("Pessoas", "Clientes");
+		context.setVariable("pessoas", "clientes");
+		
+		context.setVariable("items", new String[] { "Telefone", "Endereco" });
+		
+		String process = templateEngine.process(fileContent, context);
+		System.out.println(process);
+		
+	}
+
 
 }

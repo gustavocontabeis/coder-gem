@@ -1,0 +1,8 @@
+Instalação:
+
+Na aplicação a ser criada adicione o coder-gem como dependencia:
+
+
+Como gerar código para aplicações WAR?
+	adicione o coder-gem como uma dependencia da aplicação war
+	Adicione o AppTest nos testes da aplicação war
