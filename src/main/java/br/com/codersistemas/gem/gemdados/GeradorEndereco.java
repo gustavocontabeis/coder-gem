@@ -21,6 +21,15 @@ public class GeradorEndereco {
 			"Travessa"
 	};
 	
+	private String[] cidades = {
+			"Porto Alegre",
+			"Guaíba",
+			"Cachoeirinha",
+			"Lajeado",
+			"Bom Retiro do Sul",
+			"Relvado",
+	};
+	
 	private String[] logradouros = {
 			"Antônio Carneiro Pinto", 
 			"Fernando Osório", 
@@ -87,22 +96,28 @@ public class GeradorEndereco {
 	public String gerarLogradouro(boolean comTipoLogradouro) {
 		return ( comTipoLogradouro ? gerarTipoLogradouro() + " " : "" ) + logradouros[random.nextInt(logradouros.length)];
 	}
+	
 	public String gerarNumero() {
 		return String.valueOf(random.nextInt(3000));
 	}
+	
 	public String gerarComplemento() {
 		return complemento[random.nextInt(complemento.length)].replace("%", random.nextInt(12)+"");
 	}
+	
 	public String gerarCep() {
 		return "91"+String.valueOf((random.nextLong()*123456)).substring(0, 3)+"-"+String.valueOf((random.nextLong()*123456)).substring(0, 3);
 	}
+	
 	public String gerarCidade() {
-		return "";
+		return cidades[random.nextInt(cidades.length)];
 	}
+	
 	public String gerarEstado() {
-		return "";
+		return "Rio Grande do Sul";
 	}
+	
 	public String gerarUF() {
-		return "";
+		return "RS";
 	}
 }
