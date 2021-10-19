@@ -12,7 +12,7 @@ public class TSClass extends Component {
 		super(null);
 		sb.append("export class " + entidade.getNomeCapitalizado() + " {\n");
 		for (AtributoDTO atributo : entidade.getAtributos()) {
-			sb.append("\t"+atributo.getNome() + ": " + TypeScriptUtils.toTypeScript(atributo.getClasse()) + ";\n");
+			sb.append("\t"+atributo.getNome() + "!: " + TypeScriptUtils.toTypeScript(atributo.getClasse()) + ";\n");
 		}
 		sb.append("}\n");
 	}

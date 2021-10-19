@@ -86,11 +86,11 @@ public class NgCli implements IComponent {
 		for(EntidadeDTO entidade : aplicacaoDTO.getEntidades()) {
 			System.out.println("ng generate module "+entidade.getNome()+" --routing");
 			System.out.println("#Verifique ou adicione caso necessário o PessoaModule no imports do AppModule");
-			System.out.println("ng generate component "+entidade.getNomeInstancia()+"/"+entidade.getNomeInstancia()+"-add --module="+entidade.getNomeInstancia()+" --skipTests=true");
-			System.out.println("ng generate component "+entidade.getNomeInstancia()+"/"+entidade.getNomeInstancia()+"-filter --module="+entidade.getNomeInstancia()+" --skipTests=true");
-			System.out.println("ng generate component "+entidade.getNomeInstancia()+"/"+entidade.getNomeInstancia()+"-list --module="+entidade.getNomeInstancia()+" --skipTests=true");
-			System.out.println("ng generate service "+entidade.getNomeInstancia()+"/"+entidade.getNomeInstancia()+" --skipTests=true");
-			System.out.println("ng generate class "+entidade.getNomeInstancia()+"/"+entidade.getNomeInstancia()+" --skipTests=true");
+			System.out.println("ng generate component "+entidade.getNomeHyphenCase()+"/"+entidade.getNomeHyphenCase()+"-add --module="+entidade.getNomeHyphenCase()+" --skipTests=true");
+			System.out.println("ng generate component "+entidade.getNomeHyphenCase()+"/"+entidade.getNomeHyphenCase()+"-filter --module="+entidade.getNomeHyphenCase()+" --skipTests=true");
+			System.out.println("ng generate component "+entidade.getNomeHyphenCase()+"/"+entidade.getNomeHyphenCase()+"-list --module="+entidade.getNomeHyphenCase()+" --skipTests=true");
+			System.out.println("ng generate service "+entidade.getNomeHyphenCase()+"/"+entidade.getNomeHyphenCase()+" --skipTests=true");
+			System.out.println("ng generate class "+entidade.getNomeHyphenCase()+"/"+entidade.getNomeHyphenCase()+" --skipTests=true");
 			System.out.println("#Verifique ou adicione caso necessário o AddComponent, FilterComponent e ListComponent no declarations do "+entidade.getNomeCapitalizado()+"Module");
 		}
 		System.out.println("ng build --prod");
@@ -99,37 +99,38 @@ public class NgCli implements IComponent {
 		System.out.println("const routes: Routes = [");
 		System.out.println("  { path: 'home', component: HomeComponent },");
 		for(EntidadeDTO entidade : aplicacaoDTO.getEntidades()) {
-			System.out.println("  { path: '"+entidade.getNomeInstancia()+"', loadChildren: './"+entidade.getNomeInstancia()+"/"+entidade.getNomeInstancia()+".module#"+entidade.getNomeCapitalizado()+"Module'},");
+			//System.out.println("  { path: '"+entidade.getNomeInstancia()+"', loadChildren: './"+entidade.getNomeInstancia()+"/"+entidade.getNomeInstancia()+".module#"+entidade.getNomeCapitalizado()+"Module'},");
+			System.out.println("  { path: '"+entidade.getNomeHyphenCase()+"', loadChildren: () => import('./"+entidade.getNomeHyphenCase()+"/"+entidade.getNomeHyphenCase()+".module').then(m => m."+entidade.getNome()+"Module)},");
 		}
 		System.out.println("  { path: '', redirectTo: 'home', pathMatch: 'full'},");
 		System.out.println("];");
 		
 		for(EntidadeDTO entidade : aplicacaoDTO.getEntidades()) {
 			System.out.println("Em "+entidade.getNomeInstancia()+"-routing.module.ts Atualize as rotas");
-			System.out.println("  { path: '"+entidade.getNomeInstancia()+"-add', component: "+entidade.getNomeCapitalizado()+"AddComponent },");
-			System.out.println("  { path: '"+entidade.getNomeInstancia()+"-add/:id', component: "+entidade.getNomeCapitalizado()+"AddComponent },");
-			System.out.println("  { path: '"+entidade.getNomeInstancia()+"-filter', component: "+entidade.getNomeCapitalizado()+"FilterComponent },");
-			System.out.println("  { path: '"+entidade.getNomeInstancia()+"-list', component: "+entidade.getNomeCapitalizado()+"ListComponent },");
+			System.out.println("  { path: '"+entidade.getNomeHyphenCase()+"-add', component: "+entidade.getNomeCapitalizado()+"AddComponent },");
+			System.out.println("  { path: '"+entidade.getNomeHyphenCase()+"-add/:id', component: "+entidade.getNomeCapitalizado()+"AddComponent },");
+			System.out.println("  { path: '"+entidade.getNomeHyphenCase()+"-filter', component: "+entidade.getNomeCapitalizado()+"FilterComponent },");
+			System.out.println("  { path: '"+entidade.getNomeHyphenCase()+"-list', component: "+entidade.getNomeCapitalizado()+"ListComponent },");
 			entidade.getAtributos().stream().filter(i -> i.isFk() && !i.isCollection()).forEach(i -> {
 				System.out.println("  { path: '"+i.getNome()+"/:id_"+i.getNome()+"', component: "+entidade.getNomeCapitalizado()+"ListComponent },");
 			});
-			//XXXXXXXXXXXXXXXXXXXXXXXXXXX
+			System.out.println("  { path: ':id', component: "+entidade.getNomeCapitalizado()+"ListComponent },");
 		}
 		
 		System.out.println("Atualizar o menu em app.component.html");
 		System.out.println("		<nav>");
 		System.out.println("			<a routerLink=\"home\">Home</a> |");
 		for(EntidadeDTO entidade : aplicacaoDTO.getEntidades()) {
-			System.out.println("			<a routerLink=\""+entidade.getNomeInstancia()+"/"+entidade.getNomeInstancia()+"-add\">"+entidade.getNomeInstancia()+" add</a> |");
-			System.out.println("			<a routerLink=\""+entidade.getNomeInstancia()+"/"+entidade.getNomeInstancia()+"-filter\">"+entidade.getNomeInstancia()+" filter</a> |");
-			System.out.println("			<a routerLink=\""+entidade.getNomeInstancia()+"/"+entidade.getNomeInstancia()+"-list\">"+entidade.getNomeInstancia()+" list</a> |");
+			System.out.println("			<a routerLink=\""+entidade.getNomeHyphenCase()+"/"+entidade.getNomeHyphenCase()+"-add\">"+entidade.getNomeInstancia()+" add</a> |");
+			System.out.println("			<a routerLink=\""+entidade.getNomeHyphenCase()+"/"+entidade.getNomeHyphenCase()+"-filter\">"+entidade.getNomeInstancia()+" filter</a> |");
+			System.out.println("			<a routerLink=\""+entidade.getNomeHyphenCase()+"/"+entidade.getNomeHyphenCase()+"-list\">"+entidade.getNomeInstancia()+" list</a> |");
 		}
 		System.out.println("		</nav>	");
 		System.out.println("Em app-routing.module.ts ...");
 		System.out.println("			  {path: '', redirectTo: 'home', pathMatch: 'full'},");
 		System.out.println("			  {path: 'home', component: HomeComponent},");
 		for(EntidadeDTO entidade : aplicacaoDTO.getEntidades()) {
-			System.out.println("			  {path: '"+entidade.getNomeInstancia()+"', loadChildren: './"+entidade.getNomeInstancia()+"/"+entidade.getNomeInstancia()+".module#"+entidade.getNome()+"Module'}");
+			System.out.println("			  {path: '"+entidade.getNomeInstancia()+"', loadChildren: './"+entidade.getNomeHyphenCase()+"/"+entidade.getNomeHyphenCase()+".module#"+entidade.getNome()+"Module'}");
 		}
 		System.out.println("Criando a service:");
 		System.out.println("ng generate service pessoa/pessoa --skipTests=true");

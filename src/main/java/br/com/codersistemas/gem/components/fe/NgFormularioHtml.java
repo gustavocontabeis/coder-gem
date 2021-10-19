@@ -36,7 +36,7 @@ public class NgFormularioHtml extends ResourceComponent {
 		divForm.attr("(ngSubmit)", "onSubmit("+formName+")");
 		
 		Element divFluid = new Element("div");
-		divFluid.addClass("ui-g ui-fluid");
+		divFluid.addClass("p-fluid");
 		
 		divForm.appendChild(divFluid);
 		
@@ -51,26 +51,16 @@ public class NgFormularioHtml extends ResourceComponent {
 			if(atributo.isCollection())
 				continue;
 			
-			Element divContainer = divFluid.appendElement("div");
-			divContainer.addClass("ui-g-12");
+			Element divField = divFluid.appendElement("div");
+			divField.addClass("p-field");
 			    
-            Element divLabel = divContainer.appendElement("div");
-            divLabel.addClass("ui-g-4 label");
-            
-			Element label = divLabel.appendElement("label");
+			Element label = divField.appendElement("label");
 			label.attr("id", "label-"+atributo.getNome());
 			label.attr("for", atributo.getNome());
 			label.html(atributo.getRotulo());
 			
-            Element divInput = divContainer.appendElement("div");
-            divInput.addClass("ui-g-8 input");
-            
-            
-            //TODO incluir mask
-            // <p-inputMask id="altura" [(ngModel)]="pessoa.altura" mask="99-9999"></p-inputMask>
-            
             if(atributo.isFk()) {
-            	Element input = divInput.appendElement("p-dropdown");
+            	Element input = divField.appendElement("p-dropdown");
             	input.attr("id", atributo.getNome());
             	input.attr("name", atributo.getNome());
             	input.attr("#"+atributo.getNome(), "ngModel");
@@ -78,7 +68,7 @@ public class NgFormularioHtml extends ResourceComponent {
             	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
                	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
             } else if(atributo.isEnum()) {
-            	Element input = divInput.appendElement("p-dropdown");
+            	Element input = divField.appendElement("p-dropdown");
             	input.attr("id", atributo.getNome());
             	input.attr("name", atributo.getNome());
             	input.attr("#"+atributo.getNome(), "ngModel");
@@ -86,7 +76,7 @@ public class NgFormularioHtml extends ResourceComponent {
             	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
                	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
             } else if("DATE".equals(atributo.getTipo())) {
-            	Element input = divInput.appendElement("p-calendar");
+            	Element input = divField.appendElement("p-calendar");
             	input.attr("id", atributo.getNome());
             	input.attr("name", atributo.getNome());
             	input.attr("#"+atributo.getNome(), "ngModel");
@@ -95,11 +85,11 @@ public class NgFormularioHtml extends ResourceComponent {
                	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
             } else if("INTEGER".equals(atributo.getTipo())
             		|| "LONG".equals(atributo.getTipo())) {
-            	Element input = divInput.appendElement("input");
+            	Element input = divField.appendElement("input");
             	input.attr("id", atributo.getNome());
             	input.attr("name", atributo.getNome());
             	input.attr("#"+atributo.getNome(), "ngModel");
-            	input.attr("pInputText");
+            	input.attr("pInputText", "ok");
             	input.attr("pKeyFilter", "int");
             	input.attr("placeholder", atributo.getRotulo());
             	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
@@ -107,7 +97,7 @@ public class NgFormularioHtml extends ResourceComponent {
             	input.attr("pattern", "^\\d+$");
             } else if("FLOAT".equals(atributo.getTipo())
             		|| "DOUBLE".equals(atributo.getTipo())) {
-            	Element input = divInput.appendElement("input");
+            	Element input = divField.appendElement("input");
             	input.attr("id", atributo.getNome());
             	input.attr("name", atributo.getNome());
             	input.attr("#"+atributo.getNome(), "ngModel");
@@ -118,7 +108,7 @@ public class NgFormularioHtml extends ResourceComponent {
             	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
             	input.attr("pattern", "^[+-]?\\d+(\\,\\d+)?$");
             } else if("BOOLEAN".equals(atributo.getTipo())) {
-            	Element input = divInput.appendElement("input");
+            	Element input = divField.appendElement("input");
             	input.attr("id", atributo.getNome());
             	input.attr("name", atributo.getNome());
             	input.attr("#"+atributo.getNome(), "ngModel");
@@ -126,7 +116,7 @@ public class NgFormularioHtml extends ResourceComponent {
             	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
                	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
             } else {
-            	Element input = divInput.appendElement("input");
+            	Element input = divField.appendElement("input");
             	input.attr("id", atributo.getNome());
             	input.attr("name", atributo.getNome());
             	input.attr("#"+atributo.getNome(), "ngModel");
@@ -146,6 +136,7 @@ public class NgFormularioHtml extends ResourceComponent {
 		buttonSalvar.attr("icon", "pi pi-check");
 		buttonSalvar.attr("(click)", "salvar()");
 		buttonSalvar.attr("label", "Salvar");
+		buttonSalvar.attr("style", "margin-right: 2px;");
 		buttonSalvar.attr("[disabled]", "!"+formName+".valid");
 		
 		divControls.appendChild(buttonSalvar);
@@ -156,11 +147,37 @@ public class NgFormularioHtml extends ResourceComponent {
 		buttonExcluir.attr("(click)", "confirmarExcluir()");
 		buttonExcluir.attr("label", "Excluir");
 		buttonExcluir.addClass("ui-button-secondary");
+		buttonExcluir.attr("style", "margin-right: 2px;");
 		buttonExcluir.attr("*ngIf", entidade.getNomeInstancia()+".id");
 		
 		divControls.appendChild(buttonExcluir);
 		
 		elements.add(divControls);
+		
+		Element confirmDialog = new Element("p-confirmDialog");
+		elements.add(confirmDialog);
+		confirmDialog.attr("#confirmacaoDialog", "ok");
+		confirmDialog.attr("header", "Confirmação");
+		confirmDialog.attr("icon", "pi pi-exclamation-triangle");
+		
+		Element pFooter = new Element("p-footer");
+		confirmDialog.appendChild(pFooter);
+		
+		Element buttonNao = new Element("button");
+		buttonNao.attr("type", "button");
+		buttonNao.attr("pButton", "ok");
+		buttonNao.attr("icon", "pi pi-times");
+		buttonNao.attr("label", "Não");
+		buttonNao.attr("(click)", "confirmacaoDialog.reject()");
+		pFooter.appendChild(buttonNao);
+		
+		Element buttonSim = new Element("button");
+		buttonSim.attr("type", "button");
+		buttonSim.attr("pButton", "ok");
+		buttonSim.attr("icon", "pi pi-check");
+		buttonSim.attr("label", "Sim");
+		buttonSim.attr("(click)", "confirmacaoDialog.accept()");
+		pFooter.appendChild(buttonSim);
 		
 		System.out.println(elements.outerHtml().replace("=\"ok\"", ""));
 	}

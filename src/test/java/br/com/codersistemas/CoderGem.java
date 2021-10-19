@@ -1,10 +1,19 @@
 package br.com.codersistemas;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
+import javax.persistence.Entity;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,8 +34,9 @@ import br.com.codersistemas.gem.components.be.ControllerComponent;
 import br.com.codersistemas.gem.components.be.DtoComponent;
 import br.com.codersistemas.gem.components.be.HQLComponent;
 import br.com.codersistemas.gem.components.be.PojoComponent;
-import br.com.codersistemas.gem.components.be.RespositoryComponent;
+import br.com.codersistemas.gem.components.be.RepositoryComponent;
 import br.com.codersistemas.gem.components.be.SQLInsertComponent;
+import br.com.codersistemas.gem.components.be.ServiceComponent;
 import br.com.codersistemas.gem.components.be.ServiceTestComponent;
 import br.com.codersistemas.gem.components.fe.NgCli;
 import br.com.codersistemas.gem.components.fe.NgComponentAdd;
@@ -42,8 +52,11 @@ import br.com.codersistemas.libs.dto.AplicacaoDTO;
 import br.com.codersistemas.libs.dto.AtributoDTO;
 import br.com.codersistemas.libs.dto.EntidadeDTO;
 import br.com.codersistemas.libs.utils.FileUtil;
+import br.com.codersistemas.libs.utils.ReflectionUtils;
 import br.com.codersistemas.libs.utils.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class CoderGem {
 
 	int indexEntidade;
@@ -57,53 +70,24 @@ public class CoderGem {
 	@Before
 	public void antes() throws Exception {
 
-//		classes = new Class[] {
-//				Aplicacao.class,
-//				Entidade.class,
-//				Atributo.class,
-//				Pessoa.class
-//			};
-//		
-//		indexEntidade = 2;
-//
-//		classe = classes[indexEntidade];
-//		appName = "coder-gem-ui";
-		
-		//----------------------
-		
-		//Catalogo Musical
-//		classes = new Class[] {
-//				br.com.codersistemas.catalogomusical.domain.Banda.class,
-//				br.com.codersistemas.catalogomusical.domain.Album.class,
-//				br.com.codersistemas.catalogomusical.domain.Paiz.class,
-//				br.com.codersistemas.catalogomusical.domain.Artista.class,
-//				br.com.codersistemas.catalogomusical.domain.Instrumento.class,
-//				br.com.codersistemas.catalogomusical.domain.Musica.class
-//			};
-//		appName = "catalogo-musical";
-		
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-		
-//		//Blog
-//		classes = new Class[] {
-//				br.com.codersistemas.entity.Departamento.class,
-//				br.com.codersistemas.entity.Post.class,
-//				br.com.codersistemas.entity.Usuario.class,
-//			};
-//		
-//		indexEntidade = 0;
-//
-//		classe = classes[indexEntidade];
-//		appName = "coder-blog-ui-cad";
+		// condominio-adm
+		classes = new Class[] { 
+				br.com.codersistemas.condominiosadm.domain.Condominio.class, // 0
+				br.com.codersistemas.condominiosadm.domain.Pessoa.class, // 1
+				br.com.codersistemas.condominiosadm.domain.Sindico.class, // 2
+				br.com.codersistemas.condominiosadm.domain.Bloco.class, // 3
+				br.com.codersistemas.condominiosadm.domain.Apartamento.class, // 4
+				br.com.codersistemas.condominiosadm.domain.Morador.class, // 5
+				br.com.codersistemas.condominiosadm.domain.Faturamento.class, // 6
+				br.com.codersistemas.condominiosadm.domain.Boleto.class, // 7
+				br.com.codersistemas.condominiosadm.domain.CentroDeCusto.class, // 8
+				br.com.codersistemas.condominiosadm.domain.Caixa.class, // 9
+				br.com.codersistemas.condominiosadm.domain.Banco.class, // 10
+				br.com.codersistemas.condominiosadm.domain.BancoLancamento.class, // 11
+				br.com.codersistemas.condominiosadm.domain.Garagem.class,// 12
+		};
 
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-		
-		//Blog
-		classes = new Class[] {
-				br.com.codersistemas.brunapereiraapi.domain.Parametro.class
-			};
-		
-		indexEntidade = 0;
+		indexEntidade = 3;
 
 		classe = classes[indexEntidade];
 		appName = "coder-blog-ui-cad";
@@ -112,47 +96,125 @@ public class CoderGem {
 
 	}
 
+	@Test
+	public void orderClasses() throws Exception {
+
+		List<Class> entidadesOrder = new ArrayList<>();
+
+		List<EntidadeDTO> entidades = appDTO.getEntidades();
+		do {
+
+			Iterator<EntidadeDTO> iterator = entidades.iterator();
+			while (iterator.hasNext()) {
+				EntidadeDTO entidadeDTO1 = (EntidadeDTO) iterator.next();
+
+				log.info("{}", entidadeDTO1.getClasse());
+				boolean test = false;
+				boolean containsFK = false;
+
+				Class cc = null;
+				for (AtributoDTO atributo : entidadeDTO1.getAtributos()) {
+					cc = atributo.getClasse();
+					log.info("   -{} {}", atributo.getNome(), cc);
+
+					Annotation annotationEntity = atributo.getClasse().getAnnotation(Entity.class);
+					if (annotationEntity != null && !entidadesOrder.contains(cc)) {
+						log.info("    FK1-{} {}", annotationEntity != null, !entidadesOrder.contains(cc));
+						containsFK = true;
+						break;
+					}
+
+					if (atributo.isCollection()) {
+
+						log.info("    +{} {} {}", atributo.getTipoClasse(), atributo.getTipoClasseGenerica(), atributo.getTipoClasseGenericaNome());
+
+						cc = Class.forName(atributo.getTipoClasseGenerica());
+						annotationEntity = cc.getAnnotation(Entity.class);
+
+						if (annotationEntity != null && !entidadesOrder.contains(cc)) {
+							log.info("    FK2-{} {}", annotationEntity != null, !entidadesOrder.contains(cc));
+							containsFK = true;
+							break;
+						}
+
+					}
+
+					log.info("    > FK? {}", containsFK ? "Sim" : "Nao");
+
+				}
+
+				if (!containsFK) {
+					log.info("    > adicionando: {}", entidadeDTO1.getClasse());
+					entidadesOrder.add(entidadeDTO1.getClasse());
+					// entidades.remove(entidadeDTO1);
+					log.info("    > removendo antes: {}", entidades.size());
+					iterator.remove();
+					log.info("    > removendo depois: {}", entidades.size());
+				} else {
+					log.info("    > Não adicionado.");
+				}
+
+			}
+		} while (!entidades.isEmpty());
+
+		log.info("---------------------------");
+		for (Class c : entidadesOrder) {
+			log.info("{}", c);
+		}
+	}
+
+	@Test
+	public void xxx() throws Exception {
+		System.out.println("-------------------------------------------------------------------");
+		gerarPojo();
+		System.out.println("-------------------------------------------------------------------");
+		gerarRepository();
+		System.out.println("-------------------------------------------------------------------");
+		gerarRestController();
+		System.out.println("-------------------------------------------------------------------");
+	}
+
 	public void gerarAplicacaoDTO() throws Exception {
 
-		//Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		//json = gson.toJson(appDTO);
+		// Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		// json = gson.toJson(appDTO);
 
 		appDTO = new AplicacaoDTO(appName, classes);
-		
+
 		entidadeDTO = appDTO.getEntidades().get(indexEntidade);
 
 	}
 
 	@Test
 	public void exibirAplicacaoDTO() throws Exception {
-		System.out.println("getPacoteBackend: "+appDTO.getPacoteBackend());
-		System.out.println("getNome: "+appDTO.getNome());
+		System.out.println("getPacoteBackend: " + appDTO.getPacoteBackend());
+		System.out.println("getNome: " + appDTO.getNome());
 		for (EntidadeDTO entidadeDTO : appDTO.getEntidades()) {
-			System.out.println("	getClasse: "+entidadeDTO.getClasse());
-			System.out.println("	getNome: "+entidadeDTO.getNome());
-			System.out.println("	getNomeCapitalizado: "+entidadeDTO.getNomeCapitalizado());
-			System.out.println("	getNomeClasse: "+entidadeDTO.getNomeClasse());
-			System.out.println("	getNomeInstancia: "+entidadeDTO.getNomeInstancia());
-			System.out.println("	getRestURI: "+entidadeDTO.getRestURI());
-			System.out.println("	getRotulo: "+entidadeDTO.getRotulo());
-			System.out.println("	getTabela: "+entidadeDTO.getTabela());
+			System.out.println("	getClasse: " + entidadeDTO.getClasse());
+			System.out.println("	getNome: " + entidadeDTO.getNome());
+			System.out.println("	getNomeCapitalizado: " + entidadeDTO.getNomeCapitalizado());
+			System.out.println("	getNomeClasse: " + entidadeDTO.getNomeClasse());
+			System.out.println("	getNomeInstancia: " + entidadeDTO.getNomeInstancia());
+			System.out.println("	getRestURI: " + entidadeDTO.getRestURI());
+			System.out.println("	getRotulo: " + entidadeDTO.getRotulo());
+			System.out.println("	getTabela: " + entidadeDTO.getTabela());
 			List<AtributoDTO> atributos = entidadeDTO.getAtributos();
 			for (AtributoDTO atributo : atributos) {
-				System.out.println("		getNome: "+atributo.getNome());
-				System.out.println("		getColuna: "+atributo.getColuna());
-				System.out.println("		getFkField: "+atributo.getFkField());
-				System.out.println("		getNomeCapitalizado: "+atributo.getNomeCapitalizado());
-				System.out.println("		getNomeInstancia: "+atributo.getNomeInstancia());
-				System.out.println("		getNomeLista: "+atributo.getNomeLista());
-				System.out.println("		getPrecisao: "+atributo.getPrecisao());
-				System.out.println("		getRotulo: "+atributo.getRotulo());
-				System.out.println("		getTamanho: "+atributo.getTamanho());
-				System.out.println("		getTipo: "+atributo.getTipo());
-				System.out.println("		getTipoClasse: "+atributo.getTipoClasse());
-				System.out.println("		getTipoClasseGenerica: "+atributo.getTipoClasseGenerica());
-				System.out.println("		getTipoClasseGenericaNome: "+atributo.getTipoClasseGenericaNome());
-				System.out.println("		getClasse: "+atributo.getClasse());
-				System.out.println("		getEnumaracao: "+atributo.getEnumaracao());
+				System.out.println("		getNome: " + atributo.getNome());
+				System.out.println("		getColuna: " + atributo.getColuna());
+				System.out.println("		getFkField: " + atributo.getFkField());
+				System.out.println("		getNomeCapitalizado: " + atributo.getNomeCapitalizado());
+				System.out.println("		getNomeInstancia: " + atributo.getNomeInstancia());
+				System.out.println("		getNomeLista: " + atributo.getNomeLista());
+				System.out.println("		getPrecisao: " + atributo.getPrecisao());
+				System.out.println("		getRotulo: " + atributo.getRotulo());
+				System.out.println("		getTamanho: " + atributo.getTamanho());
+				System.out.println("		getTipo: " + atributo.getTipo());
+				System.out.println("		getTipoClasse: " + atributo.getTipoClasse());
+				System.out.println("		getTipoClasseGenerica: " + atributo.getTipoClasseGenerica());
+				System.out.println("		getTipoClasseGenericaNome: " + atributo.getTipoClasseGenericaNome());
+				System.out.println("		getClasse: " + atributo.getClasse());
+				System.out.println("		getEnumaracao: " + atributo.getEnumaracao());
 				System.out.println("		-------------------------");
 			}
 			System.out.println("	-----------------------------------------");
@@ -166,15 +228,30 @@ public class CoderGem {
 
 	@Test
 	public void gerarPojo() {
-		IComponent component = new PojoComponent(classe);
-		System.out.println(component.print());
+
+		try {
+
+			indexEntidade = 1;
+			entidadeDTO = appDTO.getEntidades().get(indexEntidade);
+			classe = entidadeDTO.getClasse();
+
+			IComponent component = new PojoComponent(classe);
+			System.out.println(component.print());
+			
+//			File file = new File("/home/gustavo/dev/workspace-coder/condominios-adm-api/src/main/java/br/com/codersistemas/condominiosadm/domain/"+classe.getSimpleName()+"2.java");
+//			file.createNewFile();
+//			FileUtil.write(file, component.print());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void gerarDDLPostgres() {
-		//CREATE TABLE
-		//CREATE SEQUENCE
-		//CONSTRAINTS, FK, UNIQUE, ETC
+		// CREATE TABLE
+		// CREATE SEQUENCE
+		// CONSTRAINTS, FK, UNIQUE, ETC
 	}
 
 	@Test
@@ -193,12 +270,11 @@ public class CoderGem {
 	public void gerarSQLInserts() {
 		String print = new SQLInsertComponent(entidadeDTO).print();
 		System.out.println(print);
-
 	}
 
 	@Test
 	public void gerarRepository() {
-		ResourceComponent component = new RespositoryComponent(entidadeDTO);
+		ResourceComponent component = new RepositoryComponent(entidadeDTO);
 		System.out.println(component.print());
 	}
 
@@ -209,6 +285,12 @@ public class CoderGem {
 
 	@Test
 	public void gerarService() {
+		
+		indexEntidade = 7;
+		entidadeDTO = appDTO.getEntidades().get(indexEntidade);
+
+		ResourceComponent component = new ServiceComponent(entidadeDTO);
+		System.out.println(component.print());
 	}
 
 	@Test
@@ -240,10 +322,30 @@ public class CoderGem {
 	}
 
 	@Test
-	public void gerarTSClass() {
-		System.out.println(StringUtil.toUnderlineCase(entidadeDTO.getNome()).replace("_", "-") + ".ts");
-		TSClass tsClass = new TSClass(entidadeDTO);
-		System.out.println(tsClass.print());
+	public void gerarTSClass() throws Exception {
+
+		for (int i = 0; i < classes.length; i++) {
+			
+			indexEntidade = i;
+			entidadeDTO = appDTO.getEntidades().get(indexEntidade);
+			classe = entidadeDTO.getClasse();
+			
+			System.out.println("ng generate class " + entidadeDTO.getNomeHyphenCase() + "/" + entidadeDTO.getNomeHyphenCase() + " --skipTests=true");
+		}
+
+		System.out.println("");
+
+		for (int i = 0; i < classes.length; i++) {
+			
+			indexEntidade = i;
+			entidadeDTO = appDTO.getEntidades().get(indexEntidade);
+			classe = entidadeDTO.getClasse();
+
+			System.out.println(StringUtil.toUnderlineCase(entidadeDTO.getNome()).replace("_", "-") + ".ts");
+			TSClass tsClass = new TSClass(entidadeDTO);
+			System.out.println(tsClass.print());
+		}
+
 	}
 
 	@Test
@@ -259,14 +361,21 @@ public class CoderGem {
 	}
 
 	@Test
-	public void gerarNGComponentAdd() throws Exception {
-		IComponent controller = new NgComponentAdd(entidadeDTO);
+	public void gerarNGComponentList() throws Exception {
+		IComponent controller = new NgComponentList(entidadeDTO);
 		System.out.println(controller.print());
 	}
 
 	@Test
-	public void gerarNGComponentList() throws Exception {
-		IComponent controller = new NgComponentList(entidadeDTO);
+	public void gerarTabela() throws Exception {
+		IComponent ngHtmlCrud = new NgTabelaHtml(entidadeDTO);
+		String print = ngHtmlCrud.print();
+		System.out.println(print);
+	}
+
+	@Test
+	public void gerarNGComponentAdd() throws Exception {
+		IComponent controller = new NgComponentAdd(entidadeDTO);
 		System.out.println(controller.print());
 	}
 
@@ -280,13 +389,6 @@ public class CoderGem {
 	public void gerarFormularioAdd() throws Exception {
 		IComponent ngHtmlCrud = new NgHtmlFormAdd(entidadeDTO);
 		System.out.println(ngHtmlCrud.print());
-	}
-
-	@Test
-	public void gerarTabela() throws Exception {
-		IComponent ngHtmlCrud = new NgTabelaHtml(entidadeDTO);
-		String print = ngHtmlCrud.print();
-		System.out.println(print);
 	}
 
 	@Test
@@ -309,8 +411,7 @@ public class CoderGem {
 	@Test
 	public void alterarFormulario() throws Exception {
 
-		List<String> readAllLines = Files.readAllLines(
-				Paths.get(this.getClass().getResource("post.component.html").toURI()), Charset.defaultCharset());
+		List<String> readAllLines = Files.readAllLines(Paths.get(this.getClass().getResource("post.component.html").toURI()), Charset.defaultCharset());
 		StringBuilder sb = new StringBuilder();
 		readAllLines.stream().forEach(s -> sb.append(s + "\n"));
 		String text = sb.toString();
@@ -347,8 +448,7 @@ public class CoderGem {
 		List<AtributoDTO> atributos = entidadeDTO.getAtributos();
 		for (AtributoDTO atributo : atributos) {
 			if (atributo.isFk()) {
-				System.out.println("Join<Object, Object> join" + StringUtil.capitalize(atributo.getNome())
-						+ " = root.join(\"" + atributo.getNome() + "\");");
+				System.out.println("Join<Object, Object> join" + StringUtil.capitalize(atributo.getNome()) + " = root.join(\"" + atributo.getNome() + "\");");
 			}
 		}
 
@@ -359,8 +459,7 @@ public class CoderGem {
 			if (!atributo.isFk()) {
 				System.out.println("");
 				System.out.println("if(filter.get" + StringUtil.capitalize(atributo.getNome()) + "() != null)){");
-				System.out.println("   predicates.add(cb.equal(" + atributo.getEntidade().getNomeInstancia() + ".get(\""
-						+ atributo.getNome() + "\"), filter.get" + StringUtil.capitalize(atributo.getNome()) + "()));");
+				System.out.println("   predicates.add(cb.equal(" + atributo.getEntidade().getNomeInstancia() + ".get(\"" + atributo.getNome() + "\"), filter.get" + StringUtil.capitalize(atributo.getNome()) + "()));");
 				System.out.println("}");
 			}
 		}
@@ -385,13 +484,12 @@ public class CoderGem {
 		context.setVariable("pessoa", "cliente");
 		context.setVariable("Pessoas", "Clientes");
 		context.setVariable("pessoas", "clientes");
-		
+
 		context.setVariable("items", new String[] { "Telefone", "Endereco" });
-		
+
 		String process = templateEngine.process(fileContent, context);
 		System.out.println(process);
-		
-	}
 
+	}
 
 }

@@ -18,7 +18,7 @@ public class GeradorPessoaFisicaTest {
 	}
 
 	@Test
-	public void testGerarNome() {
+	public void testGerarTudo() {
 		for (int i = 0; i < arrayLength; i++) {
 			pf = new GeradorPessoaFisica();
 			GeradorEndereco ge = new GeradorEndereco();
@@ -44,45 +44,66 @@ public class GeradorPessoaFisicaTest {
 			System.out.println("UF:                 " + ge.gerarUF());
 		}
 	}
+	
+	@Test
+	public void testGerarNome() {
+		for (int i = 0; i < 10; i++) {
+			pf = new GeradorPessoaFisica();
+			System.out.println("-------------------------------------------");
+			System.out.println("M:                  " + pf.gerarNome(Genero.MASCULINO));
+			System.out.println("F:                  " + pf.gerarNome(Genero.FEMNINO));
+			System.out.println("?:                  " + pf.gerarNome(null));
+		}
+	}
 
 	@Test
 	public void testGerarNomeMae() {
-		fail("Not yet implemented");
+		pf = new GeradorPessoaFisica();
+		System.out.println("-------------------------------------------");
+		System.out.println("MAE:                " + pf.gerarNomeMae());
 	}
 
 	@Test
 	public void testGerarNomePai() {
-		fail("Not yet implemented");
+		pf = new GeradorPessoaFisica();
+		System.out.println("-------------------------------------------");
+		System.out.println("PAI:                " + pf.gerarNomePai());
 	}
 
 	@Test
 	public void testGerarCPF() {
-		fail("Not yet implemented");
+		pf = new GeradorPessoaFisica();
+		GeradorEndereco ge = new GeradorEndereco();
+		System.out.println("-------------------------------------------");
+		System.out.println("CPF:                " + pf.gerarCPF(true));
+		System.out.println("CPF:                " + pf.gerarCPF(false));
 	}
 
 	@Test
 	public void testGerarDataDeNascimento() {
-		fail("Not yet implemented");
+		pf = new GeradorPessoaFisica();
+		System.out.println("-------------------------------------------");
+		GeradorEndereco ge = new GeradorEndereco();
+		System.out.println("Nascimento:         " + DateUtils.formatarData(pf.gerarDataDeNascimento(10, 20), "dd/MM/yyyy"));
+		System.out.println("Nascimento:         " + DateUtils.formatarData(pf.gerarDataDeNascimento(0, 70), "dd/MM/yyyy"));
+		System.out.println("Nascimento:         " + DateUtils.formatarData(pf.gerarDataDeNascimento(0, 18), "dd/MM/yyyy"));
+		System.out.println("Nascimento:         " + DateUtils.formatarData(pf.gerarDataDeNascimento(60, 70), "dd/MM/yyyy"));
+		System.out.println("Nascimento:         " + DateUtils.formatarData(pf.gerarDataDeNascimento(43, 43), "dd/MM/yyyy"));
 	}
 
 	@Test
 	public void testGerarEmail() {
-		fail("Not yet implemented");
+		pf = new GeradorPessoaFisica();
+		System.out.println("-------------------------------------------");
+		pf.gerarNome(null);
+		System.out.println("MAIL:               " + pf.gerarEmail());
 	}
 
 	@Test
 	public void testGerarCelular() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGerarLogin() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGerarSenha() {
-		fail("Not yet implemented");
+		pf = new GeradorPessoaFisica();
+		System.out.println("-------------------------------------------");
+		System.out.println("CELULAR:                  " + pf.gerarCelular());
 	}
 
 }

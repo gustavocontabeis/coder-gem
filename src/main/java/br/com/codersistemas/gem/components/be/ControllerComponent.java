@@ -32,7 +32,7 @@ public class ControllerComponent extends ResourceComponent {
 				sbMethod.append("\r\n");
 				sbMethod.append("	@GetMapping(\"/entidade/{id}\")\r\n");
 				sbMethod.append("	public ResponseEntity<List<Atributo>> buscarPorEntidade(@PathVariable(\"id\") Long id) {\r\n");
-				sbMethod.append("		Optional<List<Atributo>> findById = atributoRepository.findByEntidadeId(id);\r\n");
+				sbMethod.append("		Optional<List<Atributo>> findById = atributoService.findByEntidadeId(id);\r\n");
 				sbMethod.append("		if(!findById.isPresent()) {\r\n");
 				sbMethod.append("			return ResponseEntity.ok(Collections.EMPTY_LIST);\r\n");
 				sbMethod.append("		}else {\r\n");

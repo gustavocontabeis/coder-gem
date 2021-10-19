@@ -1,0 +1,50 @@
+//[package];
+
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class UsuarioService {
+
+//[declaracaoRepositoryPadrao]
+
+//[declaracoes]
+	
+	@Transactional(readOnly = true)
+	public List<Usuario> findAll(Sort by) {
+		return usuarioRepository.findAll(by);
+	}
+
+	@Transactional(readOnly = true)
+	public Page<Usuario> findAll(Specification<Usuario> specification, PageRequest pageRequest) {
+		return usuarioRepository.findAll(specification, pageRequest);
+	}
+
+	@Transactional(readOnly = true)
+	public Optional<Usuario> findById(Long id) {
+		return usuarioRepository.findById(id);
+	}
+
+	@Transactional(readOnly = false)
+	public Usuario save(@Valid Usuario entity) {
+		return usuarioRepository.save(entity);
+	}
+
+	@Transactional(readOnly = false)
+	public void delete(Usuario usuario) {
+		usuarioRepository.delete(usuario);		
+	}
+
+//[metodos]	
+
+}

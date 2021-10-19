@@ -66,12 +66,12 @@ public class NgComponentAdd extends ResourceComponent {
 	private void montarFK2(List<AtributoDTO> atributos) {
 		atributos.stream().filter(i->i.isFk()).forEach(i->{
 			fks2.append("  buscar"+i.getNomeCapitalizado()+"(){\n");
-			fks2.append("    this."+i.getNome()+"Service.consultar().subscribe(resposta => {\n");
+			fks2.append("    this."+i.getNome()+"Service.consultar().subscribe((resposta: any) => {\n");
 			fks2.append("      const itens = resposta as "+i.getNomeCapitalizado()+"[];\n");
 			fks2.append("      itens.forEach(element => {\n");
 			fks2.append("         this."+i.getNomeLista()+".push({label: element.nome, value: element});\n");
 			fks2.append("      });\n");
-			fks2.append("      }, error => {\n");
+			fks2.append("      }, (error: any) => {\n");
 			fks2.append("        console.log(error);\n");
 			fks2.append("        alert(error.ok);\n");
 			fks2.append("      }\n");
@@ -88,7 +88,7 @@ public class NgComponentAdd extends ResourceComponent {
 				String str = "";
 				str += ("      if (params.id_"+ StringUtil.uncapitalize(i.getNome())+") {\r\n");
 				str += ("        const id"+i.getNome()+" = params.id_"+StringUtil.uncapitalize(i.getNome())+" ? Number(params.id_"+StringUtil.uncapitalize(i.getNome())+") : null;\r\n");
-				str += ("        this.buscar"+entidadeDTO.getNome()+"Por"+i.getNomeCapitalizado()+"(id"+i.getNome()+");\r\n");
+				str += ("        this.buscar"+entidadeDTO.getNome()+"Por"+i.getNomeCapitalizado()+"(Number(id"+i.getNome()+"));\r\n");
 				str += ("      } else {\r\n");
 				str += ("        this.consultar();\r\n");
 				str += ("      }\r\n");
@@ -115,9 +115,9 @@ public class NgComponentAdd extends ResourceComponent {
 				StringBuilder sb = new StringBuilder();
 				sb.append("\r\n");
 				sb.append("  buscar"+entidadeDTO.getNome()+"Por"+atributo.getNomeCapitalizado()+"(id"+atributo.getNomeCapitalizado()+": number) {\r\n");
-				sb.append("    this."+entidadeDTO.getNomeInstancia()+"Service.buscarPor"+atributo.getNomeCapitalizado()+"(id"+atributo.getNomeCapitalizado()+").subscribe(resposta => {\r\n");
+				sb.append("    this."+entidadeDTO.getNomeInstancia()+"Service.buscarPor"+atributo.getNomeCapitalizado()+"(id"+atributo.getNomeCapitalizado()+").subscribe((resposta: any) => {\r\n");
 				sb.append("      this."+StringUtil.uncaplitalizePlural(entidadeDTO.getNomeInstancia())+" = resposta as "+entidadeDTO.getNomeCapitalizado()+"[];\r\n");
-				sb.append("    }, error => {\r\n");
+				sb.append("    }, (error: any) => {\r\n");
 				sb.append("      console.log(error);\r\n");
 				sb.append("      alert('erro "+atributo.getNomeCapitalizado()+".' + error);\r\n");
 				sb.append("    });\r\n");

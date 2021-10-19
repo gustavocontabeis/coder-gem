@@ -4,11 +4,11 @@ import br.com.codersistemas.gem.components.Replacememnt;
 import br.com.codersistemas.gem.components.ResourceComponent;
 import br.com.codersistemas.libs.dto.EntidadeDTO;
 
-public class RespositoryComponent extends ResourceComponent {
+public class RepositoryComponent extends ResourceComponent {
 
 	private EntidadeDTO entidade;
 
-	public RespositoryComponent(EntidadeDTO entidade) {
+	public RepositoryComponent(EntidadeDTO entidade) {
 		super(Replacememnt.builder().addClass(entidade.getClasse()).build());
 		this.entidade = entidade;
 	}

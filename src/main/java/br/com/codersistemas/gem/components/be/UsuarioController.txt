@@ -6,8 +6,11 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.codersistemas.entity.Usuario;
-import br.com.codersistemas.repository.UsuarioRepository;
+import br.com.codersistemas.repository.UsuarioService;
 import br.com.codersistemas.libs.utils.ReflectionUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,26 +32,30 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/usuarios")
-public class UsuarioController {
+public class UsuarioController extends BaseController<Usuario> {
 	
 	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private UsuarioService usuarioService;
 	
 	//declaracoes
 	
 	@GetMapping
 	public List<Usuario> listar() {
 		log.debug("listar!");
-		List<Usuario> findAll = usuarioRepository.findAll(Sort.by(Order.asc("nome"))); 
-		findAll.forEach(obj -> {
-			ReflectionUtils.mapToBasicDTO(obj);
-		});
-		return findAll;
+		return usuarioService.findAll(Sort.by(Order.asc("nome")));
+	}
+	
+	@PostMapping("/page")
+	public Page<Usuario> listar(@RequestBody LazyLoadEvent event) {
+		log.info("{}", event);
+		Specification<Usuario> specification = createSpecification(event);
+		PageRequest pageRequest = getPageRequest(event);
+		return usuarioService.findAll(specification, pageRequest);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Usuario> buscar(@PathVariable Long id) {
-		Optional<Usuario> findById = usuarioRepository.findById(id);
+		Optional<Usuario> findById = usuarioService.findById(id);
 		if(!findById.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
@@ -58,16 +65,16 @@ public class UsuarioController {
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public Usuario adicionar(@Valid @RequestBody Usuario entity) {
-		return usuarioRepository.save(entity);
+		return usuarioService.save(entity);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Usuario> excluir(@PathVariable Long id) {
-		Optional<Usuario> findById = usuarioRepository.findById(id);
+		Optional<Usuario> findById = usuarioService.findById(id);
 		if(!findById.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		usuarioRepository.delete(findById.get());
+		usuarioService.delete(findById.get());
 		return new ResponseEntity<Usuario>(HttpStatus.NO_CONTENT);
 	}
 	

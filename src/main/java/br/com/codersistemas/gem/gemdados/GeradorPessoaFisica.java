@@ -57,12 +57,14 @@ public class GeradorPessoaFisica {
 		
 		if(genero == null) {
 			this.genero = random.nextInt(100) % 2 == 0 ? Genero.MASCULINO : Genero.FEMNINO;
+		}else {
+			this.genero = genero;
 		}
 		
 		StringBuilder sb = new StringBuilder();
-		if(genero == Genero.MASCULINO) {
+		if(this.genero == Genero.MASCULINO) {
 			nomeUtilizado = nomesMasculino[random.nextInt(nomesMasculino.length)]; 
-		} else if(genero == Genero.FEMNINO) {
+		} else if(this.genero == Genero.FEMNINO) {
 			nomeUtilizado = nomesFeminino[random.nextInt(nomesFeminino.length)]; 
 		}
 		

@@ -12,10 +12,10 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 })
 export class UsuarioAddComponent implements OnInit {
 
-  usuario: Usuario = new Usuario();
-  usuarios: Usuario[];
-  exibirDialog: boolean;
-  novoRegistro: boolean;
+  usuario!: Usuario = new Usuario();
+  usuarios!: Usuario[];
+  exibirDialog!: boolean;
+  novoRegistro!: boolean;
 
 //[declaracoes]
 
@@ -37,18 +37,18 @@ export class UsuarioAddComponent implements OnInit {
   
 //[buscarFK2]
   buscar(id: number) {
-    this.usuarioService.buscar(id).subscribe(resposta => {
+    this.usuarioService.buscar(id).subscribe((resposta: any) => {
       this.usuario = resposta as Usuario;
-    }, error => {
+    }, (error: any) => {
       console.log(error);
       alert('erro usuarios.' + error);
     });
   }
 
   consultar() {
-    this.usuarioService.consultar().subscribe(resposta => {
+    this.usuarioService.consultar().subscribe((resposta: any) => {
       this.usuarios = resposta as Usuario[];
-    }, error => {
+    }, (error: any) => {
       console.log(error);
       alert('erro usuarios.' + error);
     });
@@ -67,13 +67,13 @@ export class UsuarioAddComponent implements OnInit {
 
   salvar() {
     console.log('salvar');
-    this.usuarioService.adicionar(this.usuario).subscribe(resposta => {
+    this.usuarioService.adicionar(this.usuario).subscribe((resposta: any) => {
       this.consultar();
       this.exibirDialog = false;
       this.novoRegistro = false;
       this.messageService.add({severity: 'success', summary: 'OK', detail: 'Registro adicionado com sucesso.'});
       this.router.navigate(['/usuario/usuario-list']);
-      }, error => {
+      }, (error: any) => {
         console.log(error);
         alert(error.ok);
       }
@@ -96,20 +96,20 @@ export class UsuarioAddComponent implements OnInit {
 
   excluir() {
     console.log('excluir');
-    this.usuarioService.excluir(this.usuario).subscribe(resposta => {
+    this.usuarioService.excluir(this.usuario).subscribe((resposta: any) => {
       this.consultar();
       this.exibirDialog = false;
       this.novoRegistro = false;
       this.messageService.add({severity: 'success', summary: 'OK', detail: 'Registro excluído com sucesso.'});
-      }, error => alert('erro usuarios.')
+      }, (error: any) => alert('erro usuarios.')
     );
   }
 
-  aoSelecionar(event) {
+  aoSelecionar(event: any) {
     this.novoRegistro = false;
   }
   
-  onSubmit(usuarioForm) {
+  onSubmit(usuarioForm: any) {
 
   }
 

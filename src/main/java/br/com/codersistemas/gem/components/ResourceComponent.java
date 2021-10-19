@@ -54,9 +54,22 @@ public abstract class ResourceComponent implements IComponent, IResourceComponen
 	@Override
 	public String print() {
 		printAntes();
-		return printDepois(content);
+		String printDepois = printDepois(content);
+		
+		return replaces(printDepois);
 	}
 	
+	private String replaces(String printDepois) {
+		if(replacement != null) {
+			Map<String, String> map = replacement.getReplaces();
+			Set<Entry<String, String>> entrySet = map.entrySet();
+			for (Entry<String, String> entry : entrySet) {
+				printDepois = printDepois.replaceAll(entry.getKey(), entry.getValue());
+			}
+		}
+		return printDepois;
+	}
+
 	protected void printAntes() {
 		
 	}
