@@ -93,7 +93,7 @@ public class NgFormularioHtml extends ResourceComponent {
             	input.attr("pKeyFilter", "int");
             	input.attr("placeholder", atributo.getRotulo());
             	input.attr("[(ngModel)]", atributo.getEntidade().getNomeInstancia()+"."+atributo.getNome());
-            	input.attr("[required]", String.valueOf(atributo.isObrigatorio()));
+            	input.attr("[required]", String.valueOf(atributo.isObrigatorio() && !atributo.isPk()));
             	input.attr("pattern", "^\\d+$");
             } else if("FLOAT".equals(atributo.getTipo())
             		|| "DOUBLE".equals(atributo.getTipo())) {

@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("[rest]")
 public class UsuarioController extends BaseController<Usuario> {
 	
 	@Autowired
@@ -42,7 +42,7 @@ public class UsuarioController extends BaseController<Usuario> {
 	@GetMapping
 	public List<Usuario> listar() {
 		log.debug("listar!");
-		return usuarioService.findAll(Sort.by(Order.asc("nome")));
+		return usuarioService.findAll(Sort.by(Order.desc("id")));
 	}
 	
 	@PostMapping("/page")

@@ -18,7 +18,7 @@ public class PojoComponent implements IComponent {
 		sb.append(JPAUtil.gerarAtributos(classe));
 		sb.append("\n");
 		sb.append("}\n");
-		sb.append("//Ajuste os tamanhos dos campos.\n");
+		sb.append("//Ajuste os tamanhos dos campos, obrigatoriedade, etc.\n");
 		return sb.toString();
 	}
 

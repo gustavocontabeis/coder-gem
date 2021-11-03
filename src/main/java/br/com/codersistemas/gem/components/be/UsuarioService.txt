@@ -37,6 +37,7 @@ public class UsuarioService {
 
 	@Transactional(readOnly = false)
 	public Usuario save(@Valid Usuario entity) {
+		//[detached-fks]
 		return usuarioRepository.save(entity);
 	}
 

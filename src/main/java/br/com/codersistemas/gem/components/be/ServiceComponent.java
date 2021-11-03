@@ -1,7 +1,10 @@
 package br.com.codersistemas.gem.components.be;
 
+import java.util.List;
+
 import br.com.codersistemas.gem.components.Replacememnt;
 import br.com.codersistemas.gem.components.ResourceComponent;
+import br.com.codersistemas.libs.dto.AtributoDTO;
 import br.com.codersistemas.libs.dto.EntidadeDTO;
 
 public class ServiceComponent extends ResourceComponent {
@@ -26,8 +29,19 @@ public class ServiceComponent extends ResourceComponent {
 		content = declararRepositoryPadrao(content);
 		content = declararRepositoriesDeFKs(content);
 		content = declararMetodosDeFKs(content);
+		content = declararDetachedFks(content);
 		
 		return content; 
+	}
+
+	private String declararDetachedFks(String content) {
+		//[detached-fks]
+		List<AtributoDTO> atributosFKs = entidade.getAtributosFKs();
+		StringBuilder sb = new StringBuilder(); 
+		for (AtributoDTO atributoDTO : atributosFKs) {
+			sb.append(String.format("\t\tentity.set%s(%sRepository.findById(entity.get%s().getId()).get());\n", atributoDTO.getNomeCapitalizado(), atributoDTO.getNomeInstancia(), atributoDTO.getNomeCapitalizado()));
+		}
+		return content.replace("//[detached-fks]", sb.toString());
 	}
 
 	private String declararPackage(String content) {

@@ -87,7 +87,7 @@ public class CoderGem {
 				br.com.codersistemas.condominiosadm.domain.Garagem.class,// 12
 		};
 
-		indexEntidade = 3;
+		indexEntidade = 7;
 
 		classe = classes[indexEntidade];
 		appName = "coder-blog-ui-cad";
@@ -231,7 +231,7 @@ public class CoderGem {
 
 		try {
 
-			indexEntidade = 1;
+			indexEntidade = 4;
 			entidadeDTO = appDTO.getEntidades().get(indexEntidade);
 			classe = entidadeDTO.getClasse();
 
@@ -286,8 +286,8 @@ public class CoderGem {
 	@Test
 	public void gerarService() {
 		
-		indexEntidade = 7;
-		entidadeDTO = appDTO.getEntidades().get(indexEntidade);
+//		indexEntidade = 7;
+//		entidadeDTO = appDTO.getEntidades().get(indexEntidade);
 
 		ResourceComponent component = new ServiceComponent(entidadeDTO);
 		System.out.println(component.print());
@@ -403,6 +403,35 @@ public class CoderGem {
 		obj.setHeaderText("OK");
 		obj.setExibirDialog("exibirDialog");
 		System.out.println(obj.print());
+	}
+
+	@Test
+	public void gerarMenu() throws Exception {
+		List<EntidadeDTO> entidades = appDTO.getEntidades();
+		
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("this.items = [\n");
+		for (EntidadeDTO entidadeDTO : entidades) {
+			
+			String x = "";
+			x += String.format("   {label: 'Listar %s', routerLink: '%s/%s-list' , icon: 'pi pi-fw pi-list'},\n", 
+					entidadeDTO.getNomeCapitalizado(),
+					entidadeDTO.getNomeHyphenCase(), 
+					entidadeDTO.getNomeHyphenCase()
+				);
+			x += String.format("   {label: 'Cadastrar %s', routerLink: '%s/%s-add' , icon: 'pi pi-fw pi-plus'},\n", 
+					entidadeDTO.getNomeCapitalizado(),
+					entidadeDTO.getNomeHyphenCase(), 
+					entidadeDTO.getNomeHyphenCase()
+				);
+			
+			sb.append(String.format("{label: '%s', icon: 'pi pi-fw pi-list', items: [\n%s]},\n", 
+					entidadeDTO.getNomeCapitalizado(), x));
+			
+		}
+		sb.append("];");
+		System.out.println(sb.toString());
 	}
 
 	/**

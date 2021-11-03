@@ -16,9 +16,11 @@ public class NgComponentList extends ResourceComponent {
 	private StringBuilder construtor = new StringBuilder(", ");
 	private StringBuilder fks2 = new StringBuilder();
 	private StringBuilder buscaPorParametros = new StringBuilder();
+	private EntidadeDTO entidadeDTO;
 	
 	public NgComponentList(EntidadeDTO entidadeDTO) {
 		super(Replacememnt.builder().addClass(entidadeDTO.getClasse()).build());
+		this.entidadeDTO = entidadeDTO;
 		List<AtributoDTO> atributos = entidadeDTO.getAtributos();
 		montarNgOnInit(entidadeDTO, atributos);
 		montarConsultarPaginadoFKs(entidadeDTO, atributos);
@@ -33,7 +35,7 @@ public class NgComponentList extends ResourceComponent {
 					+ "      let it = new Item();\r\n"
 					+ "      it.field = 'xxx.id';\r\n"
 					+ "      it.matchMode = 'equals';\r\n"
-					+ "      it.value = this.usuario.xxx.id;\r\n"
+					+ "      it.value = String(this.usuario.xxx.id);\r\n"
 					+ "      this.filters.push(it);\r\n"
 					+ "    }\r\n"
 					+ "";
@@ -44,7 +46,6 @@ public class NgComponentList extends ResourceComponent {
 	private void montarNgOnInit(EntidadeDTO entidadeDTO, List<AtributoDTO> atributos) {
 		ngOnInit = new StringBuilder();
 		ngOnInit.append("    this.usuario = new Usuario();\n\t");
-		ngOnInit.append("    //this.usuario.pessoa = {id:123}\n\t");
 	}
 
 	private void montarBuscaPorParametros(EntidadeDTO entidadeDTO, List<AtributoDTO> atributos) {
@@ -106,8 +107,20 @@ public class NgComponentList extends ResourceComponent {
 				.replace("//[ngOnInit]", ngOnInit.toString())
 				.replace("//[consultarPaginadoFKs]", ngConsultarPaginadoFKs.toString())
 				.replace("//[buscarFK2]", fks2.toString())
-				.replace("//[buscarPorParametros]", buscaPorParametros.toString());
+				.replace("//[buscarPorParametros]", buscaPorParametros.toString())
+				.replace("[usu-HyphenCase]", entidadeDTO.getNomeHyphenCase())
+				.replace("//[inicializarOjbeto]", montarInitObj());
 	}
+	
+	private String montarInitObj() {
+		StringBuilder sb = new StringBuilder();
+		List<AtributoDTO> atributosFKs = entidadeDTO.getAtributosFKs();
+		for (AtributoDTO atributoDTO : atributosFKs) {
+			sb.append("    this.usuario."+atributoDTO.getNomeInstancia()+" = new "+atributoDTO.getClasse().getSimpleName()+"();\n");
+		}
+		return sb.toString();
+	}
+
 	
 	@Override
 	protected void printAntes() {

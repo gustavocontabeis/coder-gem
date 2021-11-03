@@ -13,10 +13,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService, SelectItem } from 'primeng/api';
 import { UsuarioService } from './usuario.service';
 
-import { UsuarioRoutingModule } from './usuario-routing.module';
-import { UsuarioAddComponent } from './usuario-add/usuario-add.component';
-import { UsuarioFilterComponent } from './usuario-filter/usuario-filter.component';
-import { UsuarioListComponent } from './usuario-list/usuario-list.component';
+import { UsuarioRoutingModule } from './[usu-HyphenCase]-routing.module';
+import { UsuarioAddComponent } from './[usu-HyphenCase]-add/[usu-HyphenCase]-add.component';
+import { UsuarioFilterComponent } from './[usu-HyphenCase]-filter/[usu-HyphenCase]-filter.component';
+import { UsuarioListComponent } from './[usu-HyphenCase]-list/[usu-HyphenCase]-list.component';
 
 @NgModule({
   declarations: [UsuarioAddComponent, UsuarioFilterComponent, UsuarioListComponent],

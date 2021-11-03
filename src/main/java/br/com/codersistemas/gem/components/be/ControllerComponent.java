@@ -30,7 +30,7 @@ public class ControllerComponent extends ResourceComponent {
 			if(atributo.isFk() && !atributo.isCollection()) {
 				StringBuilder sbMethod = new StringBuilder();
 				sbMethod.append("\r\n");
-				sbMethod.append("	@GetMapping(\"/entidade/{id}\")\r\n");
+				sbMethod.append("	@GetMapping(\"/[ent-HyphenCase]/{id}\")\r\n");
 				sbMethod.append("	public ResponseEntity<List<Atributo>> buscarPorEntidade(@PathVariable(\"id\") Long id) {\r\n");
 				sbMethod.append("		Optional<List<Atributo>> findById = atributoService.findByEntidadeId(id);\r\n");
 				sbMethod.append("		if(!findById.isPresent()) {\r\n");
@@ -47,11 +47,13 @@ public class ControllerComponent extends ResourceComponent {
 						.replace("atributo", entidadeDTO.getNomeInstancia())
 						.replace("Entidade", atributo.getNomeCapitalizado())
 						.replace("entidade", atributo.getNome())
+						.replace("[ent-HyphenCase]", atributo.getNomeHyphenCase())
 				);
 			}
 		}
 		
-		return content.replace("//[findByFK]", sb.toString());
+		return content.replace("//[findByFK]", sb.toString())
+				.replace("[rest]", entidadeDTO.getRestURI());
 	}
 
 }

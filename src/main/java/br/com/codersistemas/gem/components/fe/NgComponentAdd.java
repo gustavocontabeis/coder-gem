@@ -18,9 +18,11 @@ public class NgComponentAdd extends ResourceComponent {
 	private StringBuilder fks = new StringBuilder();
 	private StringBuilder fks2 = new StringBuilder();
 	private StringBuilder buscaPorParametros = new StringBuilder();
+	private EntidadeDTO entidadeDTO;
 	
 	public NgComponentAdd(EntidadeDTO entidadeDTO) {
 		super(Replacememnt.builder().addClass(entidadeDTO.getClasse()).build());
+		this.entidadeDTO = entidadeDTO;
 		List<AtributoDTO> atributos = entidadeDTO.getAtributos();
 		for (AtributoDTO atributo : atributos) {
 			if(atributo.isEnum()) {
@@ -38,38 +40,44 @@ public class NgComponentAdd extends ResourceComponent {
 				selectItemOnInit.append("];\n");
 			}
 		}
-		
 		montarConstrutor(atributos);
-		
 		montarFK(atributos);
-		
 		montarFK2(atributos);
-		
 		montarBuscaPorParametros(entidadeDTO, atributos);
-		
 		montarMetodoBuscaPorParametros(entidadeDTO, atributos);
+	}
 
+	private String montarInitObj() {
+		StringBuilder sb = new StringBuilder();
+		List<AtributoDTO> atributosFKs = entidadeDTO.getAtributosFKs();
+		for (AtributoDTO atributoDTO : atributosFKs) {
+			sb.append("    this.usuario."+atributoDTO.getNomeInstancia()+" = new "+atributoDTO.getClasse().getSimpleName()+"();\n");
+		}
+		return sb.toString();
 	}
 
 	private void montarConstrutor(List<AtributoDTO> atributos) {
 		atributos.stream().filter(i->i.isFk()).forEach(i->{
-			construtor.append("\n    private "+i.getNome()+"Service: "+i.getNomeCapitalizado()+"Service, ");
+			String nome = StringUtil.isNotBlank( i.getTipoClasseGenericaNome() ) ? i.getTipoClasseGenericaNome() : i.getClasse().getSimpleName();
+			construtor.append("\n    private " + nome + "Service: " + nome + "Service, ");
 		});
 	}
 
 	private void montarFK(List<AtributoDTO> atributos) {
 		atributos.stream().filter(i->i.isFk()).forEach(i->{
-			fks.append("    this.buscar"+i.getNomeCapitalizado()+"();\n");
+			String nome = StringUtil.isNotBlank( i.getTipoClasseGenericaNome() ) ? i.getTipoClasseGenericaNome() : i.getClasse().getSimpleName();
+			fks.append("    this.buscar"+nome+"();\n");
 		});
 	}
 
 	private void montarFK2(List<AtributoDTO> atributos) {
 		atributos.stream().filter(i->i.isFk()).forEach(i->{
-			fks2.append("  buscar"+i.getNomeCapitalizado()+"(){\n");
-			fks2.append("    this."+i.getNome()+"Service.consultar().subscribe((resposta: any) => {\n");
-			fks2.append("      const itens = resposta as "+i.getNomeCapitalizado()+"[];\n");
+			String nome = StringUtil.isNotBlank( i.getTipoClasseGenericaNome() ) ? i.getTipoClasseGenericaNome() : i.getClasse().getSimpleName();
+			fks2.append("  buscar"+nome+"(){\n");
+			fks2.append("    this."+nome+"Service.consultar().subscribe((resposta: any) => {\n");
+			fks2.append("      const itens = resposta as "+nome+"[];\n");
 			fks2.append("      itens.forEach(element => {\n");
-			fks2.append("         this."+i.getNomeLista()+".push({label: element.nome, value: element});\n");
+			fks2.append("         this."+i.getNomeLista()+".push({label: element.id, value: element});\n");
 			fks2.append("      });\n");
 			fks2.append("      }, (error: any) => {\n");
 			fks2.append("        console.log(error);\n");
@@ -135,7 +143,9 @@ public class NgComponentAdd extends ResourceComponent {
 				.replace("//[construtor]", StringUtil.removeEnd(construtor.toString(), ", "))
 				.replace("//[buscarFK]", fks.toString())
 				.replace("//[buscarFK2]", fks2.toString())
-				.replace("//[buscarPorParametros]", buscaPorParametros.toString());
+				.replace("//[buscarPorParametros]", buscaPorParametros.toString())
+				.replace("[usu-HyphenCase]", entidadeDTO.getNomeHyphenCase())
+				.replace("//[inicializarOjbeto]", montarInitObj());
 	}
 	
 	@Override

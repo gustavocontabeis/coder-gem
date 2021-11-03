@@ -91,17 +91,16 @@ public class NgTabelaHtml implements IComponent {
 			String html = "";
 			
 			if(atributo.isFk()) {
-				td.html("<a [routerLink]=\"['/"+atributo.getNome()+"/', "+obj.getNomeInstancia()+"."+atributo.getNome()+".id]\">{{" + atributo.getEntidade().getNomeInstancia() + "." + atributo.getFkField() + "}}</a>");
+				td.html("<a [routerLink]=\"['/"+atributo.getNome()+"/', "+obj.getNomeInstancia()+"."+atributo.getNome()+".id]\">{{" + atributo.getEntidade().getNomeInstancia() + "." + atributo.getNomeInstancia() + ".id}}</a>");
 			} else if ("DATE".equals(atributo.getTipo())) {
 				td.html("{{" + atributo.getEntidade().getNomeInstancia() + "." + atributo.getNome()
 						+ " | date: 'dd/MM/yyyy hh:mm:ss'}}");
 			} else if ("INTEGER".equals(atributo.getTipo()) || "LONG".equals(atributo.getTipo())) {
 				td.attr("style", "text-align: right;");
 				td.html("{{" + atributo.getEntidade().getNomeInstancia() + "." + atributo.getNome() + "}}");
-			} else if ("FLOAT".equals(atributo.getTipo()) || "DOUBLE".equals(atributo.getTipo())) {
+			} else if ("FLOAT".equals(atributo.getTipo()) || "DOUBLE".equals(atributo.getTipo()) || "BIGDECIMAL".equals(atributo.getTipo())) {
 				td.attr("style", "text-align: right;");
-				td.html("{{" + atributo.getEntidade().getNomeInstancia() + "." + atributo.getNome() + " | number: "
-						+ atributo.getPrecisao() + " }}");
+				td.html("{{" + atributo.getEntidade().getNomeInstancia() + "." + atributo.getNome() + "| currency:'BRL':true:'1.2-2'}}");
 			} else if ("BOOLEAN".equals(atributo.getTipo())) {
 				td.attr("style", "text-align: center;");
 				td.html("{{" + atributo.getEntidade().getNomeInstancia() + "." + atributo.getNome()

@@ -1,4 +1,4 @@
-import { Usuario } from './usuario';
+import { Usuario } from './[usu-HyphenCase]';
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +13,7 @@ export class UsuarioService {
   apiUrl: string;
 
   constructor(private httpClient: HttpClient) {
-    this.apiUrl = environment.apiUrl + '/usuarios';
+    this.apiUrl = environment.apiUrl + '/[usu-HyphenCase]s';
   }
 
   adicionar(usuario: Usuario): any {

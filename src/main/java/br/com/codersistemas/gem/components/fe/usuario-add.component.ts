@@ -6,13 +6,13 @@ import { MessageService, ConfirmationService, SelectItem } from 'primeng/api';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 @Component({
-  selector: 'app-usuario-add',
-  templateUrl: './usuario-add.component.html',
-  styleUrls: ['./usuario-add.component.css']
+  selector: 'app-[usu-HyphenCase]-add',
+  templateUrl: './[usu-HyphenCase]-add.component.html',
+  styleUrls: ['./[usu-HyphenCase]-add.component.css']
 })
 export class UsuarioAddComponent implements OnInit {
 
-  usuario!: Usuario = new Usuario();
+  usuario: Usuario = new Usuario();
   usuarios!: Usuario[];
   exibirDialog!: boolean;
   novoRegistro!: boolean;
@@ -30,6 +30,7 @@ export class UsuarioAddComponent implements OnInit {
     this.exibirDialog = false;
     this.novoRegistro = false;
     this.usuario = new Usuario();
+//[inicializarOjbeto]
 //[ngOnInit]
 //[buscarFK]
 //[buscarPorParametros]
@@ -72,7 +73,7 @@ export class UsuarioAddComponent implements OnInit {
       this.exibirDialog = false;
       this.novoRegistro = false;
       this.messageService.add({severity: 'success', summary: 'OK', detail: 'Registro adicionado com sucesso.'});
-      this.router.navigate(['/usuario/usuario-list']);
+      this.router.navigate(['/[usu-HyphenCase]/[usu-HyphenCase]-list']);
       }, (error: any) => {
         console.log(error);
         alert(error.ok);

@@ -6,9 +6,9 @@ import { MessageService, ConfirmationService, SelectItem, LazyLoadEvent } from '
 import { Item } from 'src/app/models/dto/item';
 
 @Component({
-  selector: 'app-usuario-list',
-  templateUrl: './usuario-list.component.html',
-  styleUrls: ['./usuario-list.component.css']
+  selector: 'app-[usu-HyphenCase]-list',
+  templateUrl: './[usu-HyphenCase]-list.component.html',
+  styleUrls: ['./[usu-HyphenCase]-list.component.css']
 })
 export class UsuarioListComponent implements OnInit {
 
@@ -28,6 +28,7 @@ export class UsuarioListComponent implements OnInit {
 
   ngOnInit() {
 //[ngOnInit]
+//[inicializarOjbeto]
 //[buscarFK]
 //[buscarPorParametros]
   }

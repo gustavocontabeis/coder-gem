@@ -37,7 +37,9 @@ public class NgService extends ResourceComponent {
 			}
 		}
 		
-		return content.replace("//[metodos]", sb.toString());
+		return content
+				.replace("//[metodos]", sb.toString())
+				.replace("[usu-HyphenCase]", entidade.getNomeHyphenCase());
 	}
 
 }
