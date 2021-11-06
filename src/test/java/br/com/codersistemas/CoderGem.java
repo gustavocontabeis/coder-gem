@@ -87,7 +87,7 @@ public class CoderGem {
 				br.com.codersistemas.condominiosadm.domain.Garagem.class,// 12
 		};
 
-		indexEntidade = 7;
+		indexEntidade = 0;
 
 		classe = classes[indexEntidade];
 		appName = "coder-blog-ui-cad";
